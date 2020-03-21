@@ -1,0 +1,91 @@
+﻿;-------------------------------------------------
+;욕실로느긋하게쉰다
+;일상계 커맨드, 레벨 1
+;-------------------------------------------------
+@COM431
+#DIM 회복전체력1
+#DIM 회복전기력1
+#DIM 회복후체력1
+#DIM 회복후기력1
+#DIM 회복전체력2
+#DIM 회복전기력2
+#DIM 회복후체력2
+#DIM 회복후기력2
+
+회복전체력1 = BASE:MASTER:체력
+회복전기력1 = BASE:MASTER:기력
+IF DAY * 1440 + TIME - EX:MASTER:전회입욕시각 < 360
+	TFLAG:194 = 1
+	PRINTFORML 조금 전 들어갔던 바로 직후다
+	RETURN -1
+ELSE
+	IF BATHCHECK(CFLAG:MASTER:현재위치)
+		IF TARGET > 0 && CFLAG:TARGET:6 > 0 && !CFLAG:TARGET:수면 
+			회복전체력2 = BASE:TARGET:체력
+			회복전기력2 = BASE:TARGET:기력
+			CALL ODEKAKE_OFURO(TARGET, 1)
+			회복후체력2 = BASE:TARGET:체력
+			회복후기력2 = BASE:TARGET:기력
+		ENDIF
+		CALL ODEKAKE_OFURO(MASTER, 1)
+		CFLAG:MASTER:목욕탕 = 0
+	;풀장으로 느긋하게 쉬는 경우(휴식의 한층 더 약체화판)
+	ELSE
+		CALL ODEKAKE_OFURO(MASTER, 3)
+		IF GETBIT (FLAG:풀장, 2)
+			STAIN:MASTER:구 = 0
+			STAIN:MASTER:1 = 0
+			STAIN:MASTER:2 = 2
+			STAIN:MASTER:3 = 1
+			STAIN:MASTER:4 = 8
+			STAIN:MASTER:5 = 0
+		ENDIF
+		IF TARGET > 0 && CFLAG:TARGET:6 > 0 && !CFLAG:TARGET:수면 
+			회복전체력2 = BASE:TARGET:체력
+			회복전기력2 = BASE:TARGET:기력
+			CALL ODEKAKE_OFURO(TARGET, 3)
+			회복후체력2 = BASE:TARGET:체력
+			회복후기력2 = BASE:TARGET:기력
+		ENDIF
+	ENDIF
+	회복후체력1 = BASE:MASTER:체력
+	회복후기력1 = BASE:MASTER:기력
+	DRAWLINE
+	PRINTFORML 체력+{ABS(회복후체력1 - 회복전체력1)}(%CALLNAME:MASTER%)
+	PRINTFORML 기력+{ABS(회복후기력1 - 회복전기력1)}(%CALLNAME:MASTER%)
+	IF TARGET
+		PRINTFORML 체력+{ABS(회복후체력2 - 회복전체력2)}(%CALLNAME:TARGET%)
+		PRINTFORML 기력+{ABS(회복후기력2 - 회복전기력2)}(%CALLNAME:TARGET%)
+	ENDIF
+	TIME += 30
+ENDIF
+
+;욕실로느긋하게쉰다
+@COM_ABLE431
+;이동 실행 판정
+SIF !TFLAG:100
+	RETURN 0
+;일괄관리
+SIF GLOBAL_COMABLE(431)
+	RETURN RESULT
+;정지 중에는 불가
+SIF FLAG:70 == 1
+	RETURN 0
+;수면중
+SIF CFLAG:수면
+	RETURN 0
+;동침중
+SIF CFLAG:동침중
+	RETURN 0
+;욕실이 있는 장소 이외는 불가
+IF !BATHCHECK(CFLAG:MASTER:현재위치)
+	SIF !GETBIT (FLAG:풀장, 2)
+		RETURN 0
+	SIF SMALL_PLACE(CFLAG:MASTER:현재위치) || AT_HOME(MASTER) == 0
+		RETURN 0
+ENDIF
+SIF PLACE_SENTO()
+	RETURN 0
+SIF CFLAG:우후후 == 2
+	RETURN 0
+RETURN 1

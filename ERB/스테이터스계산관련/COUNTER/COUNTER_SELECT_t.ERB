@@ -1,0 +1,481 @@
+﻿@카운터호출처리
+#DIM NUM_TARGET
+NUM_TARGET = GET_TARGETNUM()
+;--------------------------------------------------------------------
+;TCVAR:상대:20　커맨드 번호 내용의 대략 
+;TCVAR:상대:21　파생 내용의 상세
+;--------------------------------------------------------------------
+IF ( TFLAG:102 == 3 || TFLAG:102 == 2 ) && !CFLAG:TARGET:동침중
+	;카운터
+	FOR LOCAL, 1, NUM_TARGET + 1
+		SIF TARGET:LOCAL <= 0
+			CONTINUE
+		CALL EVENT_COUNTER(TARGET:LOCAL, LOCAL)
+		CALL EVENT_COUNTER_POSE(TARGET:LOCAL, LOCAL)
+	NEXT
+	;CALL EVENT_COUNTER_COMBINATION
+	FOR LOCAL, 1, NUM_TARGET + 1
+		SIF TARGET:LOCAL <= 0
+			CONTINUE
+		CALL EVENT_COUNTER_SOURCE(TARGET:LOCAL, LOCAL)
+	NEXT
+	FOR LOCAL, 1, NUM_TARGET + 1
+		SIF TARGET:LOCAL <= 0
+			CONTINUE
+		IF TCVAR:(TARGET:LOCAL):20
+			;CALL KOJO_MESSAGE_COUNTER(TARGET:LOCAL)
+			CALL KOJO_MESSAGE_SEND("COUNTER", 1, TARGET:LOCAL, 0,0)
+			DRAWLINE
+		ENDIF
+	NEXT
+ENDIF
+
+@POSITION_OCCUPATION(ARG)
+#FUNCTION
+FOR LOCAL, 1, GET_TARGETNUM() + 1
+	SIF TARGET:LOCAL <= 0
+		CONTINUE
+	SIF TCVAR:(TARGET:LOCAL):위치관계 == ARG
+		RETURNF 1
+NEXT
+
+@EVENT_COUNTER(ARG, ARG:1)
+#DIM 후보, 310
+#DIM 기본치
+VARSET 후보
+;----------------------------------------------------
+;캔슬
+;----------------------------------------------------
+;ARG 대상 캐릭터
+;ARG:1 행동순서
+SIF GROUPMATCH(SELECTCOM, 350, 355, 400, 402, 404, 405, 420, 604, 699)
+	RETURN 0
+SIF ARG <= 0
+	RETURN 0
+SIF !SHIRAHU(ARG)
+	RETURN 0
+SIF FLAG:70 == 1 && CFLAG:ARG:344 == 0
+	RETURN 0
+SIF CFLAG:ARG:행동 == 5
+	RETURN 0
+SIF TCVAR:ARG:친해져 < 1
+	RETURN 0
+TCVAR:ARG:30 ++
+SIF TCVAR:ARG:30 > 1
+	RETURN 0
+
+VARSET LOCAL
+
+;----------------------------------------------------
+;특수한 처리
+;----------------------------------------------------
+;우후후 안
+IF CFLAG:ARG:우후후 == 1
+	DEBUGPRINT 카운터 리액션
+	CALL EVENT_COUNTER_REACTION(ARG, ARG:1)
+	RETURN 0
+ENDIF
+;약점
+;요점 조정 ENDURE와 RAND로 차를 흐린다
+IF ARG:1 == 1 && CFLAG:ARG:우후후 == 2 && CFLAG:ARG:약점잡음 && (ENDURE(ARG) < (400 + RAND:400) && !RAND:3) && !TCVAR:ARG:마음대로해
+	SIF CFLAG:ARG:약점잡음 > 0
+		CALL EVENT_COUNTER_PUNISHMENT(ARG, ARG:1)
+	FOR LOCAL, 0, CHARANUM
+		CFLAG:LOCAL:우후후 = 0
+		TFLAG:MASTER의P삽입중 = 0
+		;우후후시 계 장비 리셋
+		FOR LOCAL:1, 10, 150
+			TEQUIP:LOCAL:(LOCAL:1) = 0
+		NEXT
+		TEQUIP:LOCAL:50 = -1
+		TEQUIP:LOCAL:51 = -1
+		;사정 관계 리셋
+		IF TFLAG:102 < 2
+			BASE:LOCAL:사정 = 0
+			TCVAR:LOCAL:이기초 = 0
+		ENDIF
+		IF LOCK:(CFLAG:LOCAL:초기위치) && AT_HOME(LOCAL)
+			CALL CTRL_CLOTHES_SET(LOCAL, "현재 의상의 변경_파자마")
+			CFLAG:LOCAL:파자마 = 1
+		ELSE
+			CALL CTRL_CLOTHES_SET(LOCAL, "현재 의상의 변경_평상복")
+			CFLAG:LOCAL:파자마 = 0
+		ENDIF
+		CALL CLOTHES_SETTING_TRAIN(LOCAL)
+	NEXT
+	TFLAG:102 = 1
+	RETURN 0
+ENDIF
+
+;----------------------------------------------------
+;통상
+;----------------------------------------------------
+;후보:301=소프트 후보:302=착의 후보:303=탈의 애무 후보:304=탈의 강요 후보:305=성교 후보:306=TARGET에 의한 고문(하드한)
+
+; 낮을 정도 캐릭터 능력이 현저하게 반영된다. 높게 하면 할수록 단순한 균등 랜덤에 가까워진다. 돼지는 10
+기본치 = 10
+
+;------------------------------------------
+;1~9 커뮤니케이션
+;------------------------------------------
+;거리가 가깝다
+후보:1 = 기본치 + CFLAG:ARG:수줍음 + CFLAG:ARG:적극성
+;치라 보고
+후보:2 = 기본치 + CFLAG:ARG:수줍음 + CFLAG:ARG:적극성
+;이야기
+후보:3 = 기본치 + CFLAG:ARG:질 + CFLAG:ARG:적극성
+;좋은 냄새
+후보:4 = 기본치 + CFLAG:ARG:유혹 + CFLAG:ARG:적극성
+;
+후보:9 = (기본치*3/2) * (1 + TALENT:MASTER:농후정액)
+LOCAL:1 = COUNTER_TYPE("코뮤", ARG)
+FOR LOCAL, 1,10
+	후보 :LOCAL *= LOCAL:1
+NEXT
+;------------------------------------------
+;10~19 베리소프트
+;------------------------------------------
+;접근해 온다
+후보:11 = 기본치 + CFLAG:ARG:유혹 - CFLAG:ARG:수줍음
+;웃는 얼굴을 띄운다
+후보:12 = 기본치 + CFLAG:ARG:수줍음
+;상관해 갖고 싶어한다
+후보:13 = 기본치 + CFLAG:ARG:유혹 + CFLAG:ARG:적극성
+;몸을 문질러 댄다
+후보:14 = 기본치 + CFLAG:ARG:적극성 + CFLAG:ARG:질 - CFLAG:ARG:수줍음
+;응시해 온다
+후보:15 = 기본치 + CFLAG:ARG:유혹 + CFLAG:ARG:적극성
+;어깨에 턱이상
+후보:16 = 기본치 + CFLAG:ARG:적극성
+;차입
+후보:17 = 기본치 + CFLAG:ARG:유혹 + CFLAG:ARG:유혹 + CFLAG:ARG:적극성
+
+LOCAL:1 = COUNTER_TYPE("베리소프트", ARG)
+FOR LOCAL, 10,20
+	후보 :LOCAL *= LOCAL:1
+NEXT
+;------------------------------------------
+;20~29 유혹
+;------------------------------------------
+;요염한 행동
+후보:20 = 기본치 + CFLAG:ARG:유혹 - CFLAG:ARG:수줍음
+;응시한다
+후보:21 = 기본치 + CFLAG:ARG:수줍음
+;몸을 접댄다
+후보:22 = 기본치 + CFLAG:ARG:유혹 + CFLAG:ARG:적극성
+;치마를 걷어 붙인다
+후보:23 = 기본치 + CFLAG:ARG:적극성 + CFLAG:ARG:질 - CFLAG:ARG:수줍음
+;귓전에 입김을 내뿜는다
+후보:24 = 기본치 + CFLAG:ARG:유혹 + CFLAG:ARG:적극성
+;엉덩이를어루만진다
+후보:25 = 기본치 + CFLAG:ARG:적극성 + CFLAG:ARG:질
+;팔에 달라붙어
+후보:26 = 기본치 + CFLAG:ARG:유혹 + CFLAG:ARG:적극성
+;골짜기를 보인다
+후보:27 = 기본치 + CFLAG:ARG:유혹 + CFLAG:ARG:적극성 - CFLAG:ARG:수줍음
+;엉덩이 즈리
+후보:28 = (기본치*10/8) + CFLAG:ARG:적극성 + CFLAG:ARG:질 - CFLAG:ARG:수줍음 + MAX(EXP:ARG:사정경험 / 15, 8)
+
+LOCAL:1 = COUNTER_TYPE("소프트", ARG)
+FOR LOCAL, 20,30
+	후보 :LOCAL *= LOCAL:1
+NEXT
+;------------------------------------------
+;30~39 착의 성희롱
+;------------------------------------------
+;키스
+후보:30 = (기본치 + CFLAG:ARG:적극성) * !TALENT:ARG:키스미경험
+;뒤로부터 안겨든다
+후보:31 = 기본치 + CFLAG:ARG:수줍음 - CFLAG:ARG:적극성
+;앞에서 안겨든다
+후보:32 = 기본치 + CFLAG:ARG:유혹 + CFLAG:ARG:적극성
+;가슴을 비비게 한다
+후보:33 = 기본치 + CFLAG:ARG:유혹 - CFLAG:ARG:적극성
+;고간뒤진다
+후보:34 = 기본치 + CFLAG:ARG:적극성 + CFLAG:ARG:질
+;치마안을 보인다
+후보:35 = 기본치 + CFLAG:ARG:수줍음 + CFLAG:ARG:유혹
+;뒤로부터 가슴 만지작 만지작
+후보:36 = 기본치 + CFLAG:ARG:적극성 + CFLAG:ARG:질
+;엿강탈
+후보:39 = 기본치 + CFLAG:ARG:적극성 + CFLAG:ARG:질 * !TALENT:ARG:키스미경험
+
+LOCAL:1 = COUNTER_TYPE("착의", ARG)
+FOR LOCAL, 30,40
+	후보 :LOCAL = MAX(후보 :LOCAL + COUNTER_SIKOU:ARG:LOCAL, 1)
+	후보 :LOCAL *= LOCAL:1
+NEXT
+
+;------------------------------------------
+;40~49 애원
+;------------------------------------------
+
+;정상위 V 애원
+후보:41 = 기본치 + ABL:ARG:V감각 * 4 + EX:ARG:V절정직전 * 10
+;정상위 A 애원
+;후보:42 = 기본치 + ABL:ARG:A감각 * 4 + EX:ARG:A절정직전 * 10
+;후배위 V 애원
+후보:43 = 기본치 + ABL:ARG:V감각 * 3 + EX:ARG:V절정직전 * 10
+SIF TALENT:ARG:동물귀
+	후보:43 += ABL:ARG:V감각 * 2
+;후배위 A 애원
+후보:44 = 기본치 + ABL:ARG:A감각 * 3 + EX:ARG:A절정직전 * 10
+SIF TALENT:ARG:동물귀
+	후보:44 += ABL:ARG:A감각 * 2
+
+[SKIPSTART]
+;C
+후보:45 = ABL:ARG:C감각 + CFLAG:ARG:유혹 - CFLAG:ARG:적극성
+;V
+후보:46 = ABL:ARG:V감각 + CFLAG:ARG:유혹 - CFLAG:ARG:적극성
+;A
+후보:47 = ABL:ARG:A감각 + CFLAG:ARG:유혹 - CFLAG:ARG:적극성
+;B
+후보:48 = ABL:ARG:B감각 + CFLAG:ARG:유혹 - CFLAG:ARG:적극성
+;M
+후보:49 = (ABL:ARG:M감각 + CFLAG:ARG:유혹 - CFLAG:ARG:적극성) * !TALENT:ARG:키스미경험
+[SKIPEND]
+
+LOCAL:1 = COUNTER_TYPE("애원", ARG)
+FOR LOCAL, 40,50
+	후보 :LOCAL = MAX(후보 :LOCAL + COUNTER_SIKOU:ARG:LOCAL, 1)
+	후보 :LOCAL *= LOCAL:1
+NEXT
+
+;------------------------------------------
+;50~69 탈의 성희롱(애무)
+;------------------------------------------
+;수음
+후보:50 = 기본치 + 2 * TALENT:ARG:능숙한손가락 + ABL:ARG:손가락 + BASE:MASTER:발기 / 500
+;펠라치오, 쿠니
+후보:51 = 기본치 + TALENT:ARG:악취내성 + 2 * TALENT:ARG:혀놀림 + ABL:ARG:혀 + BASE:MASTER:발기 / 500
+;가랑이, 짝맞추기놀이
+후보:52 = 기본치 + ABL:ARG:허리 + 2 * TALENT:ARG:젖기쉬움 + BASE:MASTER:발기 / 500
+;파이즈리
+후보:53 = 기본치 + TALENT:ARG:가슴사이즈 + 2 * TALENT:ARG:음유 + ABL:ARG:가슴 + BASE:MASTER:발기 / 500
+;풋잡
+후보:54 = 기본치 + 2 * TALENT:ARG:새드 + MIN(ABL:ARG:새드끼 , 5) + BASE:MASTER:발기 / 500
+;애널애무
+후보:55 = (기본치 + 2 * TALENT:ARG:능숙한손가락 + ABL:ARG:손가락) * SIGN(EXP:ARG:A경험)
+;애널빨기
+후보:56 = (기본치 + 2 * TALENT:ARG:혀놀림 + ABL:ARG:혀 + MIN(TALENT:ARG:악취내성, 0)) * SIGN(EXP:ARG:A경험)
+;손가락 삽입
+후보:57 = 기본치 + 2 * TALENT:ARG:능숙한손가락 + ABL:ARG:손가락
+;가슴애무
+후보:58 = 기본치 + 2 * TALENT:ARG:능숙한손가락 + ABL:ARG:손가락
+;유두빨기
+후보:59 = 기본치 + 2 * TALENT:ARG:혀놀림 + ABL:ARG:혀 + 1 * TALENT:ARG:유치 - TALENT:MASTER:2
+;딥키스
+후보:60 = 기본치 + (2 * TALENT:ARG:혀놀림 + ABL:ARG:혀) * !TALENT:ARG:키스미경험
+
+
+LOCAL:1 = COUNTER_TYPE("탈의 애무", ARG)
+FOR LOCAL, 50,70
+	후보 :LOCAL = MAX(후보 :LOCAL + COUNTER_SIKOU:ARG:LOCAL, 1)
+	후보 :LOCAL *= LOCAL:1
+NEXT
+
+;------------------------------------------
+;70~79 탈의 성희롱(강요)
+;------------------------------------------
+;쿠니
+후보:70 = 기본치 + ABL:ARG:C감각
+;펠라치오
+후보:71 = 기본치 + ABL:ARG:C감각
+;애널 봉사
+후보:72 = (기본치 + ABL:ARG:A감각) * SIGN(EXP:ARG:A경험)
+;
+후보:73 = 기본치 + ABL:ARG:B감각
+;젖 맞추어라
+후보:74 = 기본치 + ABL:ARG:B감각
+;타와시 세탁
+후보:75 = 기본치 + ABL:ARG:C감각
+;강제 보지 애무
+후보:76 = 기본치 + (ABL:ARG:C감각 +  ABL:ARG:V감각) / 2
+;젖을 들이마시게 한다
+후보:77 = 기본치 + ABL:ARG:B감각
+;엉덩이 즈리
+후보:78 = (기본치*10/8) + ABL:ARG:C감각 + MAX(EXP:ARG:사정경험 / 15, 8)
+
+LOCAL:1 = COUNTER_TYPE("탈의 강요", ARG)
+FOR LOCAL, 70,80
+	후보 :LOCAL = MAX(후보 :LOCAL + COUNTER_SIKOU:ARG:LOCAL, 1)
+	후보 :LOCAL *= LOCAL:1
+NEXT
+
+;------------------------------------------
+;80~89 성교
+;------------------------------------------
+;정상위된다
+후보:80 = 기본치 + ABL:ARG:C감각 + MAX(EXP:ARG:사정경험 / 15, 15)
+;정상위 V 애원
+후보:81 = 기본치 + ABL:ARG:V감각 * 3 + EX:ARG:V절정직전 * 10
+;정상위 A 애원
+;후보:82 = 기본치 + ABL:ARG:V감각 * 3 + EX:ARG:A절정직전 * 10
+;후배위된다
+후보:83 = (기본치*7/10) + ABL:ARG:C감각 + MAX(EXP:ARG:사정경험 / 15, 15) + ABL:ARG:새드끼 / 2
+;허리 모습 V접수
+후보:84 = 기본치 + ABL:ARG:C감각
+;기승위
+후보:85 = 기본치 + ABL:ARG:V감각 * 3 + EX:ARG:V절정직전 * 10
+후보:86 = 기본치 + ABL:ARG:친밀 * 3 + EX:ARG:V절정직전 * 10
+;기승위 A
+후보:87 = 기본치 + ABL:ARG:A감각 * 3+ EX:ARG:A절정직전 * 10
+후보:88 = 기본치 + (ABL:ARG:봉사정신 + ABL:ARG:V감각) * 2
+후보:89 = 기본치 + (ABL:ARG:봉사정신 + ABL:ARG:A감각) * 2
+
+
+LOCAL:1 = COUNTER_TYPE("성교", ARG)
+FOR LOCAL, 80,90
+	후보 :LOCAL = MAX(후보 :LOCAL + COUNTER_SIKOU:ARG:LOCAL, 1)
+	후보 :LOCAL *= LOCAL:1
+NEXT
+;------------------------------------------
+;90~99 TARGET에 의한 고문(하드한)
+;------------------------------------------
+
+;후배위 A삽입된다
+후보:90 = (기본치*5/10) + ABL:ARG:C감각 + MAX(EXP:ARG:사정경험 / 15, 15) + ABL:ARG:새드끼 / 2 - (TALENT:MASTER:2 & 1) * 4 + ABL:MASTER:애널 * 2 - ABL:MASTER:질
+;이라마치오 된다
+후보:91 = 기본치 + ABL:ARG:C감각 + ABL:ARG:새드끼
+;허리 모습역A
+후보:93 = 기본치 + ABL:ARG:C감각 + MAX(EXP:ARG:사정경험 / 15, 15)
+;정상위 A삽입된다
+후보:94 = (기본치*8/10) + ABL:ARG:C감각 + MAX(EXP:ARG:사정경험 / 15, 15) - (TALENT:MASTER:2 & 1) * 4 + ABL:MASTER:애널 * 2 - ABL:MASTER:질
+;애널개발허가를 요구한다
+
+LOCAL:1 = COUNTER_TYPE("고문", ARG)
+FOR LOCAL, 90,100
+	후보 :LOCAL = MAX(후보 :LOCAL + COUNTER_SIKOU:ARG:LOCAL, 1)
+	후보 :LOCAL *= LOCAL:1
+NEXT
+
+;------------------------------------------
+;100~119 애무(섹스중)
+;------------------------------------------
+[SKIPSTART]
+;앞에서 안겨든다;32
+후보:100 = 기본치 + CFLAG:ARG:유혹 + CFLAG:ARG:적극성
+
+;가슴을 비비게 하는 33
+후보:101 = 기본치 + CFLAG:ARG:유혹 - CFLAG:ARG:적극성
+
+;치마안을 보이는 35
+후보:102 = 기본치 + CFLAG:ARG:수줍음 + CFLAG:ARG:유혹
+
+;애널애무 55
+후보:103
+
+;가슴애무 58
+후보:104
+
+;유두빨기 59
+후보:105
+;소프트 키스 30
+후보:106
+;딥키스 60
+후보:107
+
+;젖을 들이마시게 하는 77
+후보:108
+
+;매우 수기 hold 86
+후보:109
+
+;허리 모습 V 88
+후보:110
+
+;허리 모습 A 89
+후보:111
+
+;역정상위
+후보:112
+[SKIPEND]
+;------------------------------------------
+;120~139 껴안기모드
+;------------------------------------------
+;머리 어루만지고
+후보:120 = 13
+;미용사나무
+후보:121 = (기본치*12/10) - (CFLAG:ARG:질 + CFLAG:ARG:적극성) / 2
+;안아 붙어 있는
+후보:122 = 기본치 + CFLAG:ARG:유혹 - CFLAG:ARG:질
+;꼭 껴안고
+후보:123 = 기본치 + CFLAG:ARG:수줍음
+;뺨 어루만지고
+후보:124 = 기본치 + CFLAG:ARG:질
+;간질임
+후보:125 = (기본치*5/10) + CFLAG:ARG:질 + CFLAG:ARG:적극성
+;무릎베개시킨다
+후보:126 = (기본치*7/10) + CFLAG:ARG:유혹 + CFLAG:ARG:적극성
+;냄새를 냄새 맡는다
+후보:127 = (기본치*9/10) + CFLAG:ARG:수줍음
+;말을 건넨다
+후보:128 = (기본치*11/10) - CFLAG:ARG:수줍음
+;목덜미 빨고
+후보:129 = (기본치*3/10) + CFLAG:ARG:질 + CFLAG:ARG:수줍음 + GETPALAMLV(PALAM:ARG:욕정, 7)
+
+LOCAL:1 = COUNTER_TYPE("안아 붙어", ARG)
+FOR LOCAL, 120,140
+	후보 :LOCAL = MAX(후보 :LOCAL + COUNTER_SIKOU:ARG:LOCAL, 1)
+	후보 :LOCAL *= LOCAL:1
+NEXT
+
+;------------------------------------------
+;------------------------------------------
+
+
+;------------------------------------------
+;실행 판정
+;------------------------------------------
+; 니이미행 판정
+; 하나의 띠의 랜덤위치에 점수를 매겨 값의 크기를 기준에 폭을 결정해 서로 잘라내 , 띠의 점이 붙어 있는 부분 을 가지고 있는 것이 당선자
+;ARRAY_HIT를 이용해 간략화
+
+; 최대 후보 첨자+1
+LOCAL:10 = 140
+
+; 기권
+FOR LOCAL, 1, LOCAL:10
+	후보 :LOCAL *= ACTABLE(ARG, LOCAL)
+NEXT
+LOCAL:4 = ARRAY_HIT(후보, LOCAL:10)
+
+; 결정
+IF LOCAL:4 > 0
+	TCVAR:ARG:20 = LOCAL:4
+ENDIF
+[SKIPSTART]
+;디버그용
+FOR LOCAL, 0, 140
+	SIF !후보 :LOCAL
+		CONTINUE
+	SIF LOCAL == LOCAL:4
+		SETCOLOR 0, 120, 250
+	PRINTFORML {LOCAL}={후보 :LOCAL}, {COUNTER_SIKOU:ARG:LOCAL}
+	RESETCOLOR
+NEXT
+WAIT
+[SKIPEND]
+;;; 일단 구실행 판정 남겨 둔다
+;란다마이즈
+;FOR LOCAL, 1,140
+;	후보 :LOCAL = RAND:(MAX(후보 :LOCAL, 1))
+;NEXT
+
+;실행 판정
+;FOR LOCAL, 1,140
+;	후보 :LOCAL *= ACTABLE(ARG, LOCAL)
+;NEXT
+
+
+;후보:300 = 0
+;FOR LOCAL, 1,140
+;	IF 후보 :LOCAL > 후보:300
+;		후보:300 = 후보 :LOCAL
+;		후보:301 = LOCAL
+;	ENDIF
+;NEXT
+
+;SIF 후보:300 > 0
+;	TCVAR:ARG:20 = 후보:301

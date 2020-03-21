@@ -1,0 +1,887 @@
+﻿@ACTABLE(ARG, ARG:1)
+#FUNCTION
+#DIM 실행중커맨드, 510
+VARSET LOCAL
+;이전캐릭터가 무엇을 했는지를[실행중커맨드]에 출력
+FOR LOCAL, 1, GET_TARGETNUM() + 1
+	SIF TARGET:LOCAL <= 0
+		CONTINUE
+	SIF TCVAR:(TARGET:LOCAL):20
+		실행중커맨드:(TCVAR:(TARGET:LOCAL):20) ++
+NEXT
+
+SELECTCASE ARG:1
+	;거리가 가깝다
+	CASE 1
+		RETURNF 1
+	;치라 보고
+	CASE 2
+		RETURNF 1
+	;이야기
+	CASE 3
+		RETURNF 1
+	;좋은 냄새
+	CASE 4
+		RETURNF 1
+	;안이고 후 (? )
+	CASE 9
+		SIF 충전율(ARG, 4) >= 15
+			RETURNF 1
+;------------------------------------------
+;10~19 베리소프트
+;------------------------------------------
+	;접근해 온다
+	CASE 11
+		RETURNF 1
+	;웃는 얼굴을 띄운다
+	CASE 12
+		RETURNF 1
+	;상관해 갖고 싶어한다
+	CASE 13
+		RETURNF 1
+	;몸을 문질러 댄다
+	CASE 14
+		RETURNF 1
+	;응시해 온다
+	CASE 15
+		RETURNF 1
+	;어깨에 턱이상
+	CASE 16
+		RETURNF 1
+;------------------------------------------
+;20~29 유혹
+;------------------------------------------
+	;요염한 행동
+	CASE 20
+		RETURNF 1
+	;응시한다
+	CASE 21
+		RETURNF 1
+	;몸을 접댄다
+	CASE 22
+		RETURNF 1
+	;치마를 걷어 붙인다
+	CASE 23
+		;복장 제한
+		SIF !(EQUIP:PLAYER:치마|| EQUIP:PLAYER:원피스|| EQUIP:PLAYER:기모노)
+		RETURNF 0
+		SIF TEQUIP:PLAYER:0 > 3
+			RETURNF 0
+		SIF !EQUIP:PLAYER:0
+			RETURNF 0
+		SIF !ONCE("치마째구", 1, ARG)
+			RETURNF 0
+		RETURNF 1
+	;귓전에 입김을 내뿜는다
+	CASE 24
+		;회화중은 안 돼
+		SIF SELECTCOM == 300
+			RETURNF 0
+		RETURNF 1
+	;엉덩이를어루만진다
+	CASE 25
+		SIF !(TALENT:MASTER:2 & 1)
+			RETURNF 0
+		RETURNF 1
+	;팔에 달라붙어
+	CASE 26
+		RETURNF 1
+	;골짜기를 보인다
+	CASE 27
+		SIF TALENT:ARG:가슴사이즈 <= -1
+			RETURNF 0
+		SIF TEQUIP:ARG:1 == 1
+			RETURNF 0
+		RETURNF 1
+	;엉덩이 즈리
+	CASE 28
+		SIF !(TALENT:ARG:2 & 2)
+			RETURNF 0
+		SIF TFLAG:64
+			RETURNF 0
+		SIF BASE:ARG:발기 < 500
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 >= 0 || TEQUIP:MASTER:51 >= 0
+			RETURNF 0
+		RETURNF 1
+;------------------------------------------
+;30~39 착의 성희롱
+;------------------------------------------
+	;키스
+	CASE 30
+		SIF TFLAG:60
+			RETURNF 0
+		SIF TEQUIP:MASTER:체위 == 2
+			RETURNF 0
+		RETURNF 1
+	;뒤로부터 안겨든다
+	CASE 31
+		SIF 실행중커맨드:31
+			RETURNF 0
+		SIF TEQUIP:ARG:체위
+			RETURNF 0
+		RETURNF 1
+	;앞에서 안겨든다
+	CASE 32
+		SIF 실행중커맨드:32
+			RETURNF 0
+		SIF GROUPMATCH(TEQUIP:ARG:체위, 2,5)
+			RETURNF 0
+		;키스
+		SIF 실행중커맨드:31
+			RETURNF 0
+		SIF TEQUIP:MASTER:체위 == 2
+			RETURNF 0
+		RETURNF 1
+	;가슴을 비비게 한다
+	CASE 33
+		SIF TFLAG:61
+			RETURNF 0
+		SIF TEQUIP:MASTER:체위 == 2
+			RETURNF 0
+		RETURNF 1
+	;고간뒤진다
+	CASE 34
+		SIF TEQUIP:PLAYER:0 <= 3
+			RETURNF 0
+		SIF TFLAG:62
+			RETURNF 0
+		SIF TEQUIP:50 >= 0 || TEQUIP:51 >= 0
+			RETURNF 0
+		RETURNF 1
+	;치마안을 보인다
+	CASE 35
+		;복장 제한(조건이 의미 불명해서, 재설정(치마를 입지 않은가 개 원피스를 오지 않겠는가 개 기모노를 오지 않은 )
+		;SIF !(EQUIP:레오타드 || EQUIP:상반신윗도리2 || EQUIP:원피스)
+		SIF !EQUIP:치마 && !EQUIP:원피스 && !EQUIP:기모노
+			RETURNF 0
+		SIF TEQUIP:0 > 3
+			RETURNF 0
+		;전라(MASTER의 유무는 관계없어요?
+		SIF !EQUIP:0
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 >= 0 || TEQUIP:MASTER:51 >= 0
+			RETURNF 0
+		RETURNF 1
+	;가슴을 비빈다
+	CASE 36
+		SIF !(TALENT:MASTER:2 & 1)
+			RETURNF 0
+		SIF TEQUIP:PLAYER:1 < 1
+			RETURNF 0
+		SIF TFLAG:65
+			RETURNF 0
+		SIF TEQUIP:MASTER:체위 == 1
+			RETURNF 0
+		RETURNF 1
+;------------------------------------------
+;40~49 애원
+;------------------------------------------
+	;정상위·후배위 V 애원
+	CASE 41,43
+		SIF 삽입불가(ARG) >= 2 && EXP:ARG:V경험 < 50
+			RETURNF 0
+		SIF !(TALENT:ARG:2 & 1)
+			RETURNF 0
+		SIF TALENT:ARG:임신 && (CFLAG:ARG:903 <= 30 || CFLAG:ARG:903 >= 71)
+			RETURNF 0
+		SIF CFLAG:ARG:육아인원수 >= 1 && CFLAG:ARG:육아인원수 <= 30
+			RETURNF 0
+		SIF !(TALENT:PLAYER:2 & 2)
+			RETURNF 0
+		SIF BASE:MASTER:발기 < 1000
+			RETURNF 0
+		SIF TFLAG:MASTER의V사용중 || TEQUIP:50 >= 0 || TEQUIP:51 >= 0 || TFLAG:MASTER의A사용중
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 >= 0 || TEQUIP:MASTER:51 >= 0
+			RETURNF 0
+		SIF PALAM:ARG:윤활 < PALAMLV:3
+			RETURNF 0
+		SIF TEQUIP:ARG:바이브
+			RETURNF 0
+		SIF TEQUIP:ARG:체위
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 >= 0 || TEQUIP:MASTER:51 >= 0
+			RETURNF 0
+		;IF 임신가부(TARGET) && CFLAG:TARGET:생해금 != 2 && !TALENT:TARGET:무지 && !TCVAR:TARGET:만취
+		;	SIF !TEQUIP:MASTER:콘돔
+		;		RETURNF 0
+		;ENDIF
+		;정조대, 촉수 속옷, 바이브 팬티, 두 구멍 바이브 팬티를 입고 있다고(면) 안 돼
+		SIF EQUIP:하반신속옷2 == 27 || EQUIP:하반신속옷2 == 28 || EQUIP:하반신속옷2 == 29 || EQUIP:하반신속옷2 == 30
+			RETURNF 0
+		RETURNF 1
+	CASE 42
+	;후배위 A 애원
+	CASE 44
+		SIF 삽입불가(ARG) >= 2 && EXP:ARG:A경험 < 50
+			RETURNF 0
+		SIF !(TALENT:ARG:2 & 1)
+			RETURNF 0
+		SIF TALENT:ARG:임신 && (CFLAG:ARG:903 <= 30 || CFLAG:ARG:903 >= 71)
+			RETURNF 0
+		SIF CFLAG:ARG:육아인원수 >= 1 && CFLAG:ARG:육아인원수 <= 30
+			RETURNF 0
+		SIF !(TALENT:PLAYER:2 & 2)
+			RETURNF 0
+		SIF BASE:MASTER:발기 < 1000
+			RETURNF 0
+		SIF TFLAG:MASTER의V사용중 || TEQUIP:50 >= 0 || TEQUIP:51 >= 0 || TFLAG:MASTER의A사용중
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 >= 0 || TEQUIP:MASTER:51 >= 0
+			RETURNF 0
+		SIF PALAM:ARG:윤활 < PALAMLV:3
+			RETURNF 0
+		SIF TEQUIP:ARG:애널바이브
+			RETURNF 0
+		SIF TEQUIP:ARG:체위
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 >= 0 || TEQUIP:MASTER:51 >= 0
+			RETURNF 0
+		SIF EXP:ARG:A경험 < 30
+			RETURNF 0
+		;정조대, 촉수 속옷, 바이브 팬티, 두 구멍 바이브 팬티를 입고 있다고(면) 안 돼
+		SIF EQUIP:하반신속옷2 == 27 || EQUIP:하반신속옷2 == 28 || EQUIP:하반신속옷2 == 29 || EQUIP:하반신속옷2 == 30
+			RETURNF 0
+		RETURNF 1
+;C
+;	CASE 45
+;B
+;	CASE 46
+;V
+;	CASE 47
+;A
+;	CASE 48
+;M
+;	CASE 49
+;------------------------------------------
+;50~69 탈의 성희롱(애무)
+;------------------------------------------
+	;수음
+	CASE 50
+		SIF TFLAG:62
+			RETURNF 0
+		SIF ABL:ARG:손가락 < 1
+			RETURNF 0
+		SIF TEQUIP:50 >= 0 || TEQUIP:51 >= 0
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 >= 0 && !(TALENT:MASTER:2 & 2)
+			RETURNF 0
+		RETURNF 1
+	;펠라치오
+	CASE 51
+		SIF TFLAG:62
+			RETURNF 0
+		SIF ABL:ARG:혀 < 1
+			RETURNF 0
+		SIF TEQUIP:50 >= 0 || TEQUIP:51 >= 0
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 >= 0 || TEQUIP:MASTER:51 >= 0
+			RETURNF 0
+		RETURNF 1
+	;가랑이
+	CASE 52
+		SIF TFLAG:62
+			RETURNF 0
+		SIF ABL:ARG:허리 < 1
+			RETURNF 0
+		;윤활
+		SIF PALAM:ARG:윤활 < 2000
+			RETURNF 0
+		SIF TEQUIP:50 >= 0 || TEQUIP:51 >= 0
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 >= 0 || TEQUIP:MASTER:51 >= 0
+			RETURNF 0
+		RETURNF 1
+	;파이즈리
+	CASE 53
+		SIF TFLAG:62
+			RETURNF 0
+		SIF ABL:ARG:가슴 < 1
+			RETURNF 0
+		SIF !(TALENT:PLAYER:2 & 2)
+			RETURNF 0
+		;[절벽]이라면 불가
+		SIF TALENT:ARG:가슴사이즈 == -2
+			RETURNF 0
+		;[폭유]라면 기교 LV1 이상,[거유]가 아니면 기교 3이상,[작은 가슴]이라면 기교 4이상 필요
+		SIF TALENT:ARG:가슴사이즈 + ABL:ARG:기교 < 3
+			RETURNF 0
+		SIF TEQUIP:50 >= 0 || TEQUIP:51 >= 0
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 >= 0 || TEQUIP:MASTER:51 >= 0
+			RETURNF 0
+		RETURNF 1
+	;풋잡
+	CASE 54
+		SIF TCVAR:MASTER:120 != 1
+			RETURNF 0
+		SIF !(TALENT:PLAYER:2 & 2)
+			RETURNF 0
+		SIF TFLAG:62
+			RETURNF 0
+		SIF ABL:ARG:새드끼 < 1
+			RETURNF 0
+		SIF TEQUIP:50 >= 0 || TEQUIP:51 >= 0
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 >= 0 || TEQUIP:MASTER:51 >= 0
+			RETURNF 0
+		RETURNF 1
+	;애널애무
+	CASE 55
+		SIF TFLAG:64
+			RETURNF 0
+		SIF ABL:ARG:손가락 < 1
+			RETURNF 0
+		SIF TEQUIP:MASTER:51 >= 0
+			RETURNF 0
+		SIF PALAM:MASTER:윤활 < PALAMLV:2
+			RETURNF 0
+		RETURNF 1
+	;애널빨기
+	CASE 56
+		SIF TFLAG:64
+			RETURNF 0
+		SIF STAIN:PLAYER:4 & 8 && TALENT:ARG:악취내성 < 1
+			RETURNF 0
+		SIF ABL:ARG:혀 < 1
+			RETURNF 0
+		SIF TEQUIP:ARG:50 >= 0 || TEQUIP:ARG:51 >= 0
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 == ARG
+			RETURNF 0
+		SIF TEQUIP:MASTER:51 >= 0
+			RETURNF 0
+		RETURNF 1
+	;손가락 삽입
+	CASE 57
+		SIF TFLAG:63
+			RETURNF 0
+		SIF !TALENT:ARG:새드 && TALENT:PLAYER:처녀 && TALENT:PLAYER:처녀 != -1
+			RETURNF 0
+		SIF !(TALENT:PLAYER:2 & 1)
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 >= 0
+			RETURNF 0
+		SIF !TALENT:ARG:새드 && PALAM:MASTER:윤활 < PALAMLV:2
+			RETURNF 0
+		RETURNF 1
+	;가슴애무
+	CASE 58
+		SIF TFLAG:65
+			RETURNF 0
+		SIF ABL:ARG:손가락 < 1
+			RETURNF 0
+		RETURNF 1
+	;유두빨기
+	CASE 59
+		SIF TFLAG:65
+			RETURNF 0
+		SIF ABL:ARG:혀 < 1
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 >= 0 || TEQUIP:MASTER:51 >= 0
+			RETURNF 0
+		RETURNF 1
+	;딥키스
+	CASE 60
+		SIF TFLAG:60
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 >= 0 || TEQUIP:MASTER:51 >= 0
+			RETURNF 0
+		RETURNF 1
+;------------------------------------------
+;70~79 탈의 성희롱(강요)
+;------------------------------------------
+	;커닐링구스강제
+	CASE 70
+		SIF !(TALENT:ARG:2 & 1)
+			RETURNF 0
+		SIF TFLAG:60
+			RETURNF 0
+		SIF TEQUIP:ARG:50 >= 0 || TEQUIP:ARG:51 >= 0
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 >= 0 || TEQUIP:MASTER:51 >= 0
+			RETURNF 0
+		;정조대, 촉수 속옷을 입고 있다고(면) 안 돼
+		SIF EQUIP:하반신속옷2 == 27 || EQUIP:하반신속옷2 == 28
+			RETURNF 0
+		RETURNF 1
+	;펠라치오 강제
+	CASE 71
+		SIF !(TALENT:ARG:2 & 2)
+			RETURNF 0
+		SIF TFLAG:60
+			RETURNF 0
+		SIF TEQUIP:ARG:50
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 == ARG || TEQUIP:MASTER:51 == ARG
+			RETURNF 0
+		RETURNF 1
+	;애널 봉사
+	CASE 72
+		SIF TFLAG:60
+			RETURNF 0
+		SIF TEQUIP:ARG:50 >= 0 || TEQUIP:ARG:51 >= 0
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 >= 0 || TEQUIP:MASTER:51 >= 0
+			RETURNF 0
+		RETURNF 1
+	;
+	CASE 73
+		SIF TEQUIP:MASTER:50 == ARG || TEQUIP:MASTER:51 == ARG
+			RETURNF 0
+		SIF GROUPMATCH(TEQUIP:ARG:체위, 2,5)
+			RETURNF 0
+		RETURNF 1
+	;젖 맞추어라
+	CASE 74
+		SIF !(TALENT:ARG:2 & 2)
+			RETURNF 0
+		SIF TFLAG:65
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 >= 0 || TEQUIP:MASTER:51 >= 0
+			RETURNF 0
+		SIF TEQUIP:ARG:체위
+			RETURNF 0
+		RETURNF 1
+	;타와시 세탁
+	CASE 75
+		SIF !(TALENT:ARG:2 & 1)
+			RETURNF 0
+		;윤활
+		SIF PALAM:ARG:윤활 < 1500
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 >= 0 || TEQUIP:MASTER:51 >= 0
+			RETURNF 0
+		;입이 비어 있으면 쿠니 시킨다
+		SIF !TFLAG:60
+			RETURNF 0
+		SIF TFLAG:61 > 1
+			RETURNF 0
+		RETURNF 1
+	;강제 보지 애무
+	CASE 76
+		SIF !(TALENT:ARG:2 & 1)
+			RETURNF 0
+		;윤활
+		SIF PALAM:ARG:윤활 < 1000
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 == ARG || TEQUIP:MASTER:51 == ARG
+			RETURNF 0
+		SIF TEQUIP:ARG:체위
+			RETURNF 0
+		;정조대, 촉수 속옷, 바이브 팬티, 두 구멍 바이브 팬티를 입고 있다고(면) 안 돼
+		SIF EQUIP:하반신속옷2 == 27 || EQUIP:하반신속옷2 == 28 || EQUIP:하반신속옷2 == 29 || EQUIP:하반신속옷2 == 30
+			RETURNF 0
+		RETURNF 1
+	;젖을 들이마시게 한다
+	CASE 77
+		SIF TFLAG:60
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 == ARG || TEQUIP:MASTER:51 == ARG
+			RETURNF 0
+		SIF GROUPMATCH(TEQUIP:ARG:체위, 2,5)
+			RETURNF 0
+		RETURNF 1
+	;엉덩이 즈리
+	CASE 78
+		SIF !(TALENT:ARG:2 & 2)
+			RETURNF 0
+		SIF TFLAG:64
+			RETURNF 0
+		SIF BASE:ARG:발기 < 500
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 >= 0 || TEQUIP:MASTER:51 >= 0
+			RETURNF 0
+		SIF TEQUIP:ARG:체위
+			RETURNF 0
+		RETURNF 1
+;------------------------------------------
+;80~89 성교
+;------------------------------------------
+	;정상위 V삽입된다
+	CASE 80
+		SIF !(TALENT:ARG:2 & 2)
+			RETURNF 0
+		SIF !(TALENT:PLAYER:2 & 1)
+			RETURNF 0
+		SIF TALENT:ARG:임신 && (CFLAG:ARG:903 <= 30 || CFLAG:ARG:903 >= 71)
+			RETURNF 0
+		SIF CFLAG:ARG:육아인원수 >= 1 && CFLAG:ARG:육아인원수 <= 30
+			RETURNF 0
+		SIF BASE:ARG:발기 < 1000
+			RETURNF 0
+		SIF TFLAG:63
+			RETURNF 0
+		SIF TEQUIP:ARG:50 >= 0 || TEQUIP:ARG:51 >= 0
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 >= 0 || TEQUIP:MASTER:51 >= 0
+			RETURNF 0
+		;정조대, 촉수 속옷을 입고 있다고(면) 안 돼
+		SIF EQUIP:ARG:하반신속옷2 == 27 || EQUIP:ARG:하반신속옷2 == 28
+			RETURNF 0
+		SIF !TALENT:ARG:새드 && PALAM:MASTER:윤활 < PALAMLV:3
+			RETURNF 0
+		RETURNF 1
+
+	;후배위 V삽입된다
+	CASE 83
+		SIF !(TALENT:ARG:2 & 2)
+			RETURNF 0
+		SIF !(TALENT:PLAYER:2 & 1)
+			RETURNF 0
+		SIF TALENT:ARG:임신 && (CFLAG:ARG:903 <= 30 || CFLAG:ARG:903 >= 71)
+			RETURNF 0
+		SIF CFLAG:ARG:육아인원수 >= 1 && CFLAG:ARG:육아인원수 <= 30
+			RETURNF 0
+		SIF BASE:ARG:발기 < 1000
+			RETURNF 0
+		SIF TFLAG:63
+			RETURNF 0
+		SIF TEQUIP:ARG:50 >= 0 || TEQUIP:ARG:51 >= 0
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 >= 0 || TEQUIP:MASTER:51 >= 0
+			RETURNF 0
+		;정조대, 촉수 속옷을 입고 있다고(면) 안 돼
+		SIF EQUIP:ARG:하반신속옷2 == 27 || EQUIP:ARG:하반신속옷2 == 28
+			RETURNF 0
+		SIF !TALENT:ARG:새드 && PALAM:MASTER:윤활 < PALAMLV:3
+			RETURNF 0
+		RETURNF 1
+	;허리 모습 V접수
+	CASE 84
+		SIF !(TALENT:ARG:2 & 2)
+			RETURNF 0
+		SIF !(TALENT:PLAYER:2 & 1)
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 != ARG
+			RETURNF 0
+		RETURNF 1
+	;V삽입한다
+	CASE 85
+		SIF 삽입불가(ARG) >= 2 && EXP:ARG:V경험 < 50
+			RETURNF 0
+		SIF !(TALENT:ARG:2 & 1)
+			RETURNF 0
+		SIF TALENT:ARG:임신 && (CFLAG:ARG:903 <= 30 || CFLAG:ARG:903 >= 71)
+			RETURNF 0
+		SIF CFLAG:ARG:육아인원수 >= 1 && CFLAG:ARG:육아인원수 <= 30
+			RETURNF 0
+		SIF !(TALENT:PLAYER:2 & 2)
+			RETURNF 0
+		SIF BASE:MASTER:발기 < 1000
+			RETURNF 0
+		SIF TFLAG:63
+			RETURNF 0
+		SIF TEQUIP:50 >= 0 || TEQUIP:51 >= 0
+			RETURNF 0
+		SIF TEQUIP:ARG:체위
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 >= 0 || TEQUIP:MASTER:51 >= 0
+			RETURNF 0
+		SIF PALAM:ARG:윤활 < PALAMLV:3
+			RETURNF 0
+		SIF TEQUIP:ARG:바이브
+			RETURNF 0
+		;정조대, 촉수 속옷, 바이브 팬티, 두 구멍 바이브 팬티를 입고 있다고(면) 안 돼
+		SIF EQUIP:하반신속옷2 == 27 || EQUIP:하반신속옷2 == 28 || EQUIP:하반신속옷2 == 29 || EQUIP:하반신속옷2 == 30
+			RETURNF 0
+		RETURNF 1
+	;매우 수기 hold
+	CASE 86
+		SIF TCVAR:PLAYER:12 != 1 && CFLAG:ARG:우후후 != 2
+			RETURNF 0
+		SIF !TCVAR:PLAYER:이기초 && CFLAG:ARG:우후후 == 2
+			RETURNF 0
+		SIF TEQUIP:ARG:50 < 0
+			RETURNF 0
+		SIF CFLAG:ARG:생해금 != 2
+			RETURNF 0
+		SIF TEQUIP:ARG:체위 == 2 || TEQUIP:ARG:체위 == 5
+			RETURNF 0
+		RETURNF 1
+	;A삽입한다
+	CASE 87
+		SIF 삽입불가(ARG) >= 2 && EXP:ARG:A경험 < 50
+			RETURNF 0
+		SIF !(TALENT:ARG:2 & 1)
+			RETURNF 0
+		SIF !(TALENT:PLAYER:2 & 2)
+			RETURNF 0
+		SIF BASE:MASTER:발기 < 1000
+			RETURNF 0
+		SIF TALENT:ARG:임신 && (CFLAG:ARG:903 <= 30 || CFLAG:ARG:903 >= 71)
+			RETURNF 0
+		SIF CFLAG:ARG:육아인원수 >= 1 && CFLAG:ARG:육아인원수 <= 30
+			RETURNF 0
+		SIF ABL:2 < 3
+			RETURNF 0
+		SIF TFLAG:63
+			RETURNF 0
+		SIF TEQUIP:50 >= 0 || TEQUIP:51 >= 0
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 >= 0 || TEQUIP:MASTER:51 >= 0
+			RETURNF 0
+		SIF TEQUIP:ARG:체위
+			RETURNF 0
+		SIF PALAM:ARG:윤활 < PALAMLV:3
+			RETURNF 0
+		SIF TEQUIP:ARG:애널바이브
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 >= 0 || TEQUIP:MASTER:51 >= 0
+			RETURNF 0
+		RETURNF 1
+	;허리 모습 V
+	CASE 88
+		SIF !(TALENT:ARG:2 & 1)
+			RETURNF 0
+		SIF !(TALENT:PLAYER:2 & 2)
+			RETURNF 0
+		SIF BASE:MASTER:발기 < 1000
+			RETURNF 0
+		SIF TEQUIP:ARG:50 < 0
+			RETURNF 0
+		SIF !(TEQUIP:50 >= 0 || TEQUIP:51 >= 0)
+			RETURNF 0
+		SIF TCVAR:ARG:100 != PLAYER
+			RETURNF 0
+		SIF ABL:ARG:허리 < 2
+			RETURNF 0
+		RETURNF 1
+	;허리 모습 A
+	CASE 89
+		SIF !(TALENT:ARG:2 & 1)
+			RETURNF 0
+		SIF !(TALENT:PLAYER:2 & 2)
+			RETURNF 0
+		SIF BASE:MASTER:발기 < 1000
+			RETURNF 0
+		SIF TEQUIP:ARG:51 < 0
+			RETURNF 0
+		SIF !(TEQUIP:50 >= 0 || TEQUIP:51 >= 0)
+			RETURNF 0
+		SIF TCVAR:ARG:101 != PLAYER
+			RETURNF 0
+		SIF ABL:ARG:허리 < 2
+			RETURNF 0
+		RETURNF 1
+
+;------------------------------------------
+;90~99 TARGET에 의한 고문(하드한)
+;------------------------------------------
+	;후배위 A삽입된다
+	CASE 90
+		SIF 삽입불가(MASTER) >= 2 && EXP:ARG:A경험 < 50
+			RETURNF 0
+		SIF !(TALENT:ARG:2 & 2)
+			RETURNF 0
+		SIF BASE:ARG:발기 < 1000
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 >= 0 || TEQUIP:MASTER:51 >= 0
+			RETURNF 0
+		SIF TFLAG:64
+			RETURNF 0
+		SIF ABL:MASTER:2 < 2
+			RETURNF 0
+		SIF !TALENT:ARG:새드 && PALAM:MASTER:윤활 < PALAMLV:3
+			RETURNF 0
+		RETURNF 1
+	;이라마치오 된다
+	CASE 91
+		SIF !(TALENT:ARG:2 & 2)
+			RETURNF 0
+		SIF BASE:ARG:발기 < 1000
+			RETURNF 0
+		SIF TEQUIP:50 >= 0 || TEQUIP:51 >= 0
+			RETURNF 0
+		SIF TEQUIP:PLAYER:50 == ARG || TEQUIP:PLAYER:51 == ARG
+			RETURNF 0
+		SIF TFLAG:60
+			RETURNF 0
+		RETURNF 1
+	;허리 모습역A
+	CASE 93
+		SIF !(TALENT:ARG:2 & 2)
+			RETURNF 0
+		SIF TEQUIP:PLAYER:51 != ARG
+			RETURNF 0
+		RETURNF 1
+	;정상위 A삽입된다
+	CASE 94
+		SIF 삽입불가(MASTER) >= 2 && EXP:ARG:A경험 < 50
+			RETURNF 0
+		SIF !(TALENT:ARG:2 & 2)
+			RETURNF 0
+		SIF BASE:ARG:발기 < 1000
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 >= 0 || TEQUIP:MASTER:51 >= 0
+			RETURNF 0
+		SIF TFLAG:64
+			RETURNF 0
+		SIF ABL:MASTER:2 < 2
+			RETURNF 0
+		SIF !TALENT:ARG:새드 && PALAM:MASTER:윤활 < PALAMLV:3
+			RETURNF 0
+		RETURNF 1
+;------------------------------------------
+;100~119 삽입중 전용
+;------------------------------------------
+[SKIPSTART]
+	;앞에서 안겨든 ;CASE 32
+	CASE 100
+		;이전캐릭터가 안아 도착하는, 키스를 선택
+		SIF 실행중커맨드:100 || 실행중커맨드:31 || 실행중커맨드:32
+			RETURNF 0
+		SIF GROUPMATCH(TEQUIP:ARG:체위, 2,5)
+			RETURNF 0
+		SIF TEQUIP:MASTER:체위 == 2
+			RETURNF 0
+		RETURNF 1
+	;가슴을 비비게 하는 33
+	CASE 101
+		SIF TFLAG:61
+			RETURNF 0
+		RETURNF 1
+	;치마안을 보이는 35
+	CASE 102
+		;복장 제한(조건이 의미 불명해서, 재설정(치마를 입지 않은가 개 원피스를 오지 않겠는가 개 기모노를 오지 않은 )
+		;SIF ! (EQUIP:레오타드 || EQUIP:상반신윗도리2 || EQUIP:원피스)
+		SIF ! EQUIP:치마 && ! EQUIP:원피스 && ! EQUIP:기모노
+			RETURNF 0
+		SIF TEQUIP:0 > 3
+			RETURNF 0
+		;전라
+		SIF !EQUIP:0
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 >= 0 || TEQUIP:MASTER:51 >= 0
+			RETURNF 0
+		RETURNF 1
+	;애널애무 55
+	CASE 103
+		SIF TFLAG:64
+			RETURNF 0
+		SIF ABL:ARG:손가락 < 1
+			RETURNF 0
+		SIF TEQUIP:MASTER:51 >= 0
+			RETURNF 0
+		SIF GROUPMATCH(TEQUIP:ARG:체위, 2,3,5)
+			RETURNF 0
+		RETURNF 1
+	;가슴애무 58
+	CASE 104
+		SIF TFLAG:65
+			RETURNF 0
+		SIF ABL:ARG:손가락 < 1
+			RETURNF 0
+		SIF GROUPMATCH(TEQUIP:ARG:체위, 2,3,5)
+			RETURNF 0
+		RETURNF 1
+	;유두빨기 59
+	CASE 105
+		SIF TFLAG:65
+			RETURNF 0
+		SIF ABL:ARG:혀 < 1
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 >= 0 || TEQUIP:MASTER:51 >= 0
+			RETURNF 0
+		RETURNF 1
+	;딥키스 60
+	CASE 106
+		SIF TFLAG:60
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 >= 0 || TEQUIP:MASTER:51 >= 0
+			RETURNF 0
+		RETURNF 1
+	;젖을 들이마시게 하는 77
+	CASE 107
+		SIF TFLAG:60
+			RETURNF 0
+		SIF TEQUIP:MASTER:50 == ARG || TEQUIP:MASTER:51 == ARG
+			RETURNF 0
+		SIF GROUPMATCH(TEQUIP:ARG:체위, 2,3,5)
+			RETURNF 0
+		RETURNF 1
+	;매우 수기 hold 86
+	CASE 108
+		SIF TCVAR:PLAYER:12 != 1 && CFLAG:ARG:우후후 != 2
+			RETURNF 0
+		SIF !TCVAR:PLAYER:이기초 && CFLAG:ARG:우후후 == 2
+			RETURNF 0
+		SIF TEQUIP:ARG:50 < 0
+			RETURNF 0
+		SIF CFLAG:ARG:생해금 != 2
+			RETURNF 0
+		SIF GROUPMATCH(TEQUIP:ARG:체위, 2,3,5)
+			RETURNF 0
+		RETURNF 1
+	;허리 모습 V 88
+	CASE 109
+		SIF !(TALENT:ARG:2 & 1)
+			RETURNF 0
+		SIF !(TALENT:PLAYER:2 & 2)
+			RETURNF 0
+		SIF BASE:MASTER:발기 < 1000
+			RETURNF 0
+		SIF TEQUIP:ARG:50 < 0
+			RETURNF 0
+		SIF !(TEQUIP:50 >= 0 || TEQUIP:51 >= 0)
+			RETURNF 0
+		SIF TCVAR:ARG:100 != PLAYER
+			RETURNF 0
+		SIF ABL:ARG:허리 < 2
+			RETURNF 0
+		RETURNF 1
+	;허리 모습 A 89
+	CASE 110
+		SIF !(TALENT:ARG:2 & 1)
+			RETURNF 0
+		SIF !(TALENT:PLAYER:2 & 2)
+			RETURNF 0
+		SIF BASE:MASTER:발기 < 1000
+			RETURNF 0
+		SIF TEQUIP:ARG:51 < 0
+			RETURNF 0
+		SIF !(TEQUIP:50 >= 0 || TEQUIP:51 >= 0)
+			RETURNF 0
+		SIF TCVAR:ARG:101 != PLAYER
+			RETURNF 0
+		SIF ABL:ARG:허리 < 2
+			RETURNF 0
+		RETURNF 1
+[SKIPEND]
+;------------------------------------------
+;120~139 껴안기모드
+;------------------------------------------
+	;머리 어루만지고
+	CASE 120
+		RETURNF 1
+	;미용사나무
+	CASE 121
+		RETURNF 1
+	;안아 붙어 있는
+	CASE 122
+		RETURNF 1
+	;꼭 껴안고
+	CASE 123
+		RETURNF TALENT:ARG:체형 >= TALENT:MASTER:체형
+	;뺨 어루만지고
+	CASE 124
+		RETURNF 1
+	;간질임
+	CASE 125
+		RETURNF 1
+	;무릎베개시킨다
+	CASE 126
+		RETURNF TALENT:ARG:체형 <= TALENT:MASTER:체형 + 1
+	;냄새를 냄새 맡는다
+	CASE 127
+		;강아지 귀·고양이 귀 캐릭터 한정
+		RETURNF GROUPMATCH(TALENT:ARG:동물귀, 2, 4)
+	;말을 건넨다
+	CASE 128
+		RETURNF 1
+	;목덜미 빨고
+	CASE 129
+		RETURNF BASE:ARG:이성 <= 800
+
+ENDSELECT

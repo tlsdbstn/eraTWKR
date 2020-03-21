@@ -1,0 +1,569 @@
+﻿;※※※※※※※※※※※※※※※※※※※※※※※※※
+;봉사계 커맨드
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;80, 수음
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_80
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K25_80_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_80_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;시간중
+	IF FLAG:70
+		;지금 사정했다
+		IF NOWEX:PLAYER:11
+			PRINTFORML 스스로 페니스를 훑어 내, 아이의 손바닥을 그릇으로 해 정액을 따른다
+			PRINTFORML 웅덩이와 같이 모인 백탁의 양에 달성감을 느꼈다
+			RETURN 1
+		ELSE
+			PRINTFORML 훑어 내 주는 것도 없기 때문에, %마스터는% 스스로 아이의 손바닥에 귀두를 문질러 바른다
+			PRINTFORML 배인 쿠퍼를 처발라 가는 과정에 꽤의 흥분을 느꼈다
+			RETURN 1
+		ENDIF
+	ELSEIF TALENT:연모 || MARK:괘씸각인 == 3
+		;지금 사정했다
+		IF NOWEX:PLAYER:11
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「남자도 물총 할 수 있는 것이야. 낸 후에 이렇게 해 주면……」
+				PRINTFORML 일방적으로 희롱해질 것 같은 예감을 느꼈으므로 사퇴했다
+			CASE 1
+				PRINTFORML 「…………후후후」
+				PRINTFORML 계속  얼굴을 보여주면서 손바닥와 사정했다
+			CASE 2
+				PRINTFORML 「이봐, 힘내라, 힘내라」
+				PRINTFORML 라스트 스파트의 고속 딸딸이로 기분 좋게 정자를 토해내게 해 주었다
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 아이의 양손이 줄기와 끝으로 별개의 움직임을 해 페니스를 꾸짖는다
+				PRINTFORML 쉬어 않는 손재주에 허리가 뜰 것 같다
+			CASE 1
+				PRINTFORML 상냥한 손놀림으로 아이가 흐르도록(듯이) 페니스를 아주
+				PRINTFORML 「여기, 야?  꿈틀꿈틀 하고 있다」
+			CASE 2
+				PRINTFORML 손에 익숙해진 풍치로 페니스를 아주 아이는 어이들 웃고 있다
+				PRINTFORML 급소를 잡아진%마스터는% 번농 될 뿐이다
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ELSE
+		PRINTFORML 쾌히 승낙하는 일로 아이가 딸딸이를 시작해 주었다
+		PRINTFORML 매끄러운 손이 남자의 물건을 넘어 고사와 교묘하게 아주
+		RETURN 1
+	ENDIF
+	PRINTW 
+ENDIF
+RETURN 1
+
+;==================================================
+;81, 펠라치오
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_81
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K25_81_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_81_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;기본 세트
+	;시간중
+	IF FLAG:70
+		;당신이 사정했다
+		IF NOWEX:PLAYER:11
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 혀의 한가운데에 귀두를 전가, 와 사정했다
+				PRINTFORML 훑어 내 나머지국물을 내면서 표면에 정중하게 발라 넓혔다
+			CASE 1
+				PRINTFORML 귀두를 오른쪽의 볼의 안쪽에 꽉 눌러 왼쪽의 볼의 안쪽에 꽉 눌러 혀의 뒤에 기어들어 붐비게 해 토정 한다
+				PRINTFORML 아이의 입안은 이빨의 틈새에까지%CALLNAME:MASTER%의 정자가 널리 퍼져, 난자를 찾아 헤엄쳐 돌고 있을 것이다
+			CASE 2
+				PRINTFORML 시간이 움직이기 시작해도 토해낼 수 없게 마음껏 목구멍으로 사정한다
+				PRINTFORML 양손으로 아이의 얼굴을 고간에 강하게 꽉 누른 채로, 당분간 여운에 잠겼다
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 당연하지만, 돌진한 페니스에 아이의 혀가 봉사해 올 것은 없다
+				PRINTFORML 어딘지 부족함을 기억하면서 목구멍을 귀두로 떴다
+			CASE 1
+				PRINTFORML 요도구멍으로 아이의 아름다운 있고 입술을 더듬으며, 스며들고 내는 쿠퍼를 루즈와 같이 바른다
+				PRINTFORML 나누어 열어 천천히 삽입해 나가는 순간에 말하기 어려운 흥분을 느꼈다
+			CASE 2
+				PRINTFORML 턱을 손바닥에서 잡아, 아무것도 깨닫지 않은 아이에게 위를 향하게 했다
+				PRINTFORML 양치질을 하도록(듯이) 입안의 여기저기에 페니스를 칠한다. 볼록 부풀어 오르는 뺨이 재미있다
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	;연모
+	ELSEIF TALENT:연모 || MARK:괘씸각인 == 3
+		;당신이 사정했다
+		IF NOWEX:PLAYER:11
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 페니스를 열심히 빠는 사랑스러운 아이의 머리를어루만진다
+				PRINTFORML 주인이 애완동물에게 먹이를 주도록(듯이), %마스터는% 혀의 위에 질척질척의 따뜻한 밀크를 따랐다
+			CASE 1
+				PRINTFORML 미모가 자신의 더러워진 페니스를 입안에 받아들여 뺨을 왜에 부풀린다
+				PRINTFORML 그 배덕적인 회면을 내려다 보면서, %마스터는% 퓨웃과 정액을 배설했다
+			CASE 2
+				PRINTFORML 아이가 지금 확실히 사정 천도하는 귀두 와 입술로 질네, 쮸욱쮸욱 들이마셔 온다
+				PRINTFORML 자신의 의사에 반해 계속 나오는 정액에 허리가 떨렸다
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「잘먹겠습니다」
+				PRINTFORML 손을 모아 환하게 웃어, 덥석%CALLNAME:MASTER%의 양물을 입에 질천민
+			CASE 1
+				PRINTFORML 아이의 타액 투성이가 된 페니스가 요염한 입술 속 와 들이마셔진다
+				PRINTFORML 긴 혀가 줄기에 관련되어 따라 오는, 교묘하고 열심인 펠라다
+			CASE 2
+				PRINTFORML 여우의 위로 치켜올라간 눈이 눈을 치켜 뜨고 %마스터를% 응시한다
+				PRINTFORML 자신의 남근의 맛봐, 쾌감에 비뚤어지는 표정을 즐겨지고 있는 것이 알았다
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	;그 이외
+	ELSE
+		PRINTFORML 아이는 아무 저항도 없고 %CALLNAME:MASTER%의 페니스를 덥석 질
+		PRINTFORML 이분의 반응을 가만히 엿보면서, 허리가 쾌감으로 뜰 정도의 혀놀림으로 빨고 돌려 왔다
+		RETURN 1
+	ENDIF
+	PRINTW
+ENDIF
+RETURN 1
+
+;==================================================
+;82, 파이즈리
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_82
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K25_82_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_82_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;시간중
+	IF FLAG:70
+		;지금 사정했다
+		IF NOWEX:PLAYER:11
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 평상시부터 실컷 육욕을 부추겨지고 있던 훌륭한 젖가슴에 욕망을 토해낸다
+				PRINTFORML 귀두로부터 배이는 나머지국물을 탐스러운 피부로 닦아, 중단했다
+			CASE 1
+				PRINTFORML 사정하는 순간, 무심코 발기한 유두를 망치듯이 타 버렸다
+				PRINTFORML 의식이 있으면 아픔으로 비명을 올리고 있었을지도 모른다
+			CASE 2
+				PRINTFORML 이 젖으로 마음껏 사정한다
+				PRINTFORML 머릿속은 그 만큼으로, 힘껏 거유를 잡아 틈의 페니스에 압력을 가한,
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 시간이 멈추어도 유방은 진동에 응해 부드럽게 떨린다
+				PRINTFORML 흰 골짜기로부터 머리를 꺼내 인붐비는 귀두의 우산이 어딘가 유머러스하다
+			CASE 1
+				PRINTFORML 푹신푹신과 흔들리는 거유를 확실히 잡아 상하에 움직인다
+				PRINTFORML 마음껏 매혹의 살덩어리를 자위를 위해서(때문에) 사용했다
+			CASE 2
+				PRINTFORML 덥석으로 한 아이의 유방 쪽을 움직여, 골짜기에 파묻힌 페니스를 훑어낸다
+				PRINTFORML 마치 사치스러운 오나홀다
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ELSEIF TALENT:연모 || MARK:괘씸각인 == 3
+		;지금 사정했다
+		IF NOWEX:PLAYER:11
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 골짜기 안에서 정액이 분수와 같이 올랐다
+				PRINTFORML 턱아래로부터 목와 달라붙으며, 또 골짜기의 안으로 늘어져 돌아와 갔다
+			CASE 1
+				PRINTFORML 「아하, 나온」
+				PRINTFORML 사와 얼굴에 직격한 정액의 기세에 아이가 까불며 떠들었다
+			CASE 2
+				PRINTFORML 유방의 골짜기구멍에 곧게 페니스를 삽입해, 안으로 철철 정령을 토해낸다
+				PRINTFORML 끝내고 나서 좌우에 열리면 백탁이 끈적끈적하게 다리를 만들었다
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 아이가 양손으로 페니스를 사이에 두어 붐빈 유방을 꽉 댄다
+				PRINTFORML 놀라울 정도의 유압과 밀착감과 중량감, 충분히 이만큼으로 가라 기분 좋음이다
+			CASE 1
+				PRINTFORML 마치 큰 찹살떡과 같이 매끌매끌한 부드러운 살덩어리에 싸여 이상한 안도감을 느낀다
+				PRINTFORML 「하하, 기쁜 듯한 얼굴……좀 더 기쁘게 해 준다」
+			CASE 2
+				PRINTFORML 「응, , 에잇」
+				PRINTFORML 좌우의 유방을 엇갈림에 궁리해, 검토한다. 아이는 즐거운 듯이 페니스를 괴롭히고 있었다
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ELSE
+		PRINTFORML 아이의 큰 유방이 페니스를 완전히 감싸 버린다
+		PRINTFORML 이쪽이 무슨 말을 할 것도 없이, 그녀는 압박하면서 상하로 해 말투 시작했다
+		RETURN 1
+	ENDIF
+	PRINTW 
+ENDIF
+RETURN 1
+
+;==================================================
+;83, 가랑이
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_83
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K25_83_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_83_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;시간중
+	IF FLAG:70
+		;지금 사정했다
+		IF NOWEX:PLAYER:11
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 아이의 어디에 내는 것도 자유롭지만, %마스터는% 그대로 허공에 정액을 날렸다
+			CASE 1
+				PRINTFORML 풍부한 엉덩이에 손가락을 먹혀들게 해 맹렬하게 사타구니 사이로 허리를 거절한다
+				PRINTFORML 충분히의 고기를 비비어 하기 만이면서 사정했다
+			CASE 2
+				PRINTFORML 최후는 치부, 구리에 요도를 꽉 눌러 사정했다
+				PRINTFORML 내뿜는 백탁이 민감한 육아를 직격한다
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 포동포동 한 허벅지와 치부의 육감 넘치는 틈에 삽입했다
+				PRINTFORML 페니스의 반환이 구리를 켜, 이윽고 천천히 애액이 스며들고 내는 것을 느꼈다
+			CASE 1
+				PRINTFORML 다리를 닫게 해 살집이 좋은 허벅지의 틈새에 말이야 글자 붐빈다
+				PRINTFORML 쿠퍼로 점액을 띠면(자) 넣었다 뺐다 가 하기 쉬워졌다
+			CASE 2
+				PRINTFORML 구리를 집중적으로 노려, 페니스를 스릿트에 따라 둥글둥글 문질렀다
+				PRINTFORML 아이에게 의식이 있으면 강렬한 자극에 몸부림이라고 있을 것이다
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ELSEIF TALENT:연모 || MARK:괘씸각인 == 3
+		;지금 사정했다
+		IF NOWEX:PLAYER:11
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「, 퓨웃 나왔다」
+				PRINTFORML 자신의 가랑이로부터 기세 좋게 난 정액에 아이가 입술 가장자리를 느슨하게했다
+			CASE 1
+				PRINTFORML 「굉장할 기세다……조금 과분한데」
+				PRINTFORML 귀두를 부드럽게 싸는 손바닥에서 사정을 받아 들여 주었다
+			CASE 2
+				PRINTFORML 허벅지의 사이에 허리를 끊어 회음부의 근처에 뜨거운 욕망을 토해냈다
+				PRINTFORML 대량의 백탁이 막다른 곳의 없는 구멍의 전후로부터 넘쳐 나오고 했다
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 흐응 응 불쑥 아이의 사타구니 사이를 페니스가 움직인다
+				PRINTFORML 「으, 응, 응……」
+			CASE 1
+				PRINTFORML 뒤로 돌아, 엉덩이의 골짜기로부터 페니스개전후 시킨다
+				PRINTFORML 아이가 자신의 다리를 걸어 삽입감을 강하게 해 주었다
+			CASE 2
+				PRINTFORML 서로 마주 본 모습으로 스릿트에 깊이 박히는 같게 페니스를 사이에 둔다
+				PRINTFORML 두 명의 음액으로 젖은 피부가 기분 좋게 달라붙어 온다
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ELSE
+		PRINTFORML 「사이에 두는 것은 좋지만, 어느 쪽이 움직여?」
+		PRINTFORML 부드러운 삼각지대 중(안)에서 %마스터는% 스스로 페니스를 전후 시켰다
+		RETURN 1
+	ENDIF
+	PRINTW 
+ENDIF
+RETURN 1
+
+;==================================================
+;84, 거품춤
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_84
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K25_84_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_84_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	IF TALENT:연모 || MARK:괘씸각인 == 3
+		;지금 사정했다
+		IF NOWEX:PLAYER:11
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「언제라도 좋아. 사양 없게 내 주고」
+				PRINTFORML 여기저기 모두 촉촉하게 부드러운 아이의 몸에 인내도 한계다
+				PRINTFORML %마스터는% 배꼽의 근처에 남근을 꽉 눌러 안아 움츠려 사정했다
+			CASE 1
+				PRINTFORML 다리를 크고 열게 되어, 엉덩이의 골짜기나 불알의 뒤, 우뚝 서는 페니스까지를 범벅되어 있는 점액 유방이 어루만진다
+				PRINTFORML 고간을 아이의 풍만한 유방으로 압박받으면서, %마스터는% 부끄러운 모습으로 퓻 퓨웃 정령을 흘렸다
+			CASE 2
+				PRINTFORML 「어디서 내고 싶어?  얼굴?  가슴?  그렇지 않으면 안?」
+				PRINTFORML %마스터는% 아이의 교묘한 전신 봉사에 번농 될 뿐이었다
+				PRINTFORML 마지막에 음경을 훑어 내져 성대하게 발사한 정액이, 아이의 몸에 톡톡 떨어져 내리며 말했다
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「가려운 곳은 없습니까―」
+				PRINTFORML 풍만한 몸에 비누의 거품을 바르고, 아이가 미끌미끌 전신을 조정이라고 온다
+				PRINTFORML 접객업의 경험이라도 있는 것일까와 의심할수록 교묘한 거품춤이다
+			CASE 1
+				PRINTFORML 아이가 %CALLNAME:MASTER%의 한쪽 발을 가져, 거품 투성이의 가슴에 껴안았다
+				PRINTFORML 매끌매끌한 치밀한 피부, 부드럽지도 탄력 있는 유육이 발바닥을 부?부? 씻는다
+			CASE 2
+				PRINTFORML %CALLNAME:MASTER%의 팔을 사타구니 사이에 끼워, 미소를 띠는 아이가 허리를 앞뒤로 움직이게 하는
+				PRINTFORML 문지를 수 있는 대음순의 감촉. 눈앞흔들리는 큰 부푼 곳
+				PRINTFORML 아이의 서비스는 철저히 하고 있어, 최후는 손가락의 한 개 한 개에 항아리 세탁까지 해 주었다
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ELSE
+		PRINTFORML 「좋아. 거기에 엎드려 눕는다. 너는 아무것도 하지 않아 좋다」
+		PRINTFORML 말해진 대로 하면(자) 아이가 위로부터 지워져 왔다
+		PRINTFORML , 라고 큰 육 구가 무너져%CALLNAME:MASTER%의 가슴으로부터 배에를 빨도록(듯이) 어루만졌다
+		RETURN 1
+	ENDIF
+	PRINTW 
+ENDIF
+RETURN 1
+
+;==================================================
+;85, 다리 호된 훈련
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_85
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K25_85_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_85_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;시간중
+	IF FLAG:70
+		;지금 사정했다
+		IF NOWEX:PLAYER:11
+			PRINTFORML 흙 밟지 않고 끝을 꽉 눌러 점액을 가득 뿌려낸다
+			PRINTFORML 충분히 전면에 발라 넓혀 발가락의 사이까지 침투시키고 나서 그전대로로 했다
+			RETURN 1
+		ELSE
+			PRINTFORML 아이의 발바닥을 귀두로 어루만지고,  굳히고의 피부와의 마찰로 자극을 얻었다
+			RETURN 1
+		ENDIF
+	ELSEIF TALENT:연모 || MARK:괘씸각인 == 3
+		;지금 사정했다
+		IF NOWEX:PLAYER:11
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「하하하, 헛됨사도 좋으면 개다」
+				PRINTFORML 높게 난 정액의 흰 근육이, 아이의 긴 다리에 흠뻑 달라 붙었다
+			CASE 1
+				PRINTFORML 「이봐. , ♪」
+				PRINTFORML 다리만으로 절정에 이끌려 사정의 리듬까지 아이의 뜻대로 조종되어 버렸다
+			CASE 2
+				PRINTFORML 「아아~, 정액으로 끈적끈적이다」
+				PRINTFORML 「이런 추접스러운 조루 틴포, 나의 보지에는 하메 시켜 주지 않아」
+				PRINTFORML 입아귀를 낚아 올려 그렇게 말하는 쪽. 말고문은 아직 계속되고 있는 것 같다
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「좋은 재매입 마음이다. 무심코 힘이 들어가 버릴 것 같아」
+				PRINTFORML 불알을 뒤꿈치로 밟아 인은 오는 아이의 업신여기는 미소에 오싹오싹 했다
+			CASE 1
+				PRINTFORML 「이것으로 만족할 수 있다면, 나의 보지는 두 번 다시 사용할 필요는 없어?」
+				PRINTFORML 비어  섞인 말고문을 하면서 아이가 페니스를 발가락으로 아주
+				PRINTFORML 음순을 나누어 열어 과시해 온다고 하는 서비스 첨부다
+			CASE 2
+				PRINTFORML 「 아직 내지 않는다. 지금부터 양 다리를 사용하겠어」
+				PRINTFORML 한쪽 발은 능숙하게 페니스를 훑어 내, 이제(벌써) 한쪽 발은 봉투를 희롱하거나 귀두를 어루만지는 와 자유롭게 움직인다
+				PRINTFORML 손을 사용하는 것 과 다르지 않는 것 같은 성 기술에 %마스터는% 허리를 띄웠다
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ELSE
+		PRINTFORML 「흐응. 이런 것이 좋아하는가」
+		PRINTFORML 아이의 발바닥이 %CALLNAME:MASTER%의 페니스를 엉성하게 짓밟고 있다
+		RETURN 1
+	ENDIF
+	PRINTW 
+ENDIF
+RETURN 1
+;==================================================
+;88, 진공펠라
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_88
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K25_88_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_88_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	IF TALENT:연모 || MARK:괘씸각인 == 3
+		;지금 사정했다
+		IF NOWEX:PLAYER:11
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 감리카라고 %마스터가% 아이의 머리를 잡아 멈추었다
+				PRINTFORML 목구멍에까지 귀두를 돌진한 채로 노도의 사정을 시작한다
+				PRINTFORML 아이는 키라고 괴로워하는 것 같은 모습도 없고, 염연과 웃음을 띠며 목을 울리며 있었다
+			CASE 1
+				PRINTFORML 손대중을 갖고 싶어지는 것 같은 격렬한 펠라티오의 끝, 모으고 붐빈%CALLNAME:MASTER%의 정자가 제방을 자른다
+				PRINTFORML 자궁 입구에까지 돌진해 사정할 때와 같은 양이 드바드바 넘쳐 나오고,  아이의 식도를 폭포처럼 흐르고 떨어졌다
+				PRINTFORML 「…………맛있게 잘 먹었습니다. 맛있었어요, 매우」
+			CASE 2
+				PRINTFORML 괴롭힘 당하는 없음이 화가 났다%마스터는% 전후 하는 아이의 머리를 튼튼 잡는다
+				PRINTFORML 멍하니 한 깨끗한 얼굴에 허리를 박아, 음모가 코에 들어갈 만큼 강하게 꽉 누르고 그리고 목구멍에 사정을 시작했다
+				PRINTFORML 눈아래로 실룩실룩 하는 호이는, 어딘가 기쁜듯하게 보인다……
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「각오는 좋은가?」
+				PRINTFORML 히죽 웃어 선언하고 나서, 아이는 페니스를 한숨에 목까지 받아들였다
+				PRINTFORML 그 순간 시작되는 맹렬한 진공. 허리가 빠져버린다고 생각하는 만큼 들이마셔 세울 수 있었다
+			CASE 1
+				PRINTFORML 입안에서는 끈적끈적 혀가 관련되어 다해 페니스의 뿌리는 움츠린 입술이 꽉 잡는다
+				PRINTFORML 질내에의 삽입을 본뜬 것 같은 펠라티오에 더욱 빨아 올리고가 더해져, 눈 깜짝할 사이에 한계가 가까워져 왔다
+			CASE 2
+				PRINTFORML 「잘먹겠습니다」
+				PRINTFORML 아이가 남근을 한마디로 뺨 편다
+				PRINTFORML 격렬하게 빨면서의 흡인으로, 정말로 양물이 먹어져 있는 것과 같은 착각을 기억했다
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ELSE
+		PRINTFORML %마스터가% 요구하면(자) 아이는 솔직하게 페니스를 뺨 폈다
+		PRINTFORML 목에 닿을 만큼 깊게 삼켜, 뿌리 와 빨아 올려 온다
+		RETURN 1
+	ENDIF
+	PRINTW 
+ENDIF
+RETURN 1
+

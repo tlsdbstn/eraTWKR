@@ -1,0 +1,1622 @@
+﻿;※※※※※※※※※※※※※※※※※※※※※※※※※
+;성교계 커맨드
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;60, 정상위
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_60
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K25_60_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_60_1
+
+;-------------------------------------------------
+;대면입위
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && TFLAG:193
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;처녀
+		IF TCVAR:파과 == 1
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;삽입 계속
+	;기입 체크
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:100 == PLAYER
+		;지금 사정했다
+		IF NOWEX:PLAYER:11
+			;시간중
+			IF FLAG:70
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 무반응의 아이를 강하게 안아, 땅땅 격렬한 하급자압력을 먹인
+					PRINTFORML 움직이지 않는 표정과 정반대로 질내는 정자 절임의 심한 모양이다
+				CASE 1
+					PRINTFORML 음란하게 꿈틀거리며 페니스를 삼키는 질과 평상시 그대로의 표정의 갭이 %CALLNAME:MASTER%의 흥분을 부추긴다
+					PRINTFORML 반짝이는 귀두가 질벽을 세게 긁어 희게 탁해진 음액의 물보라를 밖으로 흘렸다
+				CASE 2
+					PRINTFORML 이대로 자궁의 안쪽에 듬뿍 선물을 남겨 말해 주자
+					PRINTFORML %마스터는% 상놈열정에 맡겨 박는 허리에 힘을 집중했다
+				ENDSELECT
+				RETURN 1
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 여운을 즐길 틈도 없고, %CALLNAME:MASTER%의 페니스가 미끌 미끌의 내벽 중(안)에서 날뛴다
+					PRINTFORML 칼리로 긁어내진 정액이 불기둥을 타 늘어져 왔다
+				CASE 1
+					PRINTFORML 엉덩이의 살집을 잡아, 혼신의 일사를 아이에게 쏟았다
+					PRINTFORML 「아앗, 굉장한, 정액이 안쪽을 두드리고 있다……」
+				CASE 2
+					PRINTFORML 사정을 깨달아, 아이가 꽉 소호와 같이 질구를 잡아 왔다
+					PRINTFORML 준구 세세한 질벽이 정령을 발하는 쾌감을 가속시킨다
+				ENDSELECT
+				RETURN 1
+			ENDIF
+		ELSE
+		;다른 체위→대면입위로 사정하지 않았던 경우만 표시?  계속이라고 해도 같은 체위2회라면 파생으로 이행하기 (위해)때문에, 꽤 볼 수  없다고 생각된다
+			;시간중
+			IF FLAG:70
+				PRINTFORML 이 때가 멈춘 세계라면 자신 외지 한 움직일 필요는 없다
+				PRINTFORML 고간을 관철하는 페니스를 지점에 아이를 빙글과 돌려, 하급자압력을 재개했다
+				RETURN 1
+			ELSE
+				PRINTFORML 정면으로 돌아 아이의 허리를 안아, 아래로부터 척척 밀어 올렸다
+				PRINTFORML 시야 가득하게 큰 유방이 흔들리고 있다
+				RETURN 1
+			ENDIF
+		ENDIF
+	ENDIF
+	;시간중 
+	IF FLAG:70
+		SELECTCASE RAND:4
+		CASE 0
+			PRINTFORML 능력을 능숙하게 사용하면 상대를 공중에 뜨게 하는 일도 가능하다
+			PRINTFORML 열게 한 다리 사이에 서, 꼭 좋은 높이로 고정된 질 구멍에 페니스와 묻었다
+		CASE 1
+			PRINTFORML 굳이 다리를 닫게 한 채로 아이의 스릿트의 사이에 귀두를 두 힘차게 밀어넣는다
+			PRINTFORML 원래고기가 막힌 질도가 더욱 좁아져, 견딜 수 없는 삽입감을 얻을 수 있었다
+		CASE 2
+			PRINTFORML 한쪽 발을 올린 상태로 고정해, 옆의 각도로부터 아이의 비혈에 깊게 삽입했다
+			PRINTFORML 매끌매끌한 허벅지 안쪽에 불알이 딱 접하고 있다
+		CASE 3
+			PRINTFORML 아이의 엉덩이를 양손에 움켜 쥐어 역에서 파는 도시락의 체위로 깊숙이 삽입한다
+			PRINTFORML 강간되어도 전혀 변함없는 표정에 배덕적인 즐거움을 기억했다
+		ENDSELECT
+		RETURN 1
+	ELSEIF TALENT:연모 || MARK:괘씸각인 == 3
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML 그 자리에 선 채로, 서로의 요철로 깊게 연결된다
+			PRINTFORML 미소를 주고 받으면서 허리를 전후 시키기 시작했다
+		CASE 1
+			PRINTFORML 「이얍」
+			PRINTFORML 아이가 양 다리를 허리에 걸어 온다. 이른바 역에서 파는 도시락의 모습이지만, 반 공중에 뜨고 있는 그녀는 매우 가볍다
+			PRINTFORML 목적을 정해 할짝 응과 육 경을 가라앉혔다
+		CASE 2
+			PRINTFORML 아이가 Y자 밸런스와 같이 올린 다리를 진곧 늘린다
+			PRINTFORML 끌려 작게 벌어진 대음순에, %마스터는% 귀두를 접촉하게 했다
+		CASE 3
+			PRINTFORML 「아하, 이이, ……!」
+			PRINTFORML 직립 한 채로의 격렬한 성교를 아이도 즐기고 있는 것 같다
+		CASE 4
+			PRINTFORML 음탕하게 미소짓는 아이의 손이 등에 돌려진다
+			PRINTFORML 「그렇다……몸이 뜰 정도로, 척척은……!」
+		ENDSELECT
+		RETURN 1
+	ELSE
+		PRINTFORML 측면으로부터 목적을 정해 미소짓는 아이와 충분하고 몸을 맞추었다
+		PRINTFORML 민감한 부드러운 부분을 도려내도 그녀의 밸런스는 무너지지 않는다
+		RETURN 1
+	ENDIF
+	PRINTW 
+ENDIF
+;-------------------------------------------------
+;정상위
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;처녀
+		IF TCVAR:파과 == 1
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;삽입 계속
+	;기입 체크
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:100 == PLAYER
+		;지금 사정했다
+		IF NOWEX:PLAYER:11
+			;시간중
+			IF FLAG:70
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 충분히의 정액을 가득 채우는 질 구멍에 마음껏 페니스를 주입한다
+					PRINTFORML 기세로 결합부의 틈새로부터 브픽과 백탁이 넘쳐 나오고 했다
+				CASE 1
+					PRINTFORML 단지 지금 따른 정액을 윤활제로 해, 더욱 넣었다 뺐다를 반복한다
+					PRINTFORML 긴 스토로크로 질퍽질퍽에 질퍽거린다 아이의 질벽을 맛보았다
+				CASE 2
+					PRINTFORML 귀두를 여기저기에 문질러 신선한 정자를 질벽의 구석구석까지 발라 금니구
+					PRINTFORML 한층 사용 마음이 좋아진 아이의 질 구멍으로 맹렬한 피스톤을 즐겼다
+				ENDSELECT
+				RETURN 1
+			ELSE
+				SELECTCASE RAND:5
+				CASE 0
+					PRINTFORML 치골끼리가 서로 스칠 만큼 깊게 결합해, 길고 긴 사정을 안쪽에 흘러 들어갔다
+					PRINTFORML 페니스를 하거나 뽑아 꽂아 할 때, 질내사정 끝난 질 구멍 , 와 무거운 물소리를 세우고 있다
+				CASE 1
+					PRINTFORML 뷰푹!드풋드풋고포포……
+					PRINTFORML 「아아, 굉장한 양이다……. 뜨거운, 견딜 수 없다……」
+					PRINTFORML 자신의 질내에 토해내어 진 정액의 뜨거움에, 아이는 넋을 잃고 표정을 녹일 수 있었다
+				CASE 2
+					PRINTFORML 사정을 받은 아이의 질육이 꽉 조여지며,  기쁜듯이 페니스에 관련되어 따라 왔다
+					PRINTFORML 「좀 더 갖고 싶은데. 너의 정자……」
+				CASE 3
+					PRINTFORML 아이가 무릎을 가지런히 해 움켜쥐고,  삽입한 음경이 정액으로 미끈미끈의 질육에 꽉 압박받는다
+					PRINTFORML 쇠약해질 틈조차 없고 %마스터는% 허리를 전후 시키기 시작했다
+				CASE 4
+					PRINTFORML 뷰뷰뷰……
+					PRINTFORML 사정 쾌감에 전율구 몸을, 쭉 아이가 껴안고 있어 주었다
+				ENDSELECT
+				RETURN 1
+			ENDIF
+		ELSE
+			;시간중
+			IF FLAG:70
+				PRINTFORML 절정을 목표로 해 격렬하고 재빠르게 페니스를 주입한다
+				PRINTFORML 질퍽질퍽 귀에 영향을 주는 소리가 능욕감을 높였다
+				RETURN 1
+			ELSE
+				PRINTFORML 몹시 사랑스럽게 달라붙어 오는 질벽에 매혹되어 무모한 기세로 허리를 계속 거절한다
+				PRINTFORML 아이의 천에 점점 타카네가 섞여 갔다
+				RETURN 1
+			ENDIF
+		ENDIF
+	ENDIF
+	;시간중
+	IF FLAG:70
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 발목을 잡아 황새 걸음을 열게 해 무방비인 구멍에 퓨슉하고 페니스를 찌른다
+			PRINTFORML 침입자에게 무서워해 전율구 질육에 몹시 거친 혼란 치는 것을 주입했다
+		CASE 1
+			PRINTFORML 허리가 교살할 수 있는을 잡아, 튼튼 고정하고 나서 음부에 꽂아 붐비었다
+			PRINTFORML 다이나믹한 피스톤으로 아이의 벽이 많은 명기를 제멋대로 범해 간다
+		CASE 2
+			PRINTFORML 이렇게 해 시간이 멈추어 있으면, 인가의 야쿠모 아이에게로 있을 것이고 무료의 성 처리구멍이다
+			PRINTFORML 가슴의 골짜기에 얼굴을 묻은 모습으로 원숭이와 같이 허리를 거절해 빼앗았다
+		ENDSELECT
+		RETURN 1
+	ELSEIF TALENT:연모 || MARK:괘씸각인 == 3
+		SELECTCASE RAND:6
+		CASE 0
+			PRINTFORML 소화된 질 구멍에 페니스를 뿌리까지 거두어 딱 밀착했다
+			PRINTFORML 전신의 피부로, 앙인 체한 성기로, 1개(살)에 서로 녹는 것 같은 착각을 공유한다
+			PRINTFORML 「이대로도 기분이 좋은데……」
+		CASE 1
+			PRINTFORML 「아, 좋은 , , 거기……!」
+			PRINTFORML 아이의 몸을 다 안 허리 사용으로, 질 구멍을 엉망진창에 마구 찔렀다
+		CASE 2
+			PRINTFORML 허리를 부딪치면(자) 한 박자 늦어 유방이 출렁 물결친다
+			PRINTFORML 계속  응시하고 있으면(자) 아이가 쿡쿡하고 웃었다
+		CASE 3
+			PRINTFORML 「앗, 아핫, 아, 히, 아앗!」
+			PRINTFORML 무릎 뒤를 억제해 아이에게 황새 걸음을 열게 해 거의 곧바로 돌려보네기의 모습으로 맹렬하게 피스톤을 박는다
+			PRINTFORML 밀착도의 높은 협소인 고기단지는 뜨겁고 뜨거워져, 꾸중 우는 아이와 함께 즐거움의 눈물을 흘리고 있었다
+		CASE 4
+			PRINTFORML %CALLNAME:MASTER%보다 훨씬 경험 풍부한 아이의 여성의 음부에 손대중은 필요하지 않다
+			PRINTFORML 질퍽질퍽 넣었다 뺐다 할 때마다 결합부로부터 튀는 애액은, 격렬하게 범해지는 아픔도 질성감으로 변해있는 증거다
+			PRINTFORML 허약한 여자의 얼굴을 하는 아이에게 욕정해, 한층 페니스가 발딱 세워진
+		CASE 5
+			PRINTFORML 이마가 붙는 만큼 얼굴을 대며,  제대로 눈을 맞추면서 허리를 거절한다
+			PRINTFORML 눈동자의 흔들림, 눈시울의 움직여, 잡은 손이 서로의 앙상을 서로 분명히 전한다
+		ENDSELECT
+		RETURN 1
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「좋야, 네가 마음대로 하며」
+			PRINTFORML 사타구니를 벌리며 기다리는 아이의 비소에 귀두를 맞혀 천천히 가라앉혀 갔다
+		CASE 1
+			PRINTFORML 「제대로 나도 자주(잘)해 주었으면 한데」
+			PRINTFORML 권하는 미소에 끌려 무너져 혼잡하게 1개(살)이 되었다
+		CASE 2
+			PRINTFORML 아이의 풍만한 가슴에 얼굴을 묻어 허리를 거절해 빼앗는다
+			PRINTFORML 매끈매끈한 피부, 따뜻한 체온에 만취했다
+		ENDSELECT
+		RETURN 1
+	ENDIF
+	PRINTW 
+ENDIF
+RETURN 1
+
+;==================================================
+;61, 후배위
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_61
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K25_61_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_61_1
+;-------------------------------------------------
+;배면입위
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && TFLAG:193
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;처녀
+		IF TCVAR:파과 == 1
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;삽입 계속
+	;기입 체크
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:100 == PLAYER
+		;지금 사정했다
+		IF NOWEX:PLAYER:11
+			;시간중
+			IF FLAG:70
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 자신의 허리가 이상해질 것 같은 기세로 더욱 피스톤을 계속한다
+					PRINTFORML 질구를 미끌미끌 미끄러지는 쾌감으로 무릎이 떨리는 것을 필사적으로 견뎠다
+				CASE 1
+					PRINTFORML 정액으로 질퍽질퍽의 구멍을 서 배후에서 격렬하고 후벼 파내어 돌려준다
+					PRINTFORML 의식이 없어도 남자 익숙해지고 한 아이의 바기나(질)은 음란 마지막 없다
+				CASE 2
+					PRINTFORML 팡팡하고 엉덩이의 살집을 치는 소리가 울린다
+					PRINTFORML 절실히 범해 보람이 있는 몸이라면 미소가 흘러넘쳤다
+				ENDSELECT
+				RETURN 1
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 큰 엉덩이를 비비어 하기 만이면서, 뷰욱!(와)과 정액을 쏟는다
+					PRINTFORML 「아하……선 채로의 교배, 기분 좋았는지……?」
+				CASE 1
+					PRINTFORML 쿨룩 쿨룩 쿨룩……
+					PRINTFORML %CALLNAME:MASTER%본인의 의사를 떨어져 긴 시간 사이 불알이 정액을 계속 배웅했다
+				CASE 2
+					PRINTFORML 대소변을 무의식중에 쌈의 교성, 스스로 페니스를 맞아들이려고 하는 허리의 움직임
+					PRINTFORML 정액을 따라져 발정해 버린 음미한  암컷에 아직 발기가 멈추지 않는다
+				ENDSELECT
+				RETURN 1
+			ENDIF
+		ELSE
+			;시간중
+			IF FLAG:70
+				PRINTFORML 아이의 부담도 생각하지 않고, 전력의 피스톤으로 질육을 떴다
+				PRINTFORML 그 때 관련되어 붙는 벽의 감촉이 사정욕구를 높여 간다
+				RETURN 1
+			ELSE
+				PRINTFORML 풍부한 고육을 비비어 하기 만이면서 한층 피스톤을 격렬하게 했다
+				RETURN 1
+			ENDIF
+		ENDIF
+	ENDIF
+	;시간중
+	IF FLAG:70
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 등 뒤로부터 안아 다해 허리를 "구"자 모양에 굽힌다
+			PRINTFORML 삽입하기 쉬운 각도를 찾아내 단숨에 스릿트를 관철했다
+		CASE 1
+			PRINTFORML 앞으로 구부림의 모습에 시킨 아이의 허리를 잡아, 끌어 들이는 형태로 삽입한다
+			PRINTFORML 마치 성 완구를 사용하도록(듯이) 그녀의 엉덩이를 전후에 흔들었다
+		CASE 2
+			PRINTFORML 고육을 덥석으로 해 열려, 노려 정해 퓨슉하고 돌진한다
+			PRINTFORML 남을 그렇게(오징어) 다투는 것에 특화한 것 같은 달라붙는 질벽을 난폭하게 휘저었다
+		ENDSELECT
+		RETURN 1
+	ELSEIF TALENT:연모 || MARK:괘씸각인 == 3
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML 다른 한쪽의 다리를 높게 들어 올려 한 개다리의 불안정한 자세로 푹푹과 고기단지를 찌른다
+			PRINTFORML 질성감에 괴로워하면서 밸런스를 유지하려고 하는 아이의 힘 보고가 페니스를 즐겁게 해 준다
+		CASE 1
+			PRINTFORML 「훗, 훗, 훗, 후우″……」
+			PRINTFORML 서 배후에서 강력한 피스톤을 계속하는 동안, 아이의 교성이 야성미를 띠어 왔다
+		CASE 2
+			PRINTFORML 아이가 온순하게 내밀었다 엉덩이에 허리를 쳐 붙이면서, 못된 장난좀 손바닥에서 두드렸다
+		CASE 0
+			PRINTFORML 삽시는 가볍게 느슨해져, 뽑아 내는 순간에는 꽉 전체가 꼭 죄여 관련된다
+			PRINTFORML 교묘한 준 나무를 보이는 아이의 꿀 구멍에 열중하며 넣었다 뺐다를 계속했다
+		CASE 1
+			PRINTFORML 「앗, 아핫, 앗, 아핫……!」
+			PRINTFORML 엉덩이를 허리가 치는데 맞추어 위 질질 끄는 소리가 %CALLNAME:MASTER%의 성욕에 불을 켠다
+		ENDSELECT
+		RETURN 1
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 선 채로 아이와 연결되어, 딱 불기둥 전체에 Fit(몸에 꼭 맞음) 하는 질벽의 감촉에 소리를 흘린다
+			PRINTFORML 아니나 다를까라고도 말해야 할 명기에 폭발하지 않는 정도의 피스톤을 시작했다
+		CASE 1
+			PRINTFORML 「자, 넣어 주고」
+			PRINTFORML 자신에게 향해 엉덩이를 쑥 내미는 아이의 모습에 잠깐 주시해, 갑작스러운가 되어 겨우 삽입했다
+		CASE 2
+			PRINTFORML 않고에, 라고 질구의 저항을 돌파해 고기단지에 돌입한다
+			PRINTFORML 아이의 교태(윤기)를 포함한 작은 소리를 들어, 급격하게 흥분이 높아졌다
+		ENDSELECT
+		RETURN 1
+	ENDIF
+	PRINTW 
+ENDIF
+;-------------------------------------------------
+;후배위
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;처녀
+		IF TCVAR:파과 == 1
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;삽입 계속
+	;기입 체크
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:100 == PLAYER
+		;지금 사정했다
+		IF NOWEX:PLAYER:11
+			;시간중
+			IF FLAG:70
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 사정의 흥분도 식지 않는 사이에 짐승의 교미의 몸의자세로 페니스를 박았다
+					PRINTFORML 거절도 없게 더럽혀진 질 구멍이 본능적으로 꾸불꾸불정액을 철움직임을 반복하고 있다
+				CASE 1
+					PRINTFORML %마스터는% 문득 생각나, 개가 하는 것 같은 교미 결합의 체위에 도전했다
+					PRINTFORML 삽입한 채로 몸을 반회전시켜, 어떻게든 엎드리고로 엉덩이끼리를 맞추는 것에 성공한다
+					PRINTFORML 허리를 들어 올린 곡예적인 결합 자세로 아이의 자궁 입구를 찔러 돌렸다
+				CASE 2
+					PRINTFORML 시가 멈춘 아이의 엉덩이에 배의 안쪽을 귀두로 후려갈기는 것 같은 피스톤을 주입한다
+					PRINTFORML 느끼고 있는 것이 아픔에서도 쾌감에서도, 그녀의 질구는 마음 좋은 억압 이외의반응을 보이지 않는다
+				ENDSELECT
+				RETURN 1
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 배로부터 복받치는 열에 맡겨 배후에서 잡은 엉덩이를 격렬하고 푹푹 계속 범한다
+					PRINTFORML 「응, 앗, 아핫, 앗, 아핫……!」
+					PRINTFORML 점잖고 엎드린 자세로 받아 들이는 아이의 질도로, 피스톤을 계속될 수 있는가들 와 정액을 흘렸다
+				CASE 1
+					PRINTFORML 두근 두근 두근 두근……
+					PRINTFORML 일단 페니스를 뽑아 내, 단지 지금까지 괴롭히고 뽑고 있던 아이의 여성의 음부를 바라본다
+					PRINTFORML 숨을 헐떡일 수 있어 푹 엎드리는 아이의 거기로부터 새하얀 점액와 흐르고 떨어졌다
+				CASE 2
+					PRINTFORML 사정했다고 해 %마스터는% 허리를 끊지 않는다
+					PRINTFORML 강하고 고 고기를 뽑을 때, 바로 밑에 늘어진 아이의 거유 흔들리는 바르르 흔들려 날뛰었다
+				ENDSELECT
+				RETURN 1
+			ENDIF
+		ELSE
+			;시간중
+			IF FLAG:70
+				PRINTFORML 몸의자세를 바꾸어 뜨겁고 부드러운 구멍을 페니스로 더욱 탐냈다
+				RETURN 1
+			ELSE
+				PRINTFORML 허리를 끊지 않고 냠냠 격렬하게 허리를 거절해 빼앗는다
+				PRINTFORML 뜨겁고 달아오른 질내를 도려낼수록 아이의 소리가 위않고는 간다
+				RETURN 1
+			ENDIF
+		ENDIF
+	ENDIF
+	;시간중
+	IF FLAG:70
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 고육을 덥석으로 해 리드미컬하게 강하게 허리를 두드려 붙인다
+			PRINTFORML 쪽자신이 알지 않는 사이에 질육은 꿈틀 꿈틀 경련해 페니스를 기쁨
+		CASE 1
+			PRINTFORML 잠 백의 자세로 아이에게 삽입해, 눈앞의 츠즈라오를 정리해 꼭 껴안는다
+			PRINTFORML 시야를 금빛의 털에 가득 차면서 팡팡하고 고 고기를 뽑아 울렸다
+		CASE 2
+			PRINTFORML 엉덩이를 좌우에 열려, 항문의 오므라든 곳을 관찰하면서 그 아래의 구멍에 넣었다 뺐다 한다
+			PRINTFORML 차분히 범하면서 주름의 수를 말해 세려고, 남본인은 그 치욕을 알 방법도 없다
+		ENDSELECT
+		RETURN 1
+	ELSEIF TALENT:연모 || MARK:괘씸각인 == 3
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML 한쪽 발을 들어 올려 개가 소변을 하는 모습으로 피스톤 했다
+			PRINTFORML 기세를 붙여 질 안쪽을 찌를 때마다 등이 부들부들 떨고 있다
+		CASE 1
+			PRINTFORML 엎드리고의 아이에게 지워져, 잠 백의 몸의자세로 육 경을 찔러 넣었다
+			PRINTFORML 튀는 엉덩이가 쿠션과 같이 부딪히는 허리를 되물리쳐, 피스톤을 도왔다
+		CASE 2
+			PRINTFORML 「뒤때문인지. 나도 백는 좋아한다」
+			PRINTFORML 아이는 엎드린 자세로 엉덩이를 쑥 내밀어, 한 손으로 음순을 열어 보였다
+			PRINTFORML %마스터는% 연분홍색의 부드러운 살덩어리에 귀두를 꽉 눌러, 할짝 응과 가라앉혔다
+		CASE 3
+			PRINTFORML 「패턴을 잡으면 간단해. 이봐, 호흡을 맞추어. 한, 에 ……」
+			PRINTFORML 아이의 기발한 제안을 타, 서로 넙죽 엎드리며 엉덩이를 맞추려는 듯 결합했다
+			PRINTFORML 개그 자체의 보기 흉함모습으로, 여차저차조금씩 허리를 서로 흔들었다
+		CASE 4
+			PRINTFORML 「으응, 웃, 훗, 히잇!」
+			PRINTFORML 3회 잘게 썰기에 허리의 각도를 바꾸어 시계회전에 아이의 질내를 빈틈없게 찔러 간다
+			PRINTFORML 마지막의 마지막에 제일 약한 부분에 도달했을 때, 초조하게 해진 아이의 사랑스러운 교성이 올랐다
+		ENDSELECT
+		RETURN 1
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 첨단을 입구에 가라앉혀 아이의 엉덩이에 허리를 부딪힌다
+			PRINTFORML 뿌리를 둥글둥글 밀어넣어 깊은 삽입감에 취했다
+		CASE 1
+			PRINTFORML 「응, 응, 응, 구」
+			PRINTFORML 백로부터 질내의 여기저기를 마구 찔러 , 아이의 약한 부분을 정성스럽게 찾았다
+		CASE 2
+			PRINTFORML 「꼬리, 방해가 아닌가?」
+			PRINTFORML 거절해, %마스터는% 아이와 결합한 채로 금빛의 털 보통에 얼굴을 묻었다
+		ENDSELECT
+		RETURN 1
+	ENDIF
+	PRINTW 
+ENDIF
+RETURN 1
+
+;==================================================
+;62, 정상위애널
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_62
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K25_62_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_62_1
+;-------------------------------------------------
+;애널 대면입위
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL && TFLAG:193
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;애널 처녀
+		IF TCVAR:A파과
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;삽입 계속
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;전회 사정했다
+		IF TCVAR:104
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ENDIF
+	;시간중
+	IF FLAG:70
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 
+			PRINTFORML 
+		CASE 1
+			PRINTFORML 
+			PRINTFORML 
+		CASE 2
+			PRINTFORML 
+			PRINTFORML 
+		ENDSELECT
+		RETURN 1
+	ELSEIF TALENT:연모 || MARK:괘씸각인 == 3
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 
+			PRINTFORML 
+		CASE 1
+			PRINTFORML 
+			PRINTFORML 
+		CASE 2
+			PRINTFORML 
+			PRINTFORML 
+		ENDSELECT
+		RETURN 1
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 
+			PRINTFORML 
+		CASE 1
+			PRINTFORML 
+			PRINTFORML 
+		CASE 2
+			PRINTFORML 
+			PRINTFORML 
+		ENDSELECT
+		RETURN 1
+	ENDIF
+	PRINTW 
+ENDIF
+;-------------------------------------------------
+;애널 정상위
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;애널 처녀
+		IF TCVAR:A파과
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;삽입 계속
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;전회 사정했다
+		IF TCVAR:104
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ENDIF
+	;시간중
+	IF FLAG:70
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 
+			PRINTFORML 
+		CASE 1
+			PRINTFORML 
+			PRINTFORML 
+		CASE 2
+			PRINTFORML 
+			PRINTFORML 
+		ENDSELECT
+		RETURN 1
+	ELSEIF TALENT:연모 || MARK:괘씸각인 == 3
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 
+			PRINTFORML 
+		CASE 1
+			PRINTFORML 
+			PRINTFORML 
+		CASE 2
+			PRINTFORML 
+			PRINTFORML 
+		ENDSELECT
+		RETURN 1
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 
+			PRINTFORML 
+		CASE 1
+			PRINTFORML 
+			PRINTFORML 
+		CASE 2
+			PRINTFORML 
+			PRINTFORML 
+		ENDSELECT
+		RETURN 1
+	ENDIF
+	PRINTW 
+ENDIF
+RETURN 1
+
+;==================================================
+;63, 후배위애널
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_63
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K25_63_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_63_1
+;-------------------------------------------------
+;애널 배면입위
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL && TFLAG:193
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;애널 처녀
+		IF TCVAR:A파과
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;삽입 계속
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;전회 사정했다
+		IF TCVAR:104
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ENDIF
+	;시간중
+	IF FLAG:70
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 
+			PRINTFORML 
+		CASE 1
+			PRINTFORML 
+			PRINTFORML 
+		CASE 2
+			PRINTFORML 
+			PRINTFORML 
+		ENDSELECT
+		RETURN 1
+	ELSEIF TALENT:연모 || MARK:괘씸각인 == 3
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 
+			PRINTFORML 
+		CASE 1
+			PRINTFORML 
+			PRINTFORML 
+		CASE 2
+			PRINTFORML 
+			PRINTFORML 
+		ENDSELECT
+		RETURN 1
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 
+			PRINTFORML 
+		CASE 1
+			PRINTFORML 
+			PRINTFORML 
+		CASE 2
+			PRINTFORML 
+			PRINTFORML 
+		ENDSELECT
+		RETURN 1
+	ENDIF
+	PRINTW 
+ENDIF
+;-------------------------------------------------
+;애널 후배위
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;애널 처녀
+		IF TCVAR:A파과
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;삽입 계속
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;전회 사정했다
+		IF TCVAR:104
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ENDIF
+	;시간중
+	IF FLAG:70
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 
+			PRINTFORML 
+		CASE 1
+			PRINTFORML 
+			PRINTFORML 
+		CASE 2
+			PRINTFORML 
+			PRINTFORML 
+		ENDSELECT
+		RETURN 1
+	ELSEIF TALENT:연모 || MARK:괘씸각인 == 3
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 
+			PRINTFORML 
+		CASE 1
+			PRINTFORML 
+			PRINTFORML 
+		CASE 2
+			PRINTFORML 
+			PRINTFORML 
+		ENDSELECT
+		RETURN 1
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 
+			PRINTFORML 
+		CASE 1
+			PRINTFORML 
+			PRINTFORML 
+		CASE 2
+			PRINTFORML 
+			PRINTFORML 
+		ENDSELECT
+		RETURN 1
+	ENDIF
+	PRINTW 
+ENDIF
+RETURN 1
+
+;==================================================
+;64, 역강간
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_64
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K25_64_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_64_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;조교자가 처녀
+		IF TCVAR:PLAYER:파과 == 1
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;삽입 계속
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:PLAYER:100 == TARGET
+		;전회 사정했다
+		IF TCVAR:PLAYER:102
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;기본 세트
+	;연모
+	IF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;굴복 3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;그 이외
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;65, 기승위
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_65
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K25_65_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_65_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;처녀
+		IF TCVAR:파과 == 1
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;삽입 계속
+	;기입 체크
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:100 == PLAYER
+		;지금 사정했다
+		IF NOWEX:PLAYER:11
+			;시간중
+			IF FLAG:70
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 배면 기승위의 형태로 아이의 엉덩이를 양손에 잡아, 피스톤에 맞추어 상하에 움직인다
+					PRINTFORML 최후는 강하게 허리를 하급자압력, 퓨웃!!(와)과 백탁의 분수를 뱃속에 발사했다
+				CASE 1
+					PRINTFORML 반브릿지의 몸의자세로 %마스터는% finish의 하급자압력을 발했다
+					PRINTFORML 바로 밑으로부터 꿰뚫고로 된 아이의 질 안쪽에, 괄약근이 맥타대량의 정자 따돌릴 수 있고라고 간다
+				CASE 2
+					PRINTFORML 끈적끈적 틈새 없게 관련되어 따라 오는 아이의 질육에 인내가 효과가 없게 되었다
+					PRINTFORML 마음껏 정령을 토해내면서 넣었다 뺐다 해, 탐욕인 자혈에 많은 포상을 발라 넣어 주었다
+				ENDSELECT
+				RETURN 1
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 허덕여 미치는 아이의 가느다란 허리를 양손으로 잡아, 볼륨이 있는 엉덩이를 꽉 자신의 허리에 꽉 누른다
+					PRINTFORML 분신의 모두를 끓어 오른다 아이의 나카에 거두어, %마스터는% 전력의 사정을 바로 윗쪽에 공격해 발했다
+				CASE 1
+					PRINTFORML 「아앗, 은은 얏, 아앗, 하앗……!」
+					PRINTFORML 격렬한 하급자압력을 연타해 억지로 페이스를 빼앗아 돌려준다
+					PRINTFORML 큐 응과 달린 반사적인 억압에 져%마스터는% 흘리도록(듯이) 성대한 사정을 시작했다
+				CASE 2
+					PRINTFORML 「이봐, 가라. 퓨웃이라고 내 버릴 수 있는」
+					PRINTFORML 아이가 송곳니를 보여 웃어, 이제 사정하는 이외 선택지가 없을 정도(수록) 압도적인 허리 사용으로 춤추었다
+					PRINTFORML 마치 젖을 짜지도록(듯이), %마스터는% 질육으로 해 그라고 철철정액을 토했다
+				ENDSELECT
+				RETURN 1
+			ENDIF
+		ELSE
+			;시간중
+			IF FLAG:70
+				PRINTFORML %CALLNAME:MASTER%벗기는 와 숨을 끊어 피스톤을 더욱 가속시켰다
+				PRINTFORML 격렬하고 넣었다 뺐다 되어 애액을 물보라인가 다투는 하반신과 정반대, 아이의 표정은 꿈쩍도 움직이지 않는다
+				RETURN 1
+			ELSE
+				PRINTFORML %CALLNAME:MASTER%벗기는 와 숨을 끊어 피스톤을 더욱 가속시켰다
+				PRINTFORML 아이가 비명을 올려 몸을 젖혀, 바르르 큰 유방을 세로에 흔들었다
+				RETURN 1
+			ENDIF
+		ENDIF
+	ENDIF
+	;시간중
+	IF FLAG:70
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 적당한 높이로 정지한 아이의 안쪽 깊은 곳을 쿵과 일발 밀어 올린다
+			PRINTFORML 고민 하도록(듯이) 꿈틀꿈틀 수축하는 질육으로부터, 지긋이 음액이 배이는 것을 페니스로 느꼈다
+		CASE 1
+			PRINTFORML 시간정지가 좋은 곳은 산 여자의 몸을 말하지 않는 성 완구로 할 수 있는 일이다
+			PRINTFORML %마스터는% 허리의 바로 윗쪽에서 고정한 아이의 자혈을, 그 구석구석까지 강력하고 삐걱삐걱 파임 돌렸다
+		CASE 2
+			PRINTFORML 아이에게 황새 걸음을 열게 해 비순을 개장 해, 노출한 질구에 서서히 페니스를 삽입했다
+			PRINTFORML 분홍색의 미육들어간다 거무스름한 음경. 억지로 범하고 있다, 라고 하는 실감이 다시 소생해 왔다
+		ENDSELECT
+		RETURN 1
+	ELSEIF TALENT:연모 || MARK:괘씸각인 == 3
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「으응, 훌륭한 진보다. 여유로 안쪽에 닿는 것」
+			PRINTFORML 상에 걸치는 아이가, 하복부의 한 점을 가리켜 즐거운 듯이 말했다
+		CASE 1
+			PRINTFORML %CALLNAME:MASTER%의 가슴에 손을 붙어, 아이가 추잡하게 허리를 거절한다
+			PRINTFORML 경연 자재의 억압 빠져 있는 것으로 고기단지에 빨아 돌려지고 있는 것 같다
+		CASE 2
+			PRINTFORML 「훗, 훗, 후훗」
+			PRINTFORML 눈시울을 닫아 열중하며 페니스에 봉사하는 아이의 이마에서 땀이 방울져 떨어져 떨어진다
+			PRINTFORML 서로의 성기가 끈질기게 서로 사랑하는 음색(뿐)만이 귀에 영향을 주었다
+		ENDSELECT
+		RETURN 1
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「헤에……나에게 허리를 흔들리게 해도 좋은 것인지?」
+			PRINTFORML 상으로부터 내려본다 아이의 미소지어에 번쩍으로 한 빛이 배인다
+			PRINTFORML 다이나믹한 허리 사용과 교묘하게 연동하는 질육의 관련되어 다하고가 %CALLNAME:MASTER%에 한심한 비명을 올리게 했다
+		CASE 1
+			PRINTFORML 아이가 비틂을 넣으면서 허리에 떨어뜨려, 페니스를 비혈와 삼켜 간다
+			PRINTFORML 「곧바로 이 훈이 아니어?」
+		CASE 2
+			PRINTFORML %CALLNAME:MASTER%의 허리 위에 아이가 응과 앉았다
+			PRINTFORML 꼬리의 분의 중량감으로 결합은 깊고, 음경의 모두를 아이의 아래의 입에 질네 붐비어지고 있다
+		ENDSELECT
+		RETURN 1
+	ENDIF
+	PRINTW 
+ENDIF
+RETURN 1
+
+;==================================================
+;66, 기승위애널
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_66
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K25_66_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_66_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;애널 처녀
+		IF TCVAR:A파과
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;삽입 계속
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;전회 사정했다
+		IF TCVAR:104
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ENDIF
+	;시간중
+	IF FLAG:70
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 
+			PRINTFORML 
+		CASE 1
+			PRINTFORML 
+			PRINTFORML 
+		CASE 2
+			PRINTFORML 
+			PRINTFORML 
+		ENDSELECT
+		RETURN 1
+	ELSEIF TALENT:연모 || MARK:괘씸각인 == 3
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 
+			PRINTFORML 
+		CASE 1
+			PRINTFORML 
+			PRINTFORML 
+		CASE 2
+			PRINTFORML 
+			PRINTFORML 
+		ENDSELECT
+		RETURN 1
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 
+			PRINTFORML 
+		CASE 1
+			PRINTFORML 
+			PRINTFORML 
+		CASE 2
+			PRINTFORML 
+			PRINTFORML 
+		ENDSELECT
+		RETURN 1
+	ENDIF
+	PRINTW 
+ENDIF
+RETURN 1
+
+;==================================================
+;67, 대면좌위
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_67
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K25_67_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_67_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;처녀
+		IF TCVAR:파과 == 1
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;삽입 계속
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:100 == PLAYER
+		;지금 사정했다
+		IF NOWEX:PLAYER:11
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ENDIF
+	;기본 세트
+	;연모
+	IF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;굴복 3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;그 이외
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;68, 후배위
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_68
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K25_68_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_68_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;처녀
+		IF TCVAR:파과 == 1
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;삽입 계속
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:100 == PLAYER
+		;지금 사정했다
+		IF NOWEX:PLAYER:11
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ENDIF
+	;기본 세트
+	;연모
+	IF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;굴복 3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;그 이외
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;69, 대면좌위애널
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_69
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K25_69_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_69_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;애널 처녀
+		IF TCVAR:A파과
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;삽입 계속
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;전회 사정했다
+		IF TCVAR:104
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ENDIF
+	;기본 세트
+	;연모
+	IF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;굴복 3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;그 이외
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;70, 후배위애널
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_70
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K25_70_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_70_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;애널 처녀
+		IF TCVAR:A파과
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;삽입 계속
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;전회 사정했다
+		IF TCVAR:104
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ENDIF
+	;기본 세트
+	;연모
+	IF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;굴복 3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;그 이외
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;71, 양구멍삽입
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_71
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K25_71_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_71_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;생각할 수 있는 분기가 너무 많으므로 지문의 대범한 분기만
+	;연속
+	IF PREVCOM == SELECTCOM
+		PRINTFORMW 
+		RETURN 1
+	;주인 V삽입→조수 A삽입
+	ELSEIF TCVAR:100 == MASTER
+		PRINTFORMW 
+		RETURN 1
+	;주인 A삽입→조수 V삽입
+	ELSEIF TCVAR:101 == MASTER
+		PRINTFORMW 
+		RETURN 1
+	;조수 V삽입→주인 A삽입
+	ELSEIF TCVAR:100 == ASSI
+		PRINTFORMW 
+		RETURN 1
+	;조수 A삽입→주인 V삽입
+	ELSEIF TCVAR:101 == ASSI
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+

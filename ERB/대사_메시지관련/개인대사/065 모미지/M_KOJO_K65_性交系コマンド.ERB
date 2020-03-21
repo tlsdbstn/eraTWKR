@@ -1,0 +1,1592 @@
+﻿;※※※※※※※※※※※※※※※※※※※※※※※※※
+;性交系コマンド
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;60,正常位
+;==================================================
+@M_KOJO_MESSAGE_COM_K65_60
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K65_60_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K65_60_1
+
+;-------------------------------------------------
+;立位
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL && TFLAG:193
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;処女
+		IF TCVAR:파과 == 1
+			PRINTFORMW 「원……！？」
+			PRINTFORM %CALLNAME:MASTER%(은)는 화의 편 다리를 움켜 쥐어
+				SIF TALENT:MASTER:체형 >= 0
+					PRINTFORML 반그녀를 들어 올리는 것 같은 모양으로
+			PRINTFORMW 질구에 노장의 첨단을 조정…
+			PRINTFORML 「어, 그……선 채로, 합니까…？」
+			PRINTFORMW 화는 당혹해 한 모습으로, 불안에%CALLNAME:MASTER%의 (분)편을 응시한다.
+			PRINTFORML 「……할 수 있으면, 처음은 좀 더 보통 모양이 좋았었지만……」
+			PRINTFORMW 화휘어짐이라고 중얼거렸다.
+			IF TALENT:연모
+				PRINTFORML 「…아니요 괜찮습니다」
+				PRINTFORMW 「%CALLNAME:MASTER%씨와 연결되는 것이 가능한 한으로, 나는 행복하기 때문에…」
+			ELSE
+				
+			ENDIF
+			RETURN 1
+		ELSE
+			PRINTFORMW 「원……！？」
+			PRINTFORM %CALLNAME:MASTER%(은)는 화의 편 다리를 움켜 쥐어
+				SIF TALENT:MASTER:체형 >= 0
+					PRINTFORML 반그녀를 들어 올리는 것 같은 모양으로
+			PRINTFORMW 질구에 노장의 첨단을 조정…
+			PRINTFORML 「어, 그……선 채로, 합니까…？」
+			PRINTFORMW 「우우…이 몸의 자세, 상당히 불안하게 있습니다…」
+			IF TALENT:연모
+				PRINTFORMW 「그…군이라고 꼭 껴안아, 떼어 놓지 말아 주세요…」
+			ELSE
+				PRINTFORMW 「그…분명하게 지지하고 있어 주세요…？」
+			ENDIF
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;こなれてない
+	ELSEIF ABL:V감각 < 2
+		SELECTCASE RAND:2
+			CASE 0
+				PRINTFORML 「응응…%CALLNAME:MASTER%씨…기분 좋은, 입니까…？」
+				PRINTFORM 아직도 소화되고 있다고는 말할 수 없는 질의 위화감에 당황하면서도,
+					IF TALENT:연모
+						PRINTFORMW 화는 행복할 것 같은 미소를 띄워%CALLNAME:MASTER%(을)를 받아들이고 있다…
+					ELSE
+						PRINTFORMW 화는%CALLNAME:MASTER%(을)를 신경쓰고 있다…
+					ENDIF
+			CASE 1
+				PRINTFORMW 「구, 응, 후~…이 몸의 자세는, 조금…」
+		ENDSELECT
+	;MASTERが何度も射精している
+	ELSEIF TCVAR:350 > 3 && RAND:2 == 0
+	;イキすぎ
+	;ここの条件は実際にプレイして弄る必要があるかも
+	;TARGETの性感がかなり開発されてる状況を想定してるけど、どれくらいプレイしたら出るもんなのかわからんしなぁ。
+	ELSEIF EX:V절정 > 15 && BASE:체력 < MAXBASE:체력/2 && BASE:기력 <= 0
+		;これでMASTERが射精する
+		;IF NOWEX:MASTER:11 
+		;RETURN 1
+		;ENDIF
+		SELECTCASE RAND:2
+			CASE 0
+				PRINTFORML 「후~, 후~…%CALLNAME:MASTER%씨, 조금, 쉬게 하고……！！」
+				CALL HPH_PRINT,@"「～～～～～～～ッHPHHPH」","L"
+				PRINTFORML %CALLNAME:MASTER%(은)는 거듭되는 절정에 피폐 한 화의 다리를 벌려 좁은 질내에 단번에 노장을 들어가게 할 수 있었다.
+				PRINTFORML 최안쪽을 비난과 압력을 받은 화는, 강렬한 쾌감에 소리가 되지 않는 소리를 지른다.
+				PRINTFORMW %CALLNAME:MASTER%하지만 추송을 시작하면(자), 그 소리는 점차 아첨하는 것 같은 교성으로 바뀌어 갔다…
+			CASE 1
+				CALL HPH_PRINT,@"「はあ……%CALLNAME:MASTER%さん凄すぎですよぉ……HPHあっ、くぅっ…んん～～～～～っ！！」","L"
+				PRINTFORML %CALLNAME:MASTER%(은)는 화의 허리를 움켜 쥐면(자) , 열정에 익히고 끓어오르는 육 간을 그녀중으로 밀어넣었다.
+				PRINTFORML \@ EX:65:질내정액 >= 300 ? 白濁交じりの # 滾々と溢れる \@애액으로 흠뻑 젖어 있게 된 좁은 질내는 거의 저항 없게 소레를 삼켜, 개발하고 자른 미육이 페니스에 관련되어 붙는다.
+				CALL HPH_PRINT,@"「……やっ…HPHあっHPHはっHPHんっHPHぁ～っHPH」","L"
+				PRINTFORML 리드미컬하게 질오를 밀어 올려 주면(자), 질벽, 꽉 꼭 죄여%CALLNAME:MASTER%의 사정을 재촉하려고 한다.
+				PRINTFORMW 축탈진한 화는 단속적인 천를 흘려, 주어지는 쾌감에 다만 다만 잠겨 있을 뿐이었다……
+		ENDSELECT
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	ELSEIF TALENT:사모
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+;-------------------------------------------------
+;正常位
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;処女
+		IF TCVAR:파과 == 1
+			IF TALENT:연모
+				PRINTFORMW 
+			ELSE
+				PRINTFORMW 「」
+			ENDIF
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;こなれてない
+	ELSEIF ABL:V감각 < 2
+		IF TCVAR:발정
+			PRINTFORML 「, 구, 응, 후~…」
+			PRINTFORML 발정하고 있는 화는 질내 성감을 느끼고 있는 것 같지만,
+			PRINTFORMW 아직 자극에 익숙하지 않은 것인지 때때로 얼굴을 비뚤어지게 한다…
+		ELSE
+			PRINTFORML 「응,……역시 아직, 조금 익숙해지지 않을지도 모릅니다……」
+			PRINTFORMW 「아니요 괜찮습니다…%CALLNAME:MASTER%씨,\@ TALENT:연모 ? もっとぎゅってしてください # 動いてください \@……」
+		ENDIF
+	;MASTERが何度も射精している
+	ELSEIF TCVAR:350 > 3 && RAND:2 == 0
+		PRINTFORML 「아, 그렇게 사정했는데, 아직 할 수 있습니까…！？」
+		PRINTFORML 대답하는 대신에%CALLNAME:MASTER%하\@ GETBIT(STAIN:MASTER:2,4) ? 精液にまみれた # 硬く屹立した \@페니스를 질구에 나누어주어,
+		PRINTFORML ?女의 한 개 한 개를 확인하도록(듯이) 천천히 삽입해 나간다…
+		IF EX:V절정 > 15 && BASE:체력 < MAXBASE:체력/2 && BASE:기력 <= 0
+			PRINTFORML 「히우우 우우……！！나, 이제 무리인데……」
+			PRINTFORML 화가 한계를 호소하는데도 상관하지 않고,%CALLNAME:MASTER%(은)는 질육을 밀어 헤쳐 최안쪽으로 도달했다.
+			PRINTFORMW 「, 아……딱딱하고, 두꺼운……%CALLNAME:MASTER%씨, 절너무 요……」
+		ELSEIF TCVAR:발정
+			CALL HPH_PRINT,@"「う、ぁ…すごぉっ……HPH」","L"
+			PRINTFORML 발정한 화의 거북한 질육은 평상시보다 강하게 페니스를 단단히 조여
+			PRINTFORML 귀두에 히다가 관련되어 붙어 허리를 진행시키는 것만으로도 사정해 버릴 것 같을 만큼(정도)의 쾌감이 주어진다.
+			CALL HPH_PRINT,@"「おくっ、まで、きたぁ…HPH%CALLNAME:MASTER%さん、もっと搾り取ってあげちゃいますね…HPH」","L"
+			PRINTFORMW 페니스가 최안쪽까지 도달하면(자) 화는%CALLNAME:MASTER%(을)를 꽉 꼭 껴안아 새로운 사랑을 추구해 허리를 꽉 눌렀다…
+		ELSE
+			CALL HPH_PRINT,@"「うぁ…すごい、ですっ……HPH%CALLNAME:MASTER%、さんっ…HPH」","L"
+			PRINTFORMW 페니스가 최안쪽까지 도달하면(자) 화는 감탄의 한숨을 흘려,%CALLNAME:MASTER%(을)를 꽉 꼭 껴안았다…
+		ENDIF
+	;イキすぎ
+	ELSEIF EX:V절정 > 15 && BASE:체력 < MAXBASE:체력/2 && BASE:기력 <= 0
+		;これでMASTERが射精する
+		;IF NOWEX:MASTER:11 
+		;RETURN 1
+		;ENDIF
+		SELECTCASE RAND:2
+			CASE 0
+				PRINTFORML 「후~, 후~…%CALLNAME:MASTER%씨, 조금, 쉬게 하고……！！」
+				CALL HPH_PRINT,@"「～～～～～～～ッHPHHPH」","L"
+				PRINTFORML %CALLNAME:MASTER%(은)는 거듭되는 절정에 피폐 한 화의 다리를 벌려 좁은 질내에 단번에 노장을 들어가게 할 수 있었다.
+				PRINTFORML 최안쪽을 비난과 압력을 받은 화는, 강렬한 쾌감에 소리가 되지 않는 소리를 지른다.
+				PRINTFORMW %CALLNAME:MASTER%하지만 추송을 시작하면(자), 그 소리는 점차 아첨하는 것 같은 교성으로 바뀌어 갔다…
+			CASE 1
+				CALL HPH_PRINT,@"「はあ……%CALLNAME:MASTER%さん凄すぎですよぉ……HPHあっ、くぅっ…んん～～～～～っ！！」","L"
+				PRINTFORML %CALLNAME:MASTER%(은)는 위로 향해 된 화의 허리를 움켜 쥐면(자) , 열정에 익히고 끓어오르는 육 간을 그녀중으로 밀어넣었다.
+				PRINTFORML \@ EX:65:질내정액 >= 300 ? 白濁交じりの # 滾々と溢れる \@애액으로 흠뻑 젖어 있게 된 좁은 질내는 거의 저항 없게 소레를 삼켜, 개발하고 자른 미육이 관련되어 붙는다.
+				CALL HPH_PRINT,@"「……やっ…HPHあっHPHはっHPHんっHPHあぁっHPH」","L"
+				PRINTFORML 리드미컬하게 질오를 밀어 올려 주면(자), 질벽, 꽉 꼭 죄여%CALLNAME:MASTER%의 사정을 재촉하려고 한다.
+				PRINTFORMW 축탈진한 화는 단속적인 천를 흘려, 주어지는 쾌감에 다만 다만 잠겨 있을 뿐이었다……
+		ENDSELECT
+	;恋慕
+	ELSEIF TALENT:연모
+		;恋慕かつ発情中
+		IF TCVAR:발정
+			SELECTCASE RAND:2
+				CASE 0
+					CALL HPH_PRINT,@"「はぁっ、あ゛っ…HPHおまんこきゅんきゅんして、腰とまんな、ぁっHPH」","W"
+				CASE 1
+					CALL HPH_PRINT,@"「ああんっ！くぅ、きゅぅんっHPH%CALLNAME:MASTER%さんっ、すき、すきぃっHPH」","L"
+					PRINTFORMW 화는 쾌락에 몸을 비틀면서,%CALLNAME:MASTER%에 사랑을 계속 속삭인다…
+			ENDSELECT
+		;恋慕かつ非発情
+		ELSE
+			SELECTCASE RAND:2
+					CASE 0
+						CALL HPH_PRINT,@"「はっ、ぁふ、くぅんっHPH%CALLNAME:MASTER%さんっ……！」","L"
+						PRINTFORMW 화는 섹스의 쾌락에 뺨을 느슨해지게 하고 있다…
+					CASE 1
+						CALL HPH_PRINT,@"「くぅ、あは、ぁんっ…HPHもっと、わたしで気持ちよくなってくださいっ……」","L"
+				ENDSELECT
+		ENDIF
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		;まだです
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		;まだです
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;61,後背位
+;==================================================
+@M_KOJO_MESSAGE_COM_K65_61
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K65_61_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K65_61_1
+;-------------------------------------------------
+;立位
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL && TFLAG:193
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;処女
+		IF TCVAR:파과 == 1
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;挿入継続
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:100 == PLAYER
+		;前回射精した
+		IF TCVAR:102
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+;-------------------------------------------------
+;後背位
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;処女
+		IF TCVAR:파과 == 1
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;こなれてない
+	ELSEIF ABL:V감각 < 2
+		IF TCVAR:발정
+			PRINTFORML 「구, , 하, 공 응」
+			PRINTFORMW 「%CALLNAME:MASTER%씨,%CALLNAME:MASTER%씨…」
+		ELSE
+			PRINTFORML 「응응……」
+			PRINTFORMW 「이 몸의 자세, 어쩐지 대단히 부끄럽습니다…」
+		ENDIF
+	;MASTERが何度も射精している
+	ELSEIF TCVAR:350 > 3 && RAND:2 == 0
+			;イキすぎ
+			IF EX:V절정 > 15 && BASE:체력 < MAXBASE:체력/2 && BASE:기력 <= 0
+				PRINTFORML 화는 체력이 한계에 가까워지고 있는 것 같고, 엎드려 난폭한 한숨 돌리고 있다.
+				PRINTFORML 「후~, 후~……(이)나 , 더 이상 하면(자), 나, 부서지면…～～～～～！！」
+				PRINTFORML 겨 질질 꺼 피하려고 하는 화의 허리를 잡으면(자),%CALLNAME:MASTER%(은)는 단번에 최안쪽까지 페니스를 꽂았다.
+				CALL HPH_PRINT,@"「やっ、あっ、うぅ……っ！そんな、ケダモノみたいなっ、ぁっHPHはっ、ぃいっ…あっ、あ゛あぁぁぁっHPH」","L"
+				PRINTFORMW 녹고 자른 질내를 집요하게 계속 마찰하면(자) , 화는 비명에도 가까운 것 같은 교성을 올려 벌벌신체를 경련시켰다.
+			ELSEIF TCVAR:발정
+				PRINTFORML %CALLNAME:MASTER%(은)는 화의 허리를 끌어 들이면(자), 유음순에 페니스의 첨단을 나누어주었다.
+				CALL HPH_PRINT,@"「ふぁぅ…っHPH沢山ぴゅっぴゅしたのに、まだシたいんですね…」","L"
+				CALL HPH_PRINT,@"「もう……%CALLNAME:MASTER%さんのケダモノ……HPH」","L"
+				PRINTFORML 화는 형태가 좋은 엉덩이를 높게 내걸어 꼬리를 흔들어 체와 거절하면서 못된 장난 같게 미소지어%CALLNAME:MASTER%(을)를 권하고 있다.
+				SIF EX:65:질내정액 >= 300
+					PRINTFORML 쑥 내밀어진 비렬로부터는 질내에 완전히 해결되지 않았던 정액이 넘쳐 흰 아랫배로 향해 다랑어 다랑어와 흐르고 있었다.
+				PRINTFORMW 그 모습에 흥분을 일으킬 수 있었다%CALLNAME:MASTER%(은)는, 참지 못하고 화를 격렬하게 찌르기 시작했다.
+			ELSE
+				PRINTFORML 「%CALLNAME:MASTER%씨, 아직 나를 갖고 싶네요…」
+				PRINTFORML %CALLNAME:MASTER%(을)를 받아들이기 (위해)때문에, 화는 좀 작은 엉덩이를 쑥 내밀어, 가는 손가락끝을 음순에 나누어주어 스스로 나누어 열었다.
+				PRINTFORML 「좋아요…좀 더, 나로 기분 좋아져 주세요……」
+				PRINTFORML 뺨을 연분홍색에 물들이면서, 힘껏의 웃는 얼굴로%CALLNAME:MASTER%(을)를 유혹해 보인다.
+				SIF EX:65:질내정액 >= 300
+					PRINTFORML 뻥연 비렬로부터는 질내에 완전히 해결되지 않았던 정액이 넘쳐 흰 아랫배로 향해 다랑어 다랑어와 흐르고 있었다.
+				PRINTFORMW 그 모습에 흥분을 일으킬 수 있었다%CALLNAME:MASTER%(은)는, 참지 못하고 그녀를 격렬하게 찌르기 시작했다.
+			ENDIF
+	;イキすぎ
+	ELSEIF EX:V절정 > 15 && BASE:체력 < MAXBASE:체력/2 && BASE:기력 <= 0
+		SELECTCASE RAND:2
+			CASE 0
+				CALL HPH_PRINT,@"「くぅっHPHあっHPHあ～～～～っ！！%CALLNAME:MASTER%さんっHPH%CALLNAME:MASTER%さんっHPH%CALLNAME:MASTER%さんっHPHHPH」","L"
+				PRINTFORML \@ EX:65:질내정액 >= 300 ? 精液混じりの # 滾々と溢れる \@애액을 긁어내도록(듯이) 큰 stroke로 화의 비부를 찔러 돌리면(자),
+				PRINTFORML %CALLNAME:MASTER%의 모양을 기억한 질육이 구급과 페니스를 단단히 조여 두 명을 보다 밀착시켜 쾌감을 어디까지나 높여 계속해 간다.
+				PRINTFORMW 거듭되는 절정이 주어진 빈의 이성은 쾌락안에 녹고 떠나, 화는 다만 다만\@ TALENT:연모 ? 愛する人 # 情交の相手 \@의 이름을 외칠 수 밖에 할 수 없는 것이었다…
+			CASE 1
+				CALL HPH_PRINT,@"「はぁっ…！あっ、くっ、ふぁっHPHひぁ、んんっ！！あっHPHああんっHPHHPH」","L"
+				PRINTFORML 화가 납죽 엎드림이 되면(자),%CALLNAME:MASTER%(은)는 곧 바로 몸의 자세를 바꾸어 본능이 요구하는 대로 그녀를 페니스로 관철했다.
+				PRINTFORML %CALLNAME:MASTER%의 추송에 응하도록(듯이) 화는 허리를 꽉 눌러, 흘립 한 페니스를 최안쪽으로 맞아들인다.
+				PRINTFORMW 짐승과 같이 교합 계속 하는 두 명에게는 이미 말마저 필요없고, 응과 고기가 부딪치는 소리와 교성(뿐)만이 주위에 영향을 주어 건너고 있었다.
+			ENDSELECT
+	;恋慕
+	ELSEIF TALENT:연모
+		;恋慕かつ発情
+		IF TCVAR:발정
+			SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"「イイっ…イイですぅっ……HPHもっとっ、%CALLNAME:MASTER%さんのおちんちん、ずこずこ、ってぇ…！！」","W"
+				CASE 1
+					CALL HPH_PRINT,@"「はぁぁんっHPH獣みたいに後ろからされるの、きもちいいですっ……！！」","W"
+				CASE 2
+					CALL HPH_PRINT,@"「ひぁ、んんっ、くぁっ、あんんっ！！この格好、%CALLNAME:MASTER%さんに、犯されてるみたいぃっ……HPH」","W"
+			ENDSELECT
+		;恋慕かつ非発情
+		ELSE
+			SELECTCASE RAND:2
+				CASE 0
+					CALL HPH_PRINT,@"「んぅ…っ！は、ぁんっ！この格好、いろいろ見られちゃって…きゃうんっHPH」","L"
+					PRINTFORMW 화는 수치를 느끼면서도, 오히려 흥분하고 있는 것처럼 보인다…
+				CASE 1
+					PRINTFORML 「팥고물, 응, 은 아…%CALLNAME:MASTER%씨의 것이, 안쪽까지……」
+					CALL HPH_PRINT,@"（%CALLNAME:MASTER%さんの顔が見えないから、おちんちんが膣内でどうなってるのか、すごく意識しちゃう……HPH）","W"
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+	;まだ
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+	;まだ
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;62,正常位アナル
+;==================================================
+@M_KOJO_MESSAGE_COM_K65_62
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K65_62_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K65_62_1
+;-------------------------------------------------
+;立位
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL && TFLAG:193
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;アナル処女
+		IF TCVAR:A파과
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;挿入継続
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;前回射精した
+		IF TCVAR:104
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+;-------------------------------------------------
+;正常位
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;アナル処女
+		IF TCVAR:A파과
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;挿入継続
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;前回射精した
+		IF TCVAR:104
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;63,後背位アナル
+;==================================================
+@M_KOJO_MESSAGE_COM_K65_63
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K65_63_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K65_63_1
+;-------------------------------------------------
+;立位
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL && TFLAG:193
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;アナル処女
+		IF TCVAR:A파과
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;挿入継続
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;前回射精した
+		IF TCVAR:104
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+;-------------------------------------------------
+;後背位
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;アナル処女
+		IF TCVAR:A파과
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;挿入継続
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;前回射精した
+		IF TCVAR:104
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;64,逆レイプ
+;==================================================
+@M_KOJO_MESSAGE_COM_K65_64
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K65_64_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K65_64_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;調教者が処女
+		IF TALENT:PLAYER:처녀 == 1
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;挿入継続
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:PLAYER:100 == TARGET
+		;前回射精した
+		IF TCVAR:PLAYER:102
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;65,騎乗位
+;==================================================
+@M_KOJO_MESSAGE_COM_K65_65
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K65_65_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K65_65_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;処女
+		IF TCVAR:파과 == 1
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;挿入継続
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:100 == PLAYER
+		;前回射精した
+		IF TCVAR:102
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;こなれてない
+	ELSEIF ABL:V감각 < 2
+		IF TCVAR:발정
+			PRINTFORML 「응응, 구, , 깊은,……」
+			PRINTFORMW 화는 주와 같은 땀을 액에 띄우면서 허리를 움직이고 있다…
+		ELSE
+			PRINTFORML 「어떻게, 입니까…나의, 기분이 좋은, 입니까…」
+			PRINTFORMW 화는 난폭한 숨을 내쉬면서 필사적으로 움직이고 있다…
+		ENDIF
+	;MASTERが何度も射精している
+	ELSEIF TCVAR:350 > 3 && RAND:2 == 0
+			;イキすぎ
+			IF EX:V절정 > 15 && BASE:체력 < MAXBASE:체력/2 && BASE:기력 <= 0
+				CALL HPH_PRINT,@"「っ、くぅ、あああああああぁぁっ！！%CALLNAME:MASTER%さんっ、はぁ、はぁっ、%CALLNAME:MASTER%さんんっ……HPH」","L"
+				PRINTFORML 신체 위에 쓰러진 화를 꼭 껴안으면(자),%CALLNAME:MASTER%(은)는 강하게 허리를 부딪혔다.
+				PRINTFORML 숨을 헐떡일 수 있는이면서 서로의 이름을 서로 불러 , 끝나고가 없는 쾌락의 후치로 저속해져 간다.
+				PRINTFORMW 격렬한 정교의 한중간에 서로 섞인 체액으로, 두 명의 주위는 추잡한 악취로 가득 차고 가득 차 있었다.
+			ELSEIF TCVAR:발정
+				PRINTFORML 「네에…아직, 내고 싶지요？」
+				PRINTFORML 화는%CALLNAME:MASTER%의 위에 걸치면(자), 요염한 미소를 띄워 페니스에 손을 대었다.
+				CALL HPH_PRINT,@"「うああっ…硬いぃ……HPH」","L"
+				PRINTFORML 화는 감촉을 맛보는것 같이 천천히 앉아, 녹고 자른 질구로 페니스를 감추어 붐비어 간다.
+				PRINTFORML 이윽고 해 귀두가 약간 딱딱한 것에 접해 최안쪽에 도달했던 것(적)이 전해져 온다.
+				CALL HPH_PRINT,@"「あはあっHPH%CALLNAME:MASTER%さん、本当に、底なしなんですからぁっ…HPH」","W"
+			ELSE
+				PRINTFORML 「…아직, 부족합니까……？」
+				PRINTFORML %CALLNAME:MASTER%(은)는 화를 걸치게 하면(자), 좀 작은 엉덩이해와 두드려 계속을 재촉했다.
+				PRINTFORML 「우우…그런, 재촉하지 말아 주세요……응, 구, 아, 뜨겁다…」
+				PRINTFORML 화가 앉으면(자), 유인 질구에%CALLNAME:MASTER%의 페니스와 침울해져 간다.
+				PRINTFORML 「아…나카로, 자꾸자꾸 커져…%CALLNAME:MASTER%씨, 정말로 바닥 없음이니까…」
+				PRINTFORMW 황홀로 한 표정으로 아랫배를 어루만지면(자), 화는 천천히 허리를 움직이기 시작했다.
+			ENDIF
+	;イキすぎ
+	ELSEIF EX:V절정 > 15 && BASE:체력 < MAXBASE:체력/2 && BASE:기력 <= 0
+		;SELECTCASE RAND:2
+		;	CASE 0
+				PRINTFORML 「하, 후~, -…응응…너무 기분 좋아 져 , 허리가 힘이 빠져 버리고 있습니다……아하하」
+				PRINTFORML %CALLNAME:MASTER%에 껴안을 수 있던 채로, 화는 이마에 땀을 띄워 힘 없게 웃었다.
+				PRINTFORML 그 모습에 왠지 흥분을 느꼈다%CALLNAME:MASTER%(은)는, 녹고 자른 화의 비소를 단번에 관철했다.
+				CALL HPH_PRINT,@"「ひぁぁぁっ！？%CALLNAME:MASTER%さんっ、もっ、むりっ、ひぐっ、あっHPHああああ～～～っHPH」","W"
+		;	CASE 1
+		;		
+		;ENDSELECT
+	;恋慕
+	ELSEIF TALENT:연모
+		;恋慕かつ発情
+		IF TCVAR:발정
+			SELECTCASE RAND:4
+				CASE 0
+					CALL HPH_PRINT,@"「あっ、はあっ！ひあぅっ……くぁ、ああんっ、～～～～～っHPH」","L"
+					PRINTFORML %CALLNAME:MASTER%(은)는 화의 손을 잡아, 그녀의 좁은 질내를 몇번이나 몇번이나 밀어 올린다.
+					PRINTFORMW 화도%CALLNAME:MASTER%의 움직임에 맞추어 허리를 거절해, 서로 쾌락을 계속 탐냈다.
+				CASE 1
+					PRINTFORML 「아는, 내가 움직여도 좋네요…？」
+					CALL HPH_PRINT,@"「それじゃあ、%CALLNAME:MASTER%さんの精液、搾り取ってあげちゃいます…HPH」","W"
+				CASE 2
+					CALL HPH_PRINT,@"「あんっ、くぅ、きゅうぅんっHPHおちんちんイイっ…おちんちんイイよぉっ…」","W"
+				CASE 3
+					CALL HPH_PRINT,@"「この格好…なんだか、私が%CALLNAME:MASTER%さんを犯してるみたいで、興奮しちゃいますっHPH」","W"
+			ENDSELECT
+		;恋慕かつ非発情
+		ELSE
+			SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"「あっ、はあっ！ひあぅっ……くぁ、ああんっ、～～～～～っHPH」","L"
+					PRINTFORML %CALLNAME:MASTER%(은)는 화의 손을 잡아, 그녀의 좁은 질내를 몇번이나 몇번이나 밀어 올린다.
+					PRINTFORMW 화도%CALLNAME:MASTER%의 움직임에 맞추어 허리를 거절해, 서로 쾌락을 계속 탐냈다.
+				CASE 1
+					PRINTFORML 「아 아…깊은, 깊어……」
+					PRINTFORMW 화는 스스로 적극적으로 허리를 거절해, 쾌락을 향수하고 있다…
+				CASE 2
+					PRINTFORML 「후~, 팥고물……나에게 맡겨 주세요」
+					PRINTFORMW 「가득, 기분 좋게 해 줄테니까…, 구,…」
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;66,騎乗位アナル
+;==================================================
+@M_KOJO_MESSAGE_COM_K65_66
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K65_66_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K65_66_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;アナル処女
+		IF TCVAR:A파과
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;挿入継続
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;前回射精した
+		IF TCVAR:104
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;67,対面座位
+;==================================================
+@M_KOJO_MESSAGE_COM_K65_67
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K65_67_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K65_67_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;処女
+		IF TCVAR:파과 == 1
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;こなれてない
+	ELSEIF ABL:V감각 < 2
+		IF TCVAR:발정
+		;	SELECTCASE RAND:2
+		;		CASE 0
+					PRINTFORML 「후~…, 응응…」
+					PRINTFORMW 화는 무언가에 참도록(듯이) 당신의 신체를 꼭 껴안았다.
+		;		CASE 1
+		;			PRINTFORML 
+		;	ENDSELECT
+		ELSE
+		;	SELECTCASE RAND:2
+		;		CASE 0
+					PRINTFORML 「구, 응…%CALLNAME:MASTER%씨…」
+					PRINTFORMW 꽉 해가 보고 붙어 오는 화의 손가락끝이 당신의 등에 먹혀들었다.
+		;		CASE 1
+		;			PRINTFORML 
+		;	ENDSELECT
+		ENDIF
+	;イキすぎ
+	ELSEIF EX:V절정 > 15 && BASE:체력 < MAXBASE:체력/2 && BASE:기력 <= 0
+		CALL HPH_PRINT,@"「ふうっ、んん…HPHふふ、鍛えてはいるつもりですけれど…さすがに疲れちゃいました…」","L"
+		PRINTFORMW 화는%CALLNAME:MASTER%에 기대고 걸리면서 숨을 정돈하고 있다.
+		CALL HPH_PRINT,@"「こうして、しばらく…あなたの胸で、休ませてください…HPH」","L"
+		PRINTFORML 주홍에 물든 피부를 대어 서로의 튄 고동을 전신으로 서로 전한다.
+		CALL HPH_PRINT,@"「%CALLNAME:MASTER%さん、温かいです…HPHこのまま、ぎゅってして…離さないでくださいね…HPH」","W"
+	;MASTERが何度も射精している
+	ELSEIF TCVAR:350 > 3 && RAND:2 == 0
+		IF TCVAR:발정
+			CALL HPH_PRINT,@"「あふっ…HPHもっと、しましょ…？」","L"
+			PRINTFORML 화는%CALLNAME:MASTER%의 신체를 꽉 꼭 껴안아 아첨하도록(듯이) 신체를 문질러 왔다.
+			PRINTFORMW 노장의 첨단이 화의 흰 아랫배를 위를 덧써 돌려, 반투명의 액즙이 추잡한 궤적을 그리고 있다…
+			CALL HPH_PRINT,@"「%K65_AEGI("控えめ",3)%…んん、うまく、入らない…」","L"
+			PRINTFORML 화가 안타까운 듯이  허리를 구군요들 다툴 때에, 입구가 귀두에 걸려 완만한 쾌감이 주어진다.
+			CALL HPH_PRINT,@"「%K65_AEGI("控えめ",2)%…あはHPHこうして、擦りつけるのも…HPH…っ、～～～～～～～HPHHPHHPH」","L"
+			PRINTFORML \@ PALAM:윤활 >= 10000 ? トロトロになった # きゅっと引き締まった \@쿠레바스로 그것이 미끄러져 들어간 순간, 화는 열명을 올려 신체를 진동시켰다.
+		ELSE
+			CALL HPH_PRINT,@"「%K65_AEGI("控えめ",3)%…ぁ…」","L"
+			PRINTFORML %CALLNAME:MASTER%(와)과 마주 보게 된 화는 어딘가 부끄러운 듯이  시선을 뒤로 젖혔다.
+			PRINTFORMW 「……그, 이렇게 가까우면 조금 조있습니다…」
+			PRINTFORML
+			PRINTFORML 「아하하…지금에 되어 서로 응시하는 것이 부끄럽다니, 조금 이상하네요…
+			PRINTFORML 　이렇게 꼭 껴안을 수 있어, 가득, 내 줘…좀 더 불쾌한 일, 많이 해…」
+			PRINTFORMW 지금까지의 은밀한 일을 반추 하면서 서로의 체온을 느끼고 있으면(자), 말해 알려지지 않고 신체가 뜨거워진다.
+			CALL HPH_PRINT,@"「……あっHPH」","L"
+			CALL HPH_PRINT,@"「……おちんちん、さっきより硬くなっちゃいましたね。もっといやらしい事、したいですか…？」","L"
+			PRINTFORML 대답하는 대신에 좁은 질내를 밀어 헤쳐 흠뻑유미육으로부터 흘러넘쳐 오는 음수의 열을 차분히 맛본다.
+			PRINTFORML …그녀도%CALLNAME:MASTER%(와)과 같이, 기억이 실마리가 되어 앙인 체하며 있던 것 같다.
+			CALL HPH_PRINT,@"「%K65_AEGI("控えめ",3)%…ふふ。もっともっと、私に%CALLNAME:MASTER%さんを刻み付けてください…HPH」","W"
+		ENDIF
+	;恋慕
+	ELSEIF TALENT:연모 && RAND:2
+		;恋慕かつ発情
+		IF TCVAR:발정
+			SELECTCASE RAND:2
+				CASE 0
+					CALL HPH_PRINT,@"「%K65_AEGI()%…%CALLNAME:MASTER%さんっ…HPH」","L"
+					PRINTFORML 화는%CALLNAME:MASTER%에 매달린 채로 손재주가 있게 허리를 움직여 쾌락을 탐내고 있다…
+					CALL HPH_PRINT,@"「あはぁ…っHPH%K65_AEGI("控えめ",3)%…ぎゅってするの、好きぃ…っHPH」","W"
+					PRINTFORML %CALLNAME:MASTER%(은)는 그녀의 배후에 손을 써 부드러운 꼬리를 어루만지면서, 화를 좋아한다고 속삭였다.
+					CALL HPH_PRINT,@"「ひぅっ…！？んやっ、ぁっHPHそんなの、はんそく…ですっ…%K65_AEGI(,2)%…っHPH」","L"
+					PRINTFORMW 단 말을 걸 때마다 녹은 밀혈이 구급과 단단히 조여%CALLNAME:MASTER%(을)를 즐겁게 했다…
+				CASE 1
+					CALL HPH_PRINT,@"「%CALLNAME:MASTER%さん…%K65_AEGI(,2)%…ん、ちゅHPHちゅっ…HPH」","L"
+					PRINTFORML 화는 도연으로 하면서%CALLNAME:MASTER%의 신체에 입 맞춤 하고 있다…
+					CALL HPH_PRINT,@"「ちゅ、ちゅぅ、ちゅるりゅっHPHはぷっ…HPHちゅ、ちゅうぅっHPH」","L"
+					PRINTFORML 가슴 팍에, 목덜미에, 유두에 달라붙고 나서, 또 목덜미에…
+					PRINTFORML 그녀의 얼굴이 가까워져 오면(자), 튄 숨이 체표를 비바람이라고 조크조크와 쾌감이 솟아나 온다.
+					CALL HPH_PRINT,@"「ん、ふふっ…HPH%CALLNAME:MASTER%さん、きもちよさそう…HPH」","L"
+					CALL HPH_PRINT,@"「こうして、ちゅーしてあげると…おちんちんが、ぴくぴくHPHってして…HPH私も、きもちいいです…HPHんむ、れるぅっ…HPH」","L"
+					PRINTFORML %CALLNAME:MASTER%의 저항이 없는 것을 좋은 것에, 화는%CALLNAME:MASTER%의 목 원래로 혀를 기게 해 타액을 칠한다.
+					PRINTFORMW 마치, 육식동물의 마킹과 같았다…
+			ENDSELECT
+		;恋慕かつ非発情
+		ELSE
+			SELECTCASE RAND:2
+				CASE 0
+					CALL HPH_PRINT,@"「%K65_AEGI()%…%CALLNAME:MASTER%さんっ…HPH」","L"
+					PRINTFORML 화는%CALLNAME:MASTER%에 히 쉿매달려, 물기를 띤 눈동자를 향하여 온다.
+					PRINTFORMW 복받치는 사랑 아까움을 억제하지 못하고 작은 등을 꼭 껴안으면(자), 질오로부터 녹은 밀이와 목표 없게 흘러넘쳐 왔다.
+				CASE 1
+					CALL HPH_PRINT,@"「んんっ…あったかい…HPH」","L"
+					PRINTFORML %CALLNAME:MASTER%에 안아 도착한 화는, 만족기분인 한숨을 흘렸다.
+					PRINTFORML 꽉 눌리는 가슴의 첨단의 딱딱한 감촉이 어딘지 모르게 간지럽고, 불쾌하다.
+					CALL HPH_PRINT,@"「あ…HPH%CALLNAME:MASTER%さん、さっきよりもおっきくなった…HPHこうしてぎゅってするの、好きですか？」","L"
+					CALL HPH_PRINT,@"「私は……ふふHPH大好きですHPHえへへ、ぎゅう～っHPH」","W"
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	;それ以外
+	ELSE
+		IF TCVAR:발정
+			SELECTCASE RAND:2
+				CASE 0
+					CALL HPH_PRINT,@"「%K65_AEGI()%」","W"
+				CASE 1
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:2
+				CASE 0
+					CALL HPH_PRINT,@"「%K65_AEGI()%」","W"
+				CASE 1
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;68,背面座位
+;==================================================
+@M_KOJO_MESSAGE_COM_K65_68
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K65_68_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K65_68_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;処女
+		IF TCVAR:파과 == 1
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;挿入継続
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:100 == PLAYER
+		;前回射精した
+		IF TCVAR:102
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;69,対面座位アナル
+;==================================================
+@M_KOJO_MESSAGE_COM_K65_69
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K65_69_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K65_69_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;アナル処女
+		IF TCVAR:A파과
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;挿入継続
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;前回射精した
+		IF TCVAR:104
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;70,背面座位アナル
+;==================================================
+@M_KOJO_MESSAGE_COM_K65_70
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K65_70_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K65_70_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;アナル処女
+		IF TCVAR:A파과
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;挿入継続
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;前回射精した
+		IF TCVAR:104
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;71,二穴挿し
+;==================================================
+@M_KOJO_MESSAGE_COM_K65_71
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K65_71_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K65_71_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;考えうる分岐が多すぎるので地の文の大まかな分岐だけ
+	;連続
+	IF PREVCOM == SELECTCOM
+		PRINTFORMW 
+		RETURN 1
+	;主人V挿入→助手A挿入
+	ELSEIF TCVAR:100 == MASTER
+		PRINTFORMW 
+		RETURN 1
+	;主人A挿入→助手V挿入
+	ELSEIF TCVAR:101 == MASTER
+		PRINTFORMW 
+		RETURN 1
+	;助手V挿入→主人A挿入
+	ELSEIF TCVAR:100 == ASSI
+		PRINTFORMW 
+		RETURN 1
+	;助手A挿入→主人V挿入
+	ELSEIF TCVAR:101 == ASSI
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;72,挿入Ｇスポット責め
+;==================================================
+@M_KOJO_MESSAGE_COM_K65_72
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K65_72_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K65_72_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+	ENDIF
+	;-------------------------------------------------
+	;挿入継続
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;前回射精した
+		IF TCVAR:104
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;73,挿入子宮口責め
+;==================================================
+@M_KOJO_MESSAGE_COM_K65_73
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K65_73_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K65_73_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+	ENDIF
+	;-------------------------------------------------
+	;挿入継続
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;前回射精した
+		IF TCVAR:104
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;経験不足
+	IF ABL:V감각 < 2
+		PRINTFORMW
+	;イキすぎ
+	ELSEIF EX:V절정 > 15 && BASE:체력 < MAXBASE:체력/2 && BASE:기력 <= 0
+		CALL HPH_PRINT,@"「いっ、ああっ！！はぁっ、あん、あんんんっ！！あっ、ああ～～～～っHPHHPHHPH」","L"
+		PRINTFORMW 
+	;MASTERが何度も射精している
+	ELSEIF TCVAR:350 > 3 && RAND:2 == 0
+		
+	;基本セット
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;74,Ｓ状結腸責め
+;==================================================
+@M_KOJO_MESSAGE_COM_K65_74
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K65_74_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K65_74_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+	ENDIF
+	;-------------------------------------------------
+	;挿入継続
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;前回射精した
+		IF TCVAR:104
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;75,膣裏責め
+;==================================================
+@M_KOJO_MESSAGE_COM_K65_75
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K65_75_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K65_75_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+	ENDIF
+	;-------------------------------------------------
+	;挿入継続
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;前回射精した
+		IF TCVAR:104
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;77,小人オナホ(針妙丸用？
+;==================================================
+@M_KOJO_MESSAGE_COM_K65_77
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K65_77_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K65_77_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+	ENDIF
+	;-------------------------------------------------
+	;挿入継続
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;前回射精した
+		IF TCVAR:104
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1

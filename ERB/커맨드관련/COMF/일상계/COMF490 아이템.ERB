@@ -1,0 +1,636 @@
+﻿;-------------------------------------------------
+;アイテム画面
+;-------------------------------------------------
+@COM490
+#DIM 回復前体力１
+#DIM 回復前気力１
+#DIM 回復前精力１
+#DIM 回復後体力１
+#DIM 回復後気力１
+#DIM 回復後精力１
+#DIM 回復前体力２
+#DIM 回復前気力２
+#DIM 回復前精力２
+#DIM 回復後体力２
+#DIM 回復後気力２
+#DIM 回復後精力２
+#DIM 対象
+#DIM 全員
+#DIM CLIENT_ID
+#DIM 虚無への回帰
+#DIM 使用アイテム
+回復前体力１ = BASE:MASTER:체력
+回復前気力１ = BASE:MASTER:기력
+回復前精力１ = BASE:MASTER:정력
+回復前体力２ = BASE:TARGET:체력
+回復前気力２ = BASE:TARGET:기력
+回復前精力２ = BASE:TARGET:정력
+VARSET LOCAL
+VARSET LOCALS
+対象 = MASTER
+虚無への回帰 = 0
+PRINTL 무엇을 사용합니까？
+$LOOP
+DRAWLINE
+FOR LOCAL,120, 699
+	IF 対象
+		IF 使用可能アイテム(LOCAL) == 2 && ITEM:LOCAL
+			PRINTFORM [{LOCAL}] %ITEMNAME:LOCAL, 18, LEFT%
+			SIF LOCAL > 99	;後々のことを考えて仕込み
+				PRINT  
+			SIF ITEM:LOCAL < 10
+				PRINT  
+			PRINTFORM 　{ITEM:LOCAL}개　
+			SETCOLOR C_L_GRAY
+				PRINTFORML %ITEM_EXPLANATION(LOCAL)%
+			RESETCOLOR
+		ENDIF
+	ELSE
+		IF 使用可能アイテム(LOCAL) && ITEM:LOCAL
+			PRINTFORM [{LOCAL}] %ITEMNAME:LOCAL, 18, LEFT%
+			SIF LOCAL > 99
+				PRINT   
+			SIF ITEM:LOCAL < 10
+				PRINT  
+			PRINTFORM 　{ITEM:LOCAL}개　
+			SETCOLOR C_L_GRAY
+				PRINTFORML %ITEM_EXPLANATION(LOCAL)%
+			RESETCOLOR
+		ENDIF
+	ENDIF
+NEXT
+PRINTL
+DRAWLINE
+PRINTFORML [900] 콜렉션의 스키마 자동 사양 변환（현재\@ FLAG:C스키마자동사양 ? ON# OFF\@）
+IF TARGET && SHIRAHU(TARGET)
+	SIF 対象
+		SETCOLOR C_YELLOW
+	PRINTFORMLC [998] %CALLNAME:TARGET%에 사용한다
+	RESETCOLOR
+ENDIF
+
+PRINTLC [999] 그만둔다
+INPUT
+使用アイテム = RESULT
+IF DRUG(使用アイテム,対象)
+	PRINTL 오늘은 이미 그만두자
+	GOTO LOOP
+ENDIF
+IF ITEM_SWEETS(使用アイテム) && !TIME_PROGRESS(TCVAR:対象:디저트공복시각)
+	PRINTL 아직 먹고 싶지 않다
+	GOTO LOOP
+ENDIF
+IF RESULT == 900
+	FLAG:C스키마자동사양 = !FLAG:C스키마자동사양
+	PRINTFORMW 자동 사양을\@ FLAG:C스키마자동사양 ? ON# OFF\@(으)로 했습니다
+	GOTO LOOP
+ENDIF
+SELECTCASE 使用アイテム
+	CASE 120
+		IF 対象 == MASTER
+			PRINTFORML %ITEMNAME:使用アイテム%(을)를 먹었다
+			PRINTL ……저렴한 맛이 났다
+			CALL RECOVER(MASTER,50, "체력", "チョコによる回復")
+			TCVAR:対象:디저트공복시각 = 1440 * DAY + TIME + 180
+			LOCAL:1 ++
+		ENDIF
+	CASE 121
+		IF 対象 == MASTER
+			PRINTFORML %ITEMNAME:使用アイテム%(을)를 먹었다
+			CALL RECOVER(MASTER,300, "체력", "チョコによる回復")
+			CALL RECOVER(MASTER,300, "기력", "チョコによる回復")
+			TCVAR:対象:디저트공복시각 = 1440 * DAY + TIME + 180
+			LOCAL:1 ++
+		ENDIF
+	CASE 122
+		IF 対象 == MASTER
+			PRINTFORML %ITEMNAME:使用アイテム%(을)를 먹었다
+			PRINTFORML 능숙하다！
+			CALL RECOVER(MASTER,500, "체력", "チョコによる回復")
+			CALL RECOVER(MASTER,500, "기력", "チョコによる回復")
+			TCVAR:対象:디저트공복시각 = 1440 * DAY + TIME + 180
+			LOCAL:1 ++
+		ENDIF
+	CASE 123
+		IF 対象 == MASTER
+			PRINTFORML %ITEMNAME:使用アイテム%(을)를 먹었다
+			PRINTFORML 사랑을 느낀다！
+			CALL RECOVER(MASTER,1000, "체력", "チョコによる回復")
+			CALL RECOVER(MASTER,1000, "기력", "チョコによる回復")
+			TCVAR:対象:디저트공복시각 = 1440 * DAY + TIME + 180
+			LOCAL:1 ++
+		ENDIF
+	CASE 212
+			PRINTFORML %ITEMNAME:使用アイテム%(을)를 먹었다
+			LOCAL:1 ++
+			CALL RECOVER(MASTER,100, "체력", "かしわもちによる回復")
+			TCVAR:対象:디저트공복시각 = 1440 * DAY + TIME + 180
+	CASE 213
+		SIF TARGET && SHIRAHU(TARGET)
+			PRINT 두 명 줄서
+			PRINTDATA
+				DATAFORM 「아이스」
+				DATAFORM 「냉동 귤」
+				DATAFORM 「(무늬)격이 2개 붙은 소다 아이스」
+				DATAFORM 「2개(살)로 1조의 달걀 아이스」
+				DATAFORM 「츄-애완동물」
+				DATAFORM 「파피코」
+				DATAFORM 「연유가 찬 milk bar」
+				DATAFORM 「아즈 어금니-」
+				DATAFORM 「수박 바」
+				DATAFORM 「가튼, 이라고 귤」
+				DATAFORM 「블랙 번개 아이스」
+				DATAFORM 「눈구경 큰 복」
+			ENDDATA
+		PRINTFORML (을)를 먹었다
+			CALL RECOVER(MASTER,150, "기력", "アイスによる回復")
+			TCVAR:MASTER:디저트공복시각 = 1440 * DAY + TIME + 180
+			IF  TARGET && SHIRAHU(TARGET)
+				CALL RECOVER(TARGET,150, "기력", "アイスによる回復")
+				TCVAR:디저트공복시각 = 1440 * DAY + TIME + 180
+			ENDIF
+		LOCAL:1 ++
+	CASE 215
+		PRINTFORML %ITEMNAME:使用アイテム%(을)를 사용했다
+		SETBIT TCVAR:MASTER:특별한차, 0
+		LOCAL:1 ++
+	CASE 352
+		PRINTFORML %ITEMNAME:使用アイテム%(을)를 먹었다
+		CALL RECOVER(対象,50, "기력", "イチゴによる回復")
+		SIF 対象 == (NO:9)
+			CALL RECOVER(対象,50, "기력", "イチゴによる回復")
+		LOCAL:1 ++
+	CASE 364
+		IF FLAG:70 == 1
+			PRINTFORML %ITEMNAME:使用アイテム%(을)를 먹었다
+			CALL RECOVER(MASTER,100, "기력", "スイカによる回復")
+		ELSE
+			PRINTFORML 모두가%ITEMNAME:使用アイテム%(을)를 먹었다
+			FOR 全員, 0, CHARANUM
+				SIF CFLAG:全員:현재위치 != CFLAG:MASTER:현재위치
+					CONTINUE
+				SIF !SHIRAHU(全員)
+					CONTINUE
+				CALL RECOVER(全員,100, "기력", "スイカによる回復")
+			NEXT
+		ENDIF
+		LOCAL:1 ++
+	;CASE 400
+	;	PRINTFORML %CALLNAME:MASTER%は%ITEMNAME:使用アイテム%を開いた
+	;	CALL COM401
+	;	LOCAL:1 ++
+	CASE 500
+		PRINTFORML %ITEMNAME:使用アイテム%(을)를 마셨다
+		PRINTL 마즈이！한잔 더！
+		CALL RECOVER(対象,100, "체력", "青汁による回復")
+		CALL RECOVER(対象,200, "기력", "青汁による回復")
+		LOCAL:1 ++
+	CASE 501
+			PRINTFORML %ITEMNAME:使用アイテム%(을)를 마셨다
+			CALL RECOVER(対象,200, "체력", "栄養ドリンクによる回復")
+			CALL RECOVER(対象,100, "기력", "栄養ドリンクによる回復")
+			TCVAR:対象:약 = 1
+			LOCAL:1 ++
+	CASE 502
+			PRINTFORML %ITEMNAME:使用アイテム%(을)를 마셨다
+			SIF GETBIT(TALENT:対象:성별, 1)
+				CALL RECOVER(対象,300, "정력", "精力剤による回復")
+			TCVAR:対象:약 = 1
+			LOCAL:1 ++
+	CASE 503
+			PRINTFORML %ITEMNAME:使用アイテム%(을)를 마셨다
+			PRINTL 실 있고 개, -응！
+			CALL RECOVER(対象,500, "체력", "ギンギンＺによる回復")
+			CALL RECOVER(対象,300, "기력", "ギンギンＺによる回復")
+			CFLAG:対象:385 = 60
+			TCVAR:対象:약 = 1
+			LOCAL:1 ++
+	;CASE 504
+	;		IF FLAG:70
+	;			PRINTFORML 時間停止を解除してから使おう
+	;			GOTO LOOP
+	;		ENDIF
+	;		IF CFLAG:MASTER:현재위치 != CFLAG:MASTER:초기위치
+	;			PRINTFORML これは自室で飲もう
+	;			GOTO LOOP
+	;		ENDIF
+	;		PRINTFORML ストロング虚無を口にした途端、虚無の力で思考はぼやけ、すべてがどうでもよくなってきた
+	;		PRINTFORML %CALLNAME:MASTER%は缶を空けながら一日を無為に過ごした…
+	;		虚無への回帰 = 1
+	CASE 505	;ギンギラギンＸ
+			PRINTFORML %ITEMNAME:使用アイテム%(을)를 마셨다
+			PRINTL ２４시간 싸울 수 있을 것 같은 생각이 든다…！
+			CALL RECOVER(対象,800, "체력", "ギンギラギンＸによる回復")
+			CALL RECOVER(対象,600, "기력", "ギンギラギンＸによる回復")
+			CFLAG:対象:졸음쫒기강도 = 180
+			CFLAG:対象:철야 = 1
+			TCVAR:対象:약 = 1
+			LOCAL:1 ++
+	CASE 506
+			PRINTFORML %ITEMNAME:使用アイテム%(을)를 마셨다
+			PRINTL 너의×××그리고 하늘을 찔러라！
+			CALL RECOVER(対象,200, "체력", "精力剤『天元凸破』による回復")
+			CALL RECOVER(対象,200, "기력", "精力剤『天元凸破』による回復")
+			CALL RECOVER(対象,600, "정력", "精力剤『天元凸破』による回復")
+			TCVAR:対象:약 = 1
+			LOCAL:1 ++
+	CASE 507
+			PRINTFORML %ITEMNAME:使用アイテム%(을)를 마셨다
+			CALL RECOVER(対象,150, "기력", "ポーションによる回復")
+			CALL RECOVER(対象,150, "TSP", "ポーションによる回復")
+			TCVAR:対象:약 = 1
+			LOCAL:1 ++
+	CASE 508
+			PRINTFORML %ITEMNAME:使用アイテム%(을)를 마셨다
+			PRINTL 마력이 넘쳐 온다…
+			CALL RECOVER(対象,300, "기력", "マジックポーションによる回復")
+			CALL RECOVER(対象,600, "TSP", "マジックポーションによる回復")
+			TCVAR:対象:약 = 1
+			LOCAL:1 ++
+	CASE 509
+			PRINTFORML %ITEMNAME:使用アイテム%(을)를 마셨다
+			CALL RECOVER(対象,200, "기력", "破眠ポーションによる回復")
+			CFLAG:対象:졸음쫒기강도 = 240
+			CFLAG:対象:철야 = 1
+			TCVAR:対象:약 = 1
+			LOCAL:1 ++
+	CASE 510
+			PRINTFORML %ITEMNAME:使用アイテム%(을)를 마셨다
+			PRINTL 간기능이 높아져, 취하기 어려워졌다
+			TFLAG:멀미약 = 1
+			LOCAL:1 ++
+	CASE 511	;エリクサー
+			PRINTFORML %ITEMNAME:使用アイテム%(을)를 마셨다
+			PRINTL 피로가 저 쪽으로 물리쳤다…！
+			CALL RECOVER(対象, MAXBASE:対象:체력, "체력", "エリクサーによる回復")
+			CALL RECOVER(対象,9999, "기력", "エリクサーによる回復")
+			SIF 対象 == MASTER
+				CALL RECOVER(対象,9999, "TSP", "エリクサーによる回復")
+			CALL RECOVER(対象,9999, "정력", "エリクサーによる回復")
+			CFLAG:対象:졸음쫒기강도 = 300
+			TCVAR:対象:약 = 1
+			LOCAL:1 ++
+	CASE 512	;仙丹
+			PRINTFORML %ITEMNAME:使用アイテム%(을)를 마셨다
+			PRINTL 심상하지 않은 힘이 넘친다……！
+			CALL BUFF_BASE(対象, BASE_체력, MAX(MAXBASE:対象:체력 / 5, 500))
+			CALL BUFF_BASE(対象, BASE_기력, MAX(MAXBASE:対象:기력 / 5, 500))
+			CALL BUFF_BASE(対象, BASE_정력, MAX(MAXBASE:対象:정력 / 5, 500))
+			LOCAL:1 ++
+	CASE 520
+			IF !TFLAG:키스마크
+				PRINTFORML 지금 사용해도 의미가 없다
+				GOTO LOOP
+			ELSE
+				PRINTFORML %CALLNAME:MASTER%하%ITEMNAME:使用アイテム%(을)를 감아 키스 마크를 숨겼다
+				TFLAG:붕대 = 1
+				LOCAL:1 ++
+			ENDIF
+	CASE 521
+			IF FLAG:70
+				PRINTFORML 시간 정지를 해제하고 나서 사용하자
+				GOTO LOOP
+			ENDIF
+			PRINTFORML %CALLNAME:MASTER%(은)는 역서를 열었다
+			PRINTFORML 점쟁이가 나왔다
+			PRINTFORMW 
+			IF CFLAG:1:현재위치 == CFLAG:MASTER:현재위치
+				PRINTFORML 재빠르게 레이무는 점쟁이의 머리에 불제봉을 내려쳤다.
+				PRINTFORML 가련한 점쟁이는 머V리 가 되서 떠나갔다.
+				FOR LOCAL,1,CHARANUM
+					IF CFLAG:LOCAL:현재위치 == CFLAG:MASTER:현재위치
+						BASE:LOCAL:이성 = MAXBASE:LOCAL:이성
+						BASE:LOCAL:무드 = 0
+					ENDIF
+				NEXT
+				LOCAL:1 ++
+			ELSE
+				PRINTFORML 「점술을 통해서 가야할 길을 보고 주자」
+				$EKISYA
+				CALL ASK_M("오늘의 운세", !GETBIT(FLAG:999, 1), "곤란해 하고있는 사람을 찾는다.", 1, "손톱깍이를 대령하라", BASE:MASTER:TSP >= 20, "미라다의돌 해주(100카리스마)", MONEY:2 >= 100, "엄지척!", 1, "공물로 바친다", 1)
+				SELECTCASE RESULT
+					CASE 0
+						SELECTCASE RAND:10
+							CASE 0
+								TFLAG:행운보정 = 3
+								PRINTFORML 「절호조다, 복권이라도 뽑으러 가는게 어때？」
+							CASE 1 TO 3
+								TFLAG:행운보정 = 1
+								PRINTFORML 「양호하다, 미루고 있던 일이 있으면 지금 해라」
+							CASE 4,5
+								PRINTFORML 「좋지도, 나쁘지도 않음, 이라는 느낌이다.」
+							CASE 6 TO 8
+								TFLAG:행운보정 = -1
+								PRINTFORML 「저조하다, 무리는 하지 말아라」
+							CASE 9
+								TFLAG:행운보정 = -3
+								PRINTFORML 「...너무 안좋다, 오늘 하루는 얌전히 있어라」
+						ENDSELECT
+					CASE 1
+						CLIENT_ID = SEARCH_UNIQUE_COM_사람돕기()
+						IF !CLIENT_ID
+							PRINTFORML 「그런 사람은 딱히 보이지 않는구나」
+							PRINTFORML 「굳이 말하자면 나다, 홍백 무녀에게 노려지고 있다」
+							PRINTFORML ...그건 어떻게 해줄수도 없을 것 같다.
+						ELSE
+							PRINTFORML 「%CALLNAME:CLIENT_ID% 인가?, 저 아이가 도움을 요구하고 있는 것 같구나」
+						ENDIF
+					CASE 2
+						PRINTFORMW %마스터가% 점쟁이를 가만히 바라보자 눈길이 되돌아 왔다.
+						PRINTFORMW ……뭐야 그 손톱은.
+						PRINTFORMW 인간을 그만두었다는 어필일진 몰라도, 너무 길다.
+						PRINTFORMW 일상 생활에서 불편하지 않나?, 타인을 실수로 긁어버리면 어떻게 하려는 거지?
+						PRINTFORMW 자신은 언제 부드러운 부분에 손대도 괜찮게 매일 체크하고 있는데...
+						PRINTFORMW 아니아니 애초에 무언가에 걸려 생살을 뜯어지게하면 아프지 않은가...
+						PRINTFORMW 손톱 밑에 때가 껴도 불편하지 않은건가?
+						PRINTFORMW 참을 수 없게 된 %마스터는% 시간을 멈추어 점쟁이의 손톱을 정중하게 잘라 가지런히 했다
+						PRINTFORMW %마스터는% 큰 달성감을 맛보았다……
+						PRINTFORML 한편 돌연 손톱이 짧아진 점쟁이는 곤혹하고 있다……
+						CALL RECOVER_PERMIL(対象,40,"기력")
+						BASE:MASTER:TSP -= 20
+					CASE 3
+						PRINTFORML 누구의 것을 해주 할까?
+						FOR LOCAL,1,CHARANUM
+							SIF CFLAG:LOCAL:몸목적
+								PRINTFORMLC [{LOCAL}] %CALLNAME:LOCAL%
+						NEXT
+						PRINTFORML 
+						DRAWLINE
+						PRINTFORML [999] 그만둔다
+						INPUT
+						IF RESULT == 999
+							GOTO EKISYA
+						ELSEIF CFLAG:RESULT:몸목적
+							PRINTFORML 「이런 도구는 좋지 않다고 생각한다」
+							PRINTFORMW 점쟁이가 무엇인가 복잡한 의식을 거행하자, 미라다의 돌은 서서히 빛을 잃어 바스라졌다.
+							TIME += 25
+							CFLAG:RESULT:몸목적 = 0
+							MONEY:2 -= 100
+						ENDIF
+					CASE 4
+						PRINTFORML %마스터는% 점쟁이와 시선을 주고 받고는 무언으로 엄지척을 했다
+						PRINTFORML 점쟁이는 잠깐 주저하다가, 강력한 엄지척 돌려주어 왔다
+						PRINTFORMW 두 사람 사이에 우정이 자라났다.
+						GOTO EKISYA
+					CASE 5
+						PRINTFORML %CALLNAME:MASTER%(은)는 시간을 멈춰서 점쟁이의 옷을 벗긴 뒤, 속옷을 신께 공물로 바쳤다.
+						CALL BUFF_BASE(MASTER,BASE_TSP,100,1)
+						PRINTFORMW 자신도 모르는 사이에 속옷을 탈취당한 점쟁이는 당황하고 있다.
+				ENDSELECT
+				PRINTFORMW 
+				DRAWLINE
+				$EKISYA_DIVIDE
+				PRINTFORML 레이무가 나타나 점쟁이의 머리를 불제봉으로 내리쳤다.
+				PRINTFORML 가련한 점쟁이는 머리가 2개로 갈라져 머V리가 됐다.
+				PRINTFORMW 레이무는 %마스터를% 잠시 바라보더니 떠나갔다.
+				FOR LOCAL,1,CHARANUM
+					IF CFLAG:LOCAL:현재위치 == CFLAG:MASTER:현재위치
+						BASE:LOCAL:이성 = MAXBASE:LOCAL:이성
+						BASE:LOCAL:무드 = 0
+					ENDIF
+				NEXT
+				LOCAL:1 ++
+			ENDIF
+	CASE 530
+		CALL SET_MIRADA
+		IF RESULT == -1
+			RETURN -1
+		ELSE
+			LOCAL:1 ++
+		ENDIF
+	CASE 550
+		IF !TIME_PROGRESS(TCVAR:対象:공복시각)
+			PRINTFORML %CALLNAME:対象%(은)는 아직 공복이 되지 않다
+			GOTO LOOP
+		ELSE
+			PRINTFORML %ITEMNAME:使用アイテム%(을)를 먹었다
+			CALL 만복도상승(対象,"경식")
+			CALL RECOVER_PERMIL(対象,40,"체력")
+			CALL RECOVER_PERMIL(対象,80,"기력")
+			CALL RECOVER_PERMIL(対象,50,"정력")
+			LOCAL:1 ++
+		ENDIF
+	CASE 626	;キイチゴ
+		PRINTFORML %ITEMNAME:使用アイテム%(을)를 먹었다
+		CALL RECOVER(対象,50, "기력", "キイチゴによる回復")
+		LOCAL:1 ++
+	CASE 628	;アケビ
+		PRINTFORML %ITEMNAME:使用アイテム%(을)를 먹었다
+		CALL RECOVER(対象,80, "체력", "アケビによる回復")
+		CALL RECOVER(対象,80, "기력", "アケビによる回復")
+		LOCAL:1 ++
+	CASE 630	;仙桃
+		PRINTFORML %ITEMNAME:使用アイテム%(을)를 먹었다
+		PRINTL 힘이 넘친다……！
+		CALL BUFF_BASE(対象, BASE_체력, MAX(MAXBASE:対象:체력 / 10, 500))
+		CALL BUFF_BASE(対象, BASE_기력, MAX(MAXBASE:対象:기력 / 10, 500))
+		SIF GETBIT(TALENT:対象:성별, 1)
+			CALL BUFF_BASE(対象, BASE_정력, MAX(MAXBASE:対象:정력 / 10, 500))
+		LOCAL:1 ++
+	CASE 643	;即席ラーメン
+		IF !KITCHEN(CFLAG:MASTER:현재위치) &&  CFLAG:MASTER:현재위치 != 29 &&  CFLAG:MASTER:현재위치 != 42 &&  CFLAG:MASTER:현재위치 != 주택가
+			PRINTFORML %ITEMNAME:使用アイテム%의 용기로부터 면을 꺼내 그대로 갉아 먹었다
+			PRINTFORML 이마이치…
+			CALL RECOVER(対象,100, "체력", "即席ラーメンによる回復")
+			CALL RECOVER(対象,100, "기력", "即席ラーメンによる回復")
+		ELSE
+			PRINTFORML %ITEMNAME:使用アイテム%(을)를 조리해 먹었다
+			PRINTFORML --！
+			CALL RECOVER(対象,600, "체력", "即席ラーメンによる回復")
+			CALL RECOVER(対象,500, "기력", "即席ラーメンによる回復")
+			CALL 만복도상승(対象,"경식")
+			EXP:対象:요리경험 += 1
+		ENDIF
+		LOCAL:1 ++
+	CASE 644	;瓶コーラ
+		PRINTFORML %ITEMNAME:使用アイテム%(을)를 마셨다
+		PRINTFORML …
+		CALL RECOVER(対象,700, "기력", "瓶コーラによる回復")
+		LOCAL:1 ++
+	CASE 645	;缶詰保存食
+		SELECTCASE RAND:30
+		CASE 0 TO 5
+			PRINTFORML 새 꼬치구이의 통조림을 개봉해 먹었다
+			CALL RECOVER(対象,750, "체력", "缶詰保存食による回復")
+			CALL RECOVER(対象,250, "기력", "缶詰保存食による回復")
+			CALL 만복도상승(対象,"경식")
+		CASE 6 TO 11
+			PRINTFORML 고등어의 된장을 넣은 조림요리의 통조림을 개봉해 먹었다
+			CALL RECOVER(対象,400, "체력", "缶詰保存食による回復")
+			CALL RECOVER(対象,300, "기력", "缶詰保存食による回復")
+			CALL 만복도상승(対象,"경식")
+			EXP:対象:학습경험 += 5
+		CASE 12 TO 15
+			PRINTFORML 빵의 통조림을 개봉해 먹었다
+			CALL RECOVER(対象,600, "체력", "缶詰保存食による回復")
+			CALL RECOVER(対象,600, "기력", "缶詰保存食による回復")
+			CALL 만복도상승(対象,"주식")
+		CASE 16 TO 19
+			PRINTFORML 복숭아의 통조림을 개봉해 먹었다
+			CALL RECOVER(対象,100, "체력", "缶詰保存食による回復")
+			CALL RECOVER(対象,1000, "기력", "缶詰保存食による回復")
+			CALL 만복도상승(対象,"디저트")
+		CASE 20 TO 23
+			PRINTFORML 스튜의 통조림을 개봉해 먹었다
+			CALL RECOVER(対象,1000, "체력", "缶詰保存食による回復")
+			CALL RECOVER(対象,500, "기력", "缶詰保存食による回復")
+			CALL 만복도상승(対象,"주식")
+		CASE 24
+			PRINTFORML 로터의 통조림을 개봉해 먹었다
+			CALL RECOVER(対象,200, "체력", "缶詰保存食による回復")
+			CALL RECOVER(対象,300, "기력", "缶詰保存食による回復")
+			CALL RECOVER(対象,1000, "정력", "缶詰保存食による回復")
+			CALL 만복도상승(対象,"경식")
+		CASE 25 
+			PRINTFORML 니싱의 통조림을 개봉해 먹었다
+			PRINTFORML 주위에 무서운 악취가 감돈다！！
+			CALL RECOVER(対象,600, "체력", "缶詰保存食による回復")
+			CALL RECOVER(対象,-1000, "기력", "缶詰保存食による回復")
+			CALL 만복도상승(対象,"경식")
+			EXP:対象:청소経験 += 20
+		CASE 26
+			PRINTFORML 보고 있는 것만으로 행복한 기분이 될 수 있는 보라색의 캔의 개봉을 시도했다
+			PRINTFORMW -응
+			PRINTFORML 행복한 캔은%CALLNAME:対象%(을)를 말려들게 해 폭발했다
+			CALL RECOVER(対象,-5000, "체력",)
+		CASE 27
+			PRINTFORML 미지의 언어가 기록된 녹색의 캔을 개봉해 수수께끼의 고기를 먹었다
+			SETCOLOR 0 , 255, 0
+			PRINTFORMW 정말로 먹어 버렸는가？
+			RESETCOLOR 
+			PRINTFORML 화가 난 환청과 함께%CALLNAME:対象%의 의식은 몽롱해졌다
+			CALL RECOVER(対象,100, "체력", "缶詰保存食による回復")
+			CALL RECOVER(対象,-5000, "기력",)
+			CALL 만복도상승(対象,"경식")
+		CASE 28
+			PRINTFORML 500(이)라고 기록된 만큼 두꺼운 캔을 개봉했다
+			PRINTFORMW 들어가 있던 한 알의 붉은 정제를%CALLNAME:対象%(은)는 섭취했다
+			CALL RECOVER(対象,9999, "체력", "缶詰保存食による回復")
+			CALL RECOVER(対象,9999,"기력", "缶詰保存食による回復")
+			CALL RECOVER(対象,9999, "정력", "缶詰保存食による回復")
+			CALL RECOVER(対象,9999, "TSP", "缶詰保存食による回復")
+		CASE 29
+			PRINTFORML 준구촉수로 덮인 미지근한 캔을 개봉했다
+			PRINTFORMW 가득찬 빛나는 육 괴를%CALLNAME:対象%(은)는 밥 했다
+			CALL RECOVER(対象,5000, "TSP", "缶詰保存食による回復")
+		SIF GETBIT(TALENT:対象:성별, 1)
+			PRINTFORML %CALLNAME:対象%의 성기가 새빨갛게 불탄다！
+			MAXBASE:対象:정력 += 50
+			CALL 만복도상승(対象,"경식")
+		ENDSELECT
+			LOCAL:1 ++
+	CASE 646
+	CASE 998
+		IF 対象
+			対象 = MASTER
+		ELSEIF SHIRAHU(TARGET) && TARGET
+			対象 = TARGET
+		ENDIF
+		GOTO LOOP
+	CASE 999
+		RETURN -1
+	CASEELSE
+		GOTO LOOP
+ENDSELECT
+IF LOCAL:1
+	IF !FLAG:70
+		TIME += 5
+	ELSE
+		BASE:MASTER:TSP -= 5
+	ENDIF
+	ITEM:使用アイテム -= 1
+	回復後体力１ = BASE:対象:체력
+	回復後気力１ = BASE:対象:기력
+	回復後精力１ = BASE:対象:정력
+	回復後体力２ = BASE:対象:체력
+	回復後気力２ = BASE:対象:기력
+	回復後精力２ = BASE:対象:정력
+	;@RECOVERとの二重表記を避けるために、100未満を回復量にとるもののみ、以下の表記を行う
+	IF GROUPMATCH(使用アイテム, 120, 352, 626, 628)
+		SETCOLOR C_GREEN
+		IF !対象
+			SIF ABS(回復後体力１ - 回復前体力１)
+				PRINTFORML 체력＋{ABS(回復後体力１ - 回復前体力１)}（%CALLNAME:対象%）
+			SIF ABS(回復後気力１ - 回復前気力１)
+				PRINTFORML 기력＋{ABS(回復後気力１ - 回復前気力１)}（%CALLNAME:対象%）
+			SIF ABS(回復後精力１ - 回復前精力１)
+				PRINTFORML 정력＋{ABS(回復後精力１ - 回復前精力１)}（%CALLNAME:対象%）
+		ELSE
+			SIF ABS(回復後体力２ - 回復前体力２)
+				PRINTFORML 체력＋{ABS(回復後体力２ - 回復前体力２)}（%CALLNAME:対象%）
+			SIF ABS(回復後気力２ - 回復前気力２)
+				PRINTFORML 기력＋{ABS(回復後気力２ - 回復前気力２)}（%CALLNAME:対象%）
+			SIF ABS(回復後精力２ - 回復前精力２)
+				PRINTFORML 정력＋{ABS(回復後精力２ - 回復前精力２)}（%CALLNAME:対象%）
+		ENDIF
+		RESETCOLOR
+	ENDIF
+	SIF 虚無への回帰
+		CALL OYASUMI
+	RETURN 0
+ENDIF
+
+
+@SET_MIRADA
+PRINTFORML 대상을 선택해 주세요.
+PRINTFORML 황색은 이미 유효, 핑크는 이미 함락 소질이 붙어 있는 캐릭터입니다.
+FOR LOCAL,1,CHARANUM
+	;SIF TALENT:LOCAL:스침
+	;	CONTINUE
+	SIF CFLAG:LOCAL:출금
+		CONTINUE
+	SIF CFLAG:LOCAL:몸목적
+		SETCOLOR C_YELLOW
+	SIF TALENT:LOCAL:섹프 || TALENT:LOCAL:연모
+		SETCOLOR C_PINK
+	PRINTFORMLC [{LOCAL}] %CALLNAME:LOCAL%
+	RESETCOLOR
+NEXT
+PRINTFORML 
+DRAWLINE
+PRINTFORML [999] 그만둔다
+INPUT
+SIF !INRANGE(RESULT,1,CHARANUM)
+	RETURN -1
+SIF CFLAG:RESULT:몸목적
+	RETURN -1
+SIF TALENT:RESULT:섹프 || TALENT:RESULT:연모
+	RETURN -1
+PRINTFORMW %CALLNAME:RESULT%(을)를 떠올리면서 미라다의 돌을 강하게 잡으면(자), 돌은 희미하게 빛을 띠었다
+CFLAG:RESULT:몸목적 = 1
+RETURN 1
+
+@使用可能アイテム(ARG)
+;1だとMASTERのみ、2だとあなた以外にも使える
+#FUNCTION
+SELECTCASE ARG
+	CASE 120 TO 123, 215, 364, 500, 510, 520, 521, 530
+		RETURNF 1
+	CASE 212, 213, 352, 501 TO 503, 505 TO 509, 511, 512, 550, 626, 628, 630, 643 TO 645
+		RETURNF 2
+	CASEELSE
+		RETURNF 0
+ENDSELECT
+
+@DRUG(ARG,ARG:1)
+#FUNCTION
+SIF GROUPMATCH(ARG, 501, 502, 503, 505, 506, 507, 508, 509, 511) && TCVAR:(ARG:1):약
+	RETURNF 1
+
+@ITEM_SWEETS(ARG)
+#FUNCTION
+SIF GROUPMATCH(ARG, 120, 121, 123, 124, 212, 213)
+	RETURNF 1
+
+
+;アイテム
+@COM_ABLE490
+;移動実行判定
+SIF !TFLAG:100
+	RETURN 0
+;一括管理
+SIF GLOBAL_COMABLE(490)
+	RETURN RESULT
+SIF CFLAG:MASTER:우후후
+	RETURN 0
+RETURN 1

@@ -1,0 +1,168 @@
+﻿@EVENT_COUNTER_POSE(ARG, ARG:1)
+VARSET LOCAL
+SIF TCVAR:ARG:30 > 1
+	RETURN 0
+SELECTCASE TCVAR:ARG:카운터행동
+	;키스
+	CASE 30
+		TFLAG:MASTER의입사용중 ++
+	;가슴을 비비게 한다
+	CASE 33
+		TFLAG:MASTER의손사용중 ++
+	;고간뒤진다
+	CASE 34
+		TFLAG:MASTER의C사용중 ++
+	;가슴을 비빈다
+	CASE 36
+		TFLAG:MASTER의B사용중 ++
+	;수음
+	CASE 50
+		TFLAG:MASTER의C사용중 ++
+	;펠라치오
+	CASE 51
+		TFLAG:MASTER의C사용중 ++
+	;가랑이
+	CASE 52
+		TFLAG:MASTER의C사용중 ++
+	;파이즈리
+	CASE 53
+		TFLAG:MASTER의C사용중 ++
+	;풋잡
+	CASE 54
+		TFLAG:MASTER의C사용중 ++
+	;애널애무
+	CASE 55
+		TFLAG:MASTER의A사용중 ++
+	;애널빨기
+	CASE 56
+		TFLAG:MASTER의A사용중 ++
+	;손가락 삽입
+	CASE 57
+		TFLAG:MASTER의V사용중 ++
+	;가슴애무
+	CASE 58
+		TFLAG:MASTER의B사용중 ++
+	;유두빨기
+	CASE 59
+		TFLAG:MASTER의입사용중 ++
+	;딥키스
+	CASE 60
+		TFLAG:MASTER의입사용중 ++
+	;커닐링구스강제
+	CASE 70
+		TFLAG:MASTER의입사용중 ++
+	;펠라치오 강제
+	CASE 71
+		TFLAG:MASTER의입사용중 ++
+	;애널 봉사
+	CASE 72
+		TFLAG:MASTER의입사용중 ++
+	;
+	CASE 73
+		TFLAG:MASTER의B사용중 ++
+	;젖 맞추어라
+	CASE 74
+		TFLAG:MASTER의B사용중 ++
+	;타와시 세탁
+	CASE 75
+		TFLAG:MASTER의손사용중 ++
+	;강제 보지 애무
+	CASE 76
+		TFLAG:MASTER의손사용중 ++
+	;젖을 들이마시게 한다
+	CASE 77
+		TFLAG:MASTER의입사용중 ++
+	;정상위 V삽입한다
+	CASE 80
+		TFLAG:MASTER의V사용중 ++
+	;후배위 V삽입한다
+	CASE 83
+		TFLAG:MASTER의V사용중 ++
+	;허리 모습 V접수
+	CASE 84
+		TFLAG:MASTER의V사용중 ++
+	;삽입시킨다
+	CASE 85
+		TFLAG:MASTER의C사용중 ++
+	;매우 수기 hold
+	CASE 86
+		TFLAG:MASTER의C사용중 ++
+	;A삽입시킨다
+	CASE 87
+		TFLAG:MASTER의C사용중 ++
+	;허리 모습 V
+	CASE 88
+		TFLAG:MASTER의C사용중 ++
+	;허리 모습 A
+	CASE 89
+		TFLAG:MASTER의C사용중 ++
+	;A삽입한다
+	CASE 90
+		TFLAG:MASTER의A사용중 ++
+	;이라마치오 강제
+	CASE 91
+		TFLAG:MASTER의입사용중 ++
+	;허리 모습역A
+	CASE 93
+		TFLAG:MASTER의A사용중 ++
+ENDSELECT
+;69몸의자세
+SELECTCASE TCVAR:ARG:카운터행동
+	CASE 50
+		CALL EVENT_COUNTER_POSE_69(ARG, ARG:1, 2)
+	;펠라치오
+	CASE 51
+		CALL EVENT_COUNTER_POSE_69(ARG, ARG:1, 2)
+	;파이즈리
+	CASE 53
+		CALL EVENT_COUNTER_POSE_69(ARG, ARG:1, 2)
+	;애널애무
+	CASE 55
+		;성교중은 69가 되지 않는다
+		IF MASTER_POSE(SET_V, SET_P) == ARG || MASTER_POSE(SET_A, SET_P) == ARG || MASTER_POSE(SET_P, SET_V) == ARG || MASTER_POSE(SET_P, SET_A) == ARG
+			LOCAL = 0
+		ELSE
+			LOCAL = 2
+		ENDIF
+		CALL EVENT_COUNTER_POSE_69(ARG, ARG:1, LOCAL)
+	;손가락 삽입
+	CASE 57
+		;성교중은 69가 되지 않는다
+		IF MASTER_POSE(SET_V, SET_P) == ARG || MASTER_POSE(SET_A, SET_P) == ARG || MASTER_POSE(SET_P, SET_V) == ARG || MASTER_POSE(SET_P, SET_A) == ARG
+			LOCAL = 0
+		ELSE
+			LOCAL = 2
+		ENDIF
+		CALL EVENT_COUNTER_POSE_69(ARG, ARG:1, LOCAL)
+	;커닐링구스강제
+	CASE 70
+		CALL EVENT_COUNTER_POSE_69(ARG, ARG:1, 2)
+	;펠라치오 강제
+	CASE 71
+		CALL EVENT_COUNTER_POSE_69(ARG, ARG:1, 2)
+	;애널 봉사
+	CASE 72
+		CALL EVENT_COUNTER_POSE_69(ARG, ARG:1, 2)
+	;이라마치오 강제
+	CASE 91
+		CALL EVENT_COUNTER_POSE_69(ARG, ARG:1, 2)
+	CASEELSE
+		CALL EVENT_COUNTER_POSE_69(ARG, ARG:1, 0)
+ENDSELECT
+
+;인수 1 대상의 캐릭터 번호 2 행동순서 3 식스나인 이행에의 확률
+@EVENT_COUNTER_POSE_69(ARG, ARG:1, ARG:2)
+IF ARG:2 == 0
+	TEQUIP:ARG:식스나인 = 0
+	RETURN 0
+ENDIF
+IF TEQUIP:ARG:식스나인
+	TFLAG:60 ++
+	RETURN 0
+ENDIF
+SIF TFLAG:60
+	RETURN 0
+IF RAND:(ARG:2) == 0
+	TEQUIP:ARG:식스나인 = 1
+	TCVAR:ARG:27 = 1
+ENDIF

@@ -1,0 +1,106 @@
+﻿
+;地点関連性응답処理
+;-----------------------------------------------------------
+@CAN_MOVE_6(ARG, ARG:1)
+#FUNCTION
+SELECTCASE ARG
+	;중유의 길
+	;3마요히가、4掘立오두막に이동可能、2삼도천と直通、중유의 길の向こうが見える
+	CASE 601
+		SIF GROUPMATCH(ARG:1,602)
+			RETURNF 3
+		SIF GROUPMATCH(ARG:1,603,604)
+			RETURNF 1
+		SIF ARG:1 == MAXROOM
+			RETURNF 2
+	;삼도천
+	;3마요히가、4掘立오두막、7피안に이동可能、1중유의 길と直通
+	CASE 602
+		SIF GROUPMATCH(ARG:1,601)
+			RETURNF 3
+		SIF GROUPMATCH(ARG:1,603,604,607)
+			RETURNF 1
+	;마요히가
+	;1중유의 길、2삼도천、객실に이동可能
+	CASE 603
+		SIF GROUPMATCH(ARG:1,601,602)
+			RETURNF 3
+		SIF GROUPMATCH(ARG:1,610)
+			RETURNF 1
+	;掘立오두막
+	;1중유의 길、2삼도천に이동可能
+	CASE 604
+		SIF GROUPMATCH(ARG:1,601,602)
+			RETURNF 1
+	;死神の오두막
+	;7피안、18寝床に이동可能
+	CASE 605
+		SIF GROUPMATCH(ARG:1,607,618)
+			RETURNF 1
+	;閻魔の屋敷
+	;7피안、8백옥루 정원、16거실に이동可能
+	CASE 606
+		SIF GROUPMATCH(ARG:1,607,608)
+			RETURNF 3
+		SIF GROUPMATCH(ARG:1,616)
+			RETURNF 1
+	;피안
+	;2삼도천、5死神の오두막、6閻魔の屋敷、8백옥루 정원、16거실に이동可能
+	CASE 607
+		SIF GROUPMATCH(ARG:1,602,605,606,608)
+			RETURNF 3
+		SIF GROUPMATCH(ARG:1,616)
+			RETURNF 1
+	;백옥루 정원
+	;6閻魔の屋敷、7피안、9백옥루、16거실に이동可能
+	CASE 608
+		SIF GROUPMATCH(ARG:1,606,607,609)
+			RETURNF 3
+		SIF GROUPMATCH(ARG:1,616)
+			RETURNF 1
+	;백옥루
+	;19妖夢の部屋、20幽々子の部屋、21목욕탕に이동可能、8백옥루 정원と直通
+	CASE 609
+		SIF GROUPMATCH(ARG:1,608)
+			RETURNF 3
+		SIF GROUPMATCH(ARG:1,619,620,621,622,623,624)
+			RETURNF 1
+	;객실
+	;3마요히가、11橙の部屋、12藍の部屋、13紫の部屋、14목욕탕に이동可能
+	CASE 610
+		SIF GROUPMATCH(ARG:1,603,611,612,613,614)
+			RETURNF 1
+	;마요히가・各部屋
+	;10객실に이동可能
+	CASE 611 TO 614
+		SIF ARG:1 == 610
+			RETURNF 1
+	;閻魔の屋敷・各部屋
+	;16거실に이동可能
+	CASE 615, 617
+		SIF ARG:1 == 616
+			RETURNF 1
+	;閻魔の屋敷・거실
+	;6、7피안、8백옥루 정원、15映姫の寝室、17목욕탕に이동可能
+	CASE 616
+		SIF GROUPMATCH(ARG:1,606,607,608)
+			RETURNF 3
+		SIF GROUPMATCH(ARG:1,615,617)
+			RETURNF 1
+	;死神の寝床
+	;5死神の오두막と直通
+	CASE 618
+		SIF ARG:1 == 605
+			RETURNF 1
+	;各部屋
+	;9백옥루に이동可能
+	CASE 619, 620, 621,622,623,624
+		SIF ARG:1 == 609
+			RETURNF 1
+	;森の外
+	;1入り口へ一方通行
+	CASE MAXROOM
+		SIF ARG:1 == 601
+			RETURNF 1
+ENDSELECT
+RETURNF 0

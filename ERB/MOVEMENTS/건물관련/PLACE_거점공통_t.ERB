@@ -1,0 +1,769 @@
+﻿;FileName_COMMON.ERB ------------------------------- Rev1. 00
+;방에 있는 인원수 취득
+;CALL		USER
+;ARG		방NO
+;RETURN		인원수
+;COMMENT	
+;-----------------------------------------------------------
+@IN_ROOM_NUMBER(ARG)
+#FUNCTION
+RETURNF CMATCH(CFLAG:현재위치, ARG)
+[SKIPSTART]
+VARSET LOCAL
+FOR LOCAL, 0, CHARANUM
+	SIF CFLAG:LOCAL:현재위치 == ARG
+		LOCAL:1 ++
+NEXT
+RETURNF LOCAL:1
+[SKIPEND]
+
+;FileName_COMMON.ERB ------------------------------- Rev1. 00
+;방최소수참조
+;CALL		USER
+;ARG		VOID
+;RETURN		최소 방번호
+;COMMENT	장소를 추가했을 경우, RETRUNF의 수를 변경의 일
+;-----------------------------------------------------------
+
+@MINROOM()
+#FUNCTION
+SELECTCASE MAIN_MAP
+	CASE 1
+		RETURNF 101
+	CASE 10
+		RETURNF 1001
+	CASEELSE
+		RETURNF MAIN_MAP * 100 + 1
+ENDSELECT
+
+
+
+;FileName_COMMON.ERB ------------------------------- Rev1. 00
+;초대방
+;CALL		USER
+;ARG		VOID
+;RETURN		초대방의 수치
+;COMMENT	시인성 향상을 위해
+;-----------------------------------------------------------
+@OMANEKIBEYA()
+#FUNCTION
+RETURNF 98 + MAIN_MAP * 100
+
+;FileName_COMMON.ERB ------------------------------- Rev1. 00
+;SUKIMA
+;CALL		USER
+;ARG		VOID
+;RETURN		어디에도 없는 캐릭터가 보내지는 장소
+;COMMENT	시인성 향상을 위해
+;-----------------------------------------------------------
+@SUKIMA()
+#FUNCTION
+RETURNF 99 + MAIN_MAP * 100
+
+;FileName_COMMON.ERB ------------------------------- Rev1. 00
+;화장실이 있는 방
+;CALL		USER
+;ARG		장소 ID
+;RETURNF		화장실의 장소인가 아닌가
+;COMMENT	장소를 변경했을 경우, RETURNF를 변경의 일
+;-----------------------------------------------------------
+
+@IN_TOILET(ARG)
+#FUNCTION
+SIF ROOMDATA:(ARG % 100) & 장소_화장실 && IN_HOME(ARG)
+	RETURNF 1
+RETURNF 0
+
+
+;FileName_COMMON.ERB ------------------------------- Rev1. 00
+;목욕탕이 있는 장소 판정
+;CALL		USER
+;ARG		판정 장소 ID
+;RETURN		있다면 1, 없으면 0
+;COMMENT	장소를 변경했을 경우, RETURNF를 변경의 일
+;-----------------------------------------------------------
+@BATHCHECK(ARG)
+#FUNCTION
+SIF ROOMDATA:(ARG % 100) & 장소_목욕탕 && IN_HOME(ARG)
+	RETURNF 1
+IF !IN_HOME(ARG)
+	SELECTCASE ARG
+		CASE 대중목욕탕, 옛지옥온천
+			RETURNF 1
+	ENDSELECT
+ENDIF
+RETURNF 0
+
+;FileName_COMMON.ERB ------------------------------- Rev1. 00
+;신체측정할 수 있는 장소 판정
+;CALL		USER
+;ARG		판정 장소 ID
+;RETURN		있다면 1, 없으면 0
+;COMMENT	장소를 변경했을 경우, RETURNF를 변경의 일
+;-----------------------------------------------------------
+@MEASUREMENTCHECK(ARG)
+#FUNCTION
+SIF ROOMDATA:(ARG % 100) & 장소_신체측정 && IN_HOME(ARG)
+	RETURNF 1
+SIF GET_MAPID(ARG) == MAIN_MAP
+	RETURNF 0
+SELECTCASE ARG
+	CASE 대중목욕탕, 옛지옥온천, 영원정
+		RETURNF 1
+ENDSELECT
+RETURNF 0
+;FileName_COMMON.ERB ------------------------------- Rev1. 00
+;목욕탕이 있는 방
+;CALL		USER
+;ARG		VOID
+;RETURN		목욕탕의 장소
+;COMMENT	장소를 변경했을 경우, RETURNF를 변경의 일
+;-----------------------------------------------------------
+@BATHROOM(ARG)
+#FUNCTION
+SIF !ARG
+	ARG = CFLAG:MASTER:현재위치
+SIF ROOMDATA:(ARG % 100) & 장소_목욕탕 && IN_HOME(ARG)
+	RETURNF 1
+RETURNF 0
+
+;FileName_COMMON.ERB ------------------------------- Rev1. 00
+;이불이 있는 방
+;CALL		USER
+;ARG		판정 방NO
+;RETURN		이불의 유무유라면 1
+;COMMENT	장소를 추가했을 경우, CASE를 변경의 일
+;-----------------------------------------------------------
+@BEDROOM(ARG)
+#FUNCTION
+SIF ARG == 0
+	ARG = CFLAG:MASTER:현재위치
+IF ARG == OMANEKIBEYA()
+	RETURNF 1
+ELSEIF MAIN_MAP == GET_MAPID(ARG)
+	SIF (ROOMDATA:(ARG % 100) & 장소_이불 && IN_HOME(ARG)) || ARG == CFLAG:MASTER:초기위치
+		RETURNF 1
+ENDIF
+SELECTCASE ARG
+	CASE 혼숙여관, 러브호텔, 주택가, OMANEKIBEYA()
+		RETURNF 1
+	CASE 540
+		SIF TALENT:11:연모
+			RETURNF 1
+	CASE 550
+		SIF TALENT:17:연모
+			RETURNF 1
+	CASE 630
+		SIF TALENT:25:연모 || TALENT:26:연모
+			RETURNF 1
+	CASE 750
+		SIF TALENT:43:연모
+			RETURNF 1
+	CASE 830
+		SIF TALENT:31:연모 || TALENT:32:연모 || TALENT:33:연모
+			RETURNF 1
+	CASE 950
+		SIF TALENT:36:연모 || TALENT:37:연모 || TALENT:38:연모 || TALENT:49:연모
+			RETURNF 1
+	CASE BATHROOM()
+		;플레이매트
+		SIF ITEM:20
+			RETURNF 1
+ENDSELECT
+RETURNF 0
+;FileName_COMMON.ERB ------------------------------- Rev1. 00
+;달구경 포인트
+;CALL		USER
+;ARG		판정 방NO
+;RETURN		월이 보이는 장소라면 1
+;COMMENT	장소를 추가했을 경우, CASE를 변경의 일
+;-----------------------------------------------------------
+@MOON_WATCH_POINT(ARG)
+#FUNCTION
+;옥외＋신사내의 실외
+IF (!INROOM(ARG) && AT_HOME(MASTER) == 1) || OUTROOF(ARG) 
+	RETURNF 1
+ELSE
+	IF MAIN_MAP == GET_MAPID(ARG)
+		SIF ROOMDATA:(ARG % 100) & 장소_달구경 && IN_HOME(ARG)
+			RETURNF 1
+	ENDIF
+	SELECTCASE CHK_INHOME(ARG)
+	;툇마루, 온천, 수양버들아래
+	CASE 130, 명련사본당, 성덕도장, 상가거리, 술집소로, 서당, 주택가, 영원정, 모리야신사본전, 백옥루
+		RETURNF 1
+	CASE OMANEKIBEYA()
+		;누구의 방인가
+		SELECTCASE CFLAG:MASTER:초대
+		;지저 거주자
+		CASE 36,37,38,49,60,64,83,84
+			RETURNF 0
+		ENDSELECT
+		RETURNF 1
+	CASEELSE
+		RETURNF 0
+	ENDSELECT
+ENDIF
+RETURNF 0
+
+;FileName_COMMON.ERB ------------------------------- Rev1. 00
+;주방이 있는 방
+;CALL		USER
+;ARG		판정 방NO
+;RETURN		주방의 유무유라면 1
+;COMMENT	장소를 추가했을 경우, CASE를 변경의 일
+;-----------------------------------------------------------
+@KITCHEN(ARG)
+#FUNCTION
+SIF ARG == OMANEKIBEYA()
+	RETURNF 1
+IF MAIN_MAP == GET_MAPID(ARG)
+	SIF ROOMDATA:(ARG % 100) & 장소_주방 && IN_HOME(ARG)
+		RETURNF 1
+ENDIF
+SELECTCASE CHK_INHOME(ARG)
+	CASE 주택가, OMANEKIBEYA()
+		RETURNF 1
+ENDSELECT
+RETURNF 0
+
+;FileName_COMMON.ERB ------------------------------- Rev1. 00
+;실내
+;CALL		USER
+;ARG		판정 방NO
+;RETURN		실내인가 아닌가 일본식방이라면 1, 양실이라면 2
+;COMMENT	장소를 추가했을 경우, CASE를 변경의 일
+;-----------------------------------------------------------
+@INROOM(ARG)
+#FUNCTION
+SIF ARG == OMANEKIBEYA()
+	RETURNF 1
+IF MAIN_MAP == GET_MAPID(ARG)
+	IF MAIN_MAP == 3
+		SIF (ROOMDATA:(ARG % 100) & 장소_옥내) && IN_HOME(ARG)
+			RETURNF 2
+	ELSEIF MAIN_MAP == 9
+		SIF ARG >= 901 && ARG <= 913
+			RETURNF 2
+		SIF (ROOMDATA:(ARG % 100) & 장소_옥내) && IN_HOME(ARG)
+			RETURNF 1
+	ELSE
+		SIF (ROOMDATA:(ARG % 100) & 장소_옥내) && IN_HOME(ARG)
+			RETURNF 1
+	ENDIF
+ENDIF
+SELECTCASE CHK_INHOME(ARG)
+	CASE 명련사본당, 성덕도장, 서당, 혼숙여관, 대중목욕탕, 백옥루, 선인의저택, 영원정, 영원정안채, 키리사메마법점, 마요히가, 모리야신사본전, 옛지옥온천
+		RETURNF 1
+	CASE 폐양관, 객실, 식당, 대도서관, 지하실, 인형양관, 지령전, 러브호텔
+		RETURNF 2
+	CASEELSE
+		RETURNF 0
+ENDSELECT
+
+;FileName_COMMON.ERB ------------------------------- Rev1. 00
+;창공
+;CALL		USER
+;ARG		판정 방NO
+;RETURN		지붕 첨부인가 아닌가 지붕 없음이라면 1
+;COMMENT	장소를 추가했을 경우, CASE를 변경의 일
+;토리이, 경내, 개수대, 뜰, 본전의뒤, 참배길, 수호신의숲, 함교
+;지장길, 명련사경내, 묘지, 광장, 정문, 죽림입구, 미혹의샛길, 사각의죽림, 안개의호수, ,
+;숲의입구, 고목의큰나무, 현무의늪, 산록의수해, 큰두꺼비의연못, 구천의폭포, 절경의언덕
+;100의 배수는 외출시, 귀찮아서의로 데이트 도중도 전부 담기로 한←옥내 함수다행이다가, 처음은 옥외의것이 적은 실사응!
+;함수명은 INROOM의 패러디
+;-----------------------------------------------------------
+@OUTROOF(ARG)
+#FUNCTION
+IF MAIN_MAP == GET_MAPID(ARG)
+	SIF ROOMDATA:(ARG % 100) & 장소_창공 && IN_HOME(ARG)
+		RETURNF 1
+ENDIF
+SELECTCASE CHK_INHOME(ARG)
+	CASE 110, 120, 지장길, 명련사경내, 묘지, 광장, 정문, 죽림입구, 미혹의샛길, 사각의죽림, 무명의언덕, 태양의밭, 안개의호수, 숲의입구, 고목의큰나무, 재고의길, 무연총, 중유의길, 삼도천, 피안, 백옥루정원, 현무의늪, 산록의수해, 큰두꺼비의연못, 구천의폭포, 절경의언덕, 산의호수, 모리야신사경내, 천계
+		RETURNF 1
+	CASE 100 TO 109,200 TO 209,300 TO 309,400 TO 409,500 TO 509,600 TO 609,700 TO 709,800 TO 809
+		RETURNF 1
+	CASEELSE
+		RETURNF 0
+ENDSELECT
+RETURNF 0
+
+;FileName_COMMON.ERB ------------------------------- Rev1. 00
+;전망이 좋은 장소
+;CALL		USER
+;ARG		판정 방NO
+;RETURN		1:넓은 실내, 2:야외
+;COMMENT	장소를 추가했을 경우, CASE를 변경의 일
+;-----------------------------------------------------------
+@OPENPLACE(ARG)
+#FUNCTION
+IF MAIN_MAP == GET_MAPID(ARG) && ROOMDATA:(ARG % 100) & 장소_전망
+	IF ROOMDATA:(ARG % 100) & 장소_옥내 && IN_HOME(ARG)
+		RETURNF 1
+	ELSE
+		RETURNF 2
+	ENDIF
+ENDIF
+RETURNF 0
+
+;FileName_COMMON.ERB ------------------------------- Rev1. 00
+;선잠 가능 에리어
+;CALL		USER
+;ARG		판정 방NO
+;RETURN		1:가능, 2:상시가능
+;COMMENT	장소를 추가했을 경우, CASE를 변경의 일
+;-----------------------------------------------------------
+@CATNAP_PLACE(ARG, ARG:1)
+#FUNCTION
+SIF ARG:1 == CFLAG:ARG:초기위치 || ARG:1 == OMANEKIBEYA()
+	RETURNF 2
+IF MAIN_MAP == GET_MAPID(ARG)
+	SIF ROOMDATA:(ARG % 100) & 장소_선잠_가능 && IN_HOME(ARG)
+		RETURNF 1
+ENDIF
+SELECTCASE CHK_INHOME(ARG:1)
+	;거실, 각부가게
+	CASE 서당, 주택가
+		RETURNF 1
+	RETURNF 0
+ENDSELECT
+RETURNF 0
+
+;FileName_COMMON.ERB ------------------------------- Rev1. 00
+;좁은 방
+;CALL		USER
+;ARG		판정 방NO
+;RETURN		1:좁은, 2:좁지 않다
+;COMMENT	장소를 추가했을 경우, CASE를 변경의 일
+;-----------------------------------------------------------
+@SMALL_PLACE(ARG)
+#FUNCTION
+IF MAIN_MAP == GET_MAPID(ARG)
+	SIF ROOMDATA:(ARG % 100) & 장소_좁다 && IN_HOME(ARG)
+		RETURNF 1
+ENDIF
+RETURNF 0
+
+;FileName_COMMON.ERB ------------------------------- Rev1. 00
+;휴식가능
+;CALL		USER
+;ARG		판정 방NO
+;RETURN		1:휴식 할 수 있다
+;COMMENT	장소를 추가했을 경우, CASE를 변경의 일
+;-----------------------------------------------------------
+@휴식가능(ARG)
+#FUNCTION
+SIF ARG == OMANEKIBEYA()
+	RETURNF 1
+IF MAIN_MAP == GET_MAPID(ARG)
+	SIF ROOMDATA:(ARG % 100) & 장소_휴식 && IN_HOME(ARG)
+		RETURNF 1
+ENDIF
+SELECTCASE CHK_INHOME(ARG)
+	CASE 객실, 식당, 대도서관, 서당, 혼숙여관, 러브호텔
+		RETURNF 1
+ENDSELECT
+RETURNF 0
+;FileName_COMMON.ERB ------------------------------- Rev1. 00
+;전투훈련가능
+;CALL		USER
+;ARG		판정 방NO
+;RETURN		1:훈련할 수 있다
+;COMMENT	장소를 추가했을 경우, CASE를 변경의 일
+;-----------------------------------------------------------
+@전투훈련가능(ARG)
+#FUNCTION
+IF MAIN_MAP == GET_MAPID(ARG)
+	SIF ROOMDATA:(ARG % 100) & 장소_훈련 && IN_HOME(ARG)
+		RETURNF 1
+ENDIF
+SELECTCASE CHK_INHOME(ARG)
+	CASE 백옥루정원
+		RETURNF 1
+ENDSELECT
+RETURNF 0
+;FileName_COMMON.ERB ------------------------------- Rev1. 00
+;공부가능
+;CALL		USER
+;ARG		판정 방NO
+;RETURN		1:공부할 수 있다
+;COMMENT	장소를 추가했을 경우, CASE를 변경의 일
+;-----------------------------------------------------------
+@공부가능(ARG)
+#FUNCTION
+SIF ARG == OMANEKIBEYA()
+	RETURNF 1
+IF MAIN_MAP == GET_MAPID(ARG)
+	SIF ROOMDATA:(ARG % 100) & 장소_공부 && IN_HOME(ARG)
+		RETURNF 1
+ENDIF
+SELECTCASE CHK_INHOME(ARG)
+;	CASE 240
+	CASE 서당
+		RETURNF 1
+ENDSELECT
+RETURNF 0
+;FileName_COMMON.ERB ------------------------------- Rev1. 00
+;하늘의 소리
+;CALL		USER
+;ARG		판정 방NO
+;RETURN		1:하늘의 목소리가 들린다
+;COMMENT	장소를 추가했을 경우, CASE를 변경의 일
+;-----------------------------------------------------------
+@하늘의성가(ARG)
+#FUNCTION
+IF MAIN_MAP == GET_MAPID(ARG)
+	SIF ROOMDATA:(ARG % 100) & 장소_하늘의소리 && IN_HOME(ARG)
+		RETURNF 1
+	SIF ITEM:제단 && CFLAG:MASTER:현재위치 == CFLAG:MASTER:311
+		RETURNF 1
+ENDIF
+RETURNF 0
+;FileName_COMMON.ERB ------------------------------- Rev1. 00
+;텃밭가능
+;CALL		USER
+;ARG		판정 방NO
+;RETURN		1:텃밭을 생기는 장소
+;COMMENT	장소를 추가했을 경우, CASE를 변경의 일
+;-----------------------------------------------------------
+@텃밭가능(ARG)
+#FUNCTION
+IF MAIN_MAP == GET_MAPID(ARG)
+	SIF ROOMDATA:(ARG % 100) & 장소_채소밭 && IN_HOME(ARG)
+		RETURNF 1
+ENDIF
+RETURNF 0
+;FileName_COMMON.ERB ------------------------------- Rev1. 00
+;물긷기가능
+;CALL		USER
+;ARG		판정 방NO
+;RETURN		1:물긷기를 할 수 있는 장소
+;COMMENT	장소를 추가했을 경우, CASE를 변경의 일
+;-----------------------------------------------------------
+@물긷기가능(ARG)
+#FUNCTION
+IF MAIN_MAP == GET_MAPID(ARG)
+	SIF ROOMDATA:(ARG % 100) & 장소_물긷기 && IN_HOME(ARG)
+		RETURNF 1
+ELSEIF CFLAG:MASTER:현재위치 == 안개의호수
+	RETURNF 1
+ELSEIF CFLAG:MASTER:현재위치 == 산의호수
+	RETURNF 1
+ENDIF
+RETURNF 0
+;FileName_COMMON.ERB ------------------------------- Rev1. 00
+;빨래너는곳가능
+;CALL		USER
+;ARG		판정 방NO
+;RETURN		1:빨래 너는 곳을 생기는 장소
+;COMMENT	장소를 추가했을 경우, CASE를 변경의 일
+;-----------------------------------------------------------
+@빨래너는곳가능(ARG)
+#FUNCTION
+SIF ROOMDATA:(ARG % 100) & 장소_빨래너는곳 && IN_HOME(ARG)
+	RETURNF 1
+RETURNF 0
+
+;FileName_COMMON.ERB ------------------------------- Rev1. 00
+;
+;CALL		USER
+;ARG		캐릭터 NO
+;RETURNF	그 캐릭터의 현재의 지명  아마 MASTER 이외가 필요하게 될 기회는 한정되겠지만
+;-----------------------------------------------------------
+@PLACE_NAME(ARG)
+#FUNCTIONS
+IF !IN_HOME(CFLAG:ARG:현재위치) && CFLAG:ARG:현재위치 != OMANEKIBEYA()
+	LOCALS = %DATENAME_SPOT()%
+ELSEIF CHK_DATENOW(CFLAG:MASTER:데이트중) && CFLAG:MASTER:현재위치 != OMANEKIBEYA()
+	LOCALS = %DATENAME_PLACE()%의 %DATENAME_SPOT()%
+ELSE
+	LOCALS = %NAME_FROM_PLACE(CFLAG:ARG:현재위치)%
+ENDIF
+RETURNF LOCALS
+
+;FileName_COMMON.ERB ------------------------------- Rev1. 00
+;기본적인 GETMAP  대체로의 거점은 이것으로 k
+;-----------------------------------------------------------
+@GETMAP_BASIC(ARG)
+#DIM 기색
+기색 = 0
+IF TALENT:MASTER:위치짐작 && FLAG:짐작모드 == 1
+	FOR LOCAL, 1, CHARANUM
+		IF CFLAG:LOCAL:현재위치 == ARG
+			IF CFLAG:LOCAL:행동 == 5
+				기색 = 2
+				BREAK
+			ELSEIF CFLAG:LOCAL:수면
+				기색 = 3
+				BREAK
+			ENDIF
+			기색 = 1
+		ENDIF
+	NEXT
+	IF 기색 == 1
+		SETCOLOR 255, 100, 200
+	ELSEIF 기색 == 2
+		SETCOLOR 255, 100, 0
+	ELSEIF 기색 == 3
+		SETCOLOR 0, 120, 180
+	ELSEIF ROOMDATA:(ARG % 100) & 장소_모브
+		SETCOLOR C_D_PINK
+	ENDIF
+ENDIF
+CALL GETMAP_YOGORE(ARG)
+
+@GETMAP_YOGORE(ARG)
+IF TALENT:MASTER:오방짐작 && FLAG:짐작모드 == 2
+	IF ARG == 0
+		SIF YOGORE:(CFLAG:MASTER:초기위치) >= 500 && YOGORE:(CFLAG:MASTER:초기위치) < 1000
+			SETCOLOR 0xFFFF00
+		SIF YOGORE:(CFLAG:MASTER:초기위치) > 1000 && YOGORE:(CFLAG:MASTER:초기위치) < 2000
+			SETCOLOR 0xFFFF00
+		SIF YOGORE:(CFLAG:MASTER:초기위치) >= 2000 && YOGORE:(CFLAG:MASTER:초기위치) < 3500
+			SETCOLOR 0xFF00FF
+		SIF YOGORE:(CFLAG:MASTER:초기위치) >= 3500 && YOGORE:(CFLAG:MASTER:초기위치) < 5000
+			SETCOLOR 0xFF00FF
+		SIF YOGORE:(CFLAG:MASTER:초기위치) >= 5000
+			SETCOLOR 0xFF0000
+	ELSE
+		SIF YOGORE:(ARG) >= 500 && YOGORE:(ARG) < 1000
+			SETCOLOR 0xFFFF00
+		SIF YOGORE:(ARG) > 1000 && YOGORE:(ARG) < 2000
+			SETCOLOR 0xFFFF00
+		SIF YOGORE:(ARG) >= 2000 && YOGORE:(ARG) < 3500
+			SETCOLOR 0xFF00FF
+		SIF YOGORE:(ARG) >= 3500 && YOGORE:(ARG) < 5000
+			SETCOLOR 0xFF00FF
+		SIF YOGORE:(ARG) >= 5000
+			SETCOLOR 0xFF0000
+	ENDIF
+ENDIF
+SIF CFLAG:MASTER:현재위치 == ARG
+	SETCOLOR 0 , 255, 0
+PRINTBUTTON ((ARG % 100) > 9 ?  TOSTR((ARG % 100)) # TOFULL(TOSTR((ARG % 100)))), ARG
+RESETCOLOR
+
+@GETMAP_BUILDING(ARG, ARG:1, ARG:2)
+IF !INRANGE(CFLAG:MASTER:현재위치, ARG:1, ARG:2) && INRANGE(CFLAG:ARG:현재위치, ARG:1, ARG:2)
+	IF CFLAG:ARG:행동 == 5
+		KEHAI = 2
+	ELSEIF CFLAG:ARG:수면
+		KEHAI = 3
+	ELSE
+		KEHAI = 1
+	ENDIF
+ENDIF
+
+
+
+;장서 열람 판정
+;
+;거점/산책 MAP 양쪽 모두 사용할 수 있습니다
+;MASTER의 현재위치를 던져 붐비면(자) 자료를 보여 줄지 어떨지를 판정
+;반환값은 0혹은 「거점 MAP의 장소 ID」입니다
+;산책 맵으로 어디어디(에)에서 자료 본 따라 주는 용
+;PLACE_ID와 MASTER의 현재위치가 다른 경우는 상정하고 있습니다
+;즉, 하쿠레이 신사에 있을 때에 아큐의 저택의 판정하면 안 돼
+@IS_LIBRARY(PLACE_ID)
+#FUNCTION
+#DIM PLACE_ID              ;반드시 MASTER의 현재위치를 건네주는 것
+#DIM DYNAMIC PLACE_LIBRARY
+;PRINTFORML {PLACE_ID} : %NAME_FROM_PLACE(PLACE_ID)%
+IF GET_MAPID(PLACE_ID) == MAIN_MAP
+	SELECTCASE GET_MAPNAME(GET_MAPID(PLACE_ID))
+	CASE "하쿠레이 신사"
+	;MAP_하쿠레이 신사 연구 조수를 매일 하고 있었던 탓으로 누구라도 자료 열람할 수 있을 것 같은 이미지
+		SIF GROUPMATCH(NAME_FROM_PLACE(PLACE_ID), "몽환유적·제1자료실", "몽환유적·연구실", "몽환유적·제2자료실")
+			PLACE_LIBRARY = PLACE_ID
+	CASE "명련사"
+	;MAP_명련사, 절/도장 모두 부탁하면 자료를 보여 줘그렇게
+		SIF GROUPMATCH(NAME_FROM_PLACE(PLACE_ID), "강당", "도장")
+			PLACE_LIBRARY = PLACE_ID
+	CASE "마을"
+	;MAP_마을, 대본소와 개인택
+		SIF GROUPMATCH(NAME_FROM_PLACE(PLACE_ID), "스즈나안", "서당", "케이네댁", "아큐의 저택")
+			PLACE_LIBRARY = PLACE_ID
+	CASE "홍마관"
+	;MAP_홍마관 우선 사용 조건이라든지 없기 때문에 소안내
+		SIF NAME_FROM_PLACE(PLACE_ID) == "도서관"
+			PLACE_LIBRARY = PLACE_ID
+	CASE "미혹의 죽림"
+	;MAP_미혹의 죽림, 이 맵 특히 도서실적인 것이 없다
+		;영원정은 많이 장서가 있을 듯 하는 이미지
+		SIF GROUPMATCH(NAME_FROM_PLACE(PLACE_ID), "카구야방", "창고", "창고")
+			PLACE_LIBRARY = PLACE_ID
+	CASE "마법의숲"
+	;MAP_마법의숲, 마법사들은 자료지비치겠지요
+		SIF GROUPMATCH(NAME_FROM_PLACE(PLACE_ID), "마리사댁·연구부가게", "인형의 관·연구실")
+			PLACE_LIBRARY = PLACE_ID
+	CASE "요괴의 산·산록"
+	;MAP_마법의숲, 카센저택만
+		SIF NAME_FROM_PLACE(PLACE_ID) == "선인의저택·서재"
+			PLACE_LIBRARY = PLACE_ID
+	CASE "지저"
+	;MAP_지저, 사토리의 서재만
+		SIF NAME_FROM_PLACE(PLACE_ID) == "서재"
+			PLACE_LIBRARY = PLACE_ID
+	CASE "저택"
+		;PRINTFORML {PLACE_ID} : %NAME_FROM_PLACE(PLACE_ID)%
+		SIF GROUPMATCH(NAME_FROM_PLACE(PLACE_ID), "이층·서재")
+			PLACE_LIBRARY = PLACE_ID
+	ENDSELECT
+ELSE
+	SELECTCASE GET_MAPNAME(GET_MAPID(PLACE_ID))
+	CASE "하쿠레이 신사"
+		SIF STR:(6000 + PLACE_ID / 10) == "몽환유적"
+			PLACE_LIBRARY = 49
+	CASE "명련사"
+		SIF STR:(6000 + PLACE_ID / 10) == "명련사경내"
+			PLACE_LIBRARY = 105
+		SIF STR:(6000 + PLACE_ID / 10) == "성덕도장"
+			PLACE_LIBRARY = 126
+	CASE "인간 마을"
+		SIF STR:(6000 + PLACE_ID / 10) == "상가거리"
+			PLACE_LIBRARY = 213
+		SIF STR:(6000 + PLACE_ID / 10) == "서당"
+			PLACE_LIBRARY = 222
+		SIF STR:(6000 + PLACE_ID / 10) == "주택가"
+			PLACE_LIBRARY = 221
+	CASE "안개의호수~홍마관"
+		SIF STR:(6000 + PLACE_ID / 10) == "대도서관"
+			PLACE_LIBRARY = 310
+	CASE "미혹의 죽림"
+		SIF STR:(6000 + PLACE_ID / 10) == "영원정안채"
+			PLACE_LIBRARY = 427
+	CASE "마법의숲"
+		SIF STR:(6000 + PLACE_ID / 10) == "키리사메마법점"
+			PLACE_LIBRARY = 513
+		SIF STR:(6000 + PLACE_ID / 10) == "인형양관"
+			PLACE_LIBRARY = 524
+	CASE "삼도천~명계"
+		[SKIPSTART]
+		IF STR:(6000 + PLACE_ID / 10) == "마요히가"
+			PLACE_LIBRARY = 630
+		ENDIF
+		IF STR:(6000 + PLACE_ID / 10) == "백옥루"
+			PLACE_LIBRARY = 690
+		ENDIF
+		[SKIPEND]
+	CASE "요괴의 산 (산록)"
+		IF STR:(6000 + PLACE_ID / 10) == "선인의저택"
+			PLACE_LIBRARY = 724
+		ENDIF
+	CASE "요괴의 산 (산정)"
+		[SKIPSTART]
+		IF STR:(6000 + PLACE_ID / 10) == "천계"
+			PLACE_LIBRARY = 890
+		ENDIF
+		[SKIPEND]
+	CASE "지저"
+		IF STR:(6000 + PLACE_ID / 10) == "지령전"
+			PLACE_LIBRARY = 920
+		ENDIF
+	CASE "꿈의 세계~달"
+		[SKIPSTART]
+		IF STR:(6000 + PLACE_ID / 10) == "와타츠키정"
+			PLACE_LIBRARY = 1060
+		ENDIF
+		[SKIPEND]
+	ENDSELECT
+ENDIF
+RETURNF CAN_READ_BOOK_COLLECTION(PLACE_LIBRARY)
+
+
+
+
+;장서 열람 허락 판정
+;·반드시 거점 맵의 장소 ID(상세한 지점의 (분)편)를 건네주는 것
+;·MASTER가 그 장소에 있는 것이 전제로 처리를 짜고 있습니다
+@CAN_READ_BOOK_COLLECTION(PLACE_ID)
+#FUNCTION
+#DIM PLACE_ID
+SELECTCASE PLACE_ID
+;몽환유적은 소안내
+CASE 48, 49, 50
+	RETURNF PLACE_ID
+;절과 성덕도장은 소안내
+CASE 105, 126
+	RETURNF PLACE_ID
+;스즈나안와 서당은 소안내
+CASE 213, 222
+	RETURNF PLACE_ID
+;아큐의 저택
+;사모/연모로 해방
+CASE 221
+	SIF !TALENT:80:연모 && !TALENT:80:사모
+		RETURNF 0
+	RETURNF PLACE_ID
+;케이네택
+CASE 224
+	SIF FLAG:역극 == 67
+		RETURNF PLACE_ID
+	SIF CFLAG:67:신뢰도 < 30
+		RETURNF 0
+	SIF CFLAG:67:현재위치 == CFLAG:MASTER:현재위치
+		RETURNF PLACE_ID
+;도서관은 소안내
+CASE 310
+	RETURNF PLACE_ID
+;카구야 방
+CASE 414
+	SIF GROUPMATCH(FLAG:역극, 52, 53, 62, 72)
+		RETURNF PLACE_ID
+	SIF !TALENT:62:연모 && !TALENT:62:사모
+		RETURNF 0
+	SIF CFLAG:62:현재위치 == CFLAG:MASTER:현재위치
+		RETURNF PLACE_ID
+;창고/창고의 수색은 느슨하고
+;누군가 한사람 동석 하고 있으면 좋아
+CASE 424, 427
+	SIF GROUPMATCH(FLAG:역극, 52, 53, 62, 72)
+		RETURNF PLACE_ID
+	SIF GROUPMATCH(CFLAG:MASTER:현재위치, CFLAG:52:현재위치, CFLAG:53:현재위치, CFLAG:62:현재위치, CFLAG:72:현재위치)
+		RETURNF PLACE_ID
+;마리사 택의 연구실
+;다소의 신뢰도로 k
+CASE 513
+	SIF FLAG:역극 == 11
+		RETURNF PLACE_ID
+	SIF CFLAG:11:신뢰도 < 30
+		RETURNF 0
+	SIF CFLAG:11:현재위치 == CFLAG:MASTER:현재위치
+		RETURNF PLACE_ID
+;인형관의 연구실
+CASE 524
+	SIF GROUPMATCH(FLAG:역극, 17, 102)
+		RETURNF PLACE_ID
+	SIF INRANGE(CFLAG:MASTER:초기위치, 521, 531)
+		RETURNF PLACE_ID
+	SIF !TALENT:17:연모 && !TALENT:17:사모 && !TALENT:102:연모 && !TALENT:102:사모
+		RETURNF 0
+	SIF GROUPMATCH(CFLAG:MASTER:현재위치, CFLAG:17:현재위치, CFLAG:102:현재위치)
+		RETURNF PLACE_ID
+;선인 저택의 서재
+CASE 724
+	SIF FLAG:역극 == 43
+		RETURNF PLACE_ID
+	SIF INRANGE(CFLAG:MASTER:초기위치, 720, 730)
+		RETURNF PLACE_ID
+	SIF !TALENT:43:연모 && !TALENT:43:사모
+		RETURNF 0
+	SIF CFLAG:43:현재위치 == CFLAG:MASTER:현재위치
+		RETURNF PLACE_ID
+;사토리의 서재
+;동거(同居) 해도 신뢰도 50 필요
+CASE 920
+	SIF FLAG:역극 == 49
+		RETURNF PLACE_ID
+	SIF CFLAG:49:신뢰도 < 50
+		RETURNF 0
+	SIF INRANGE(CFLAG:MASTER:초기위치, 902, 926)
+		RETURNF PLACE_ID
+	SIF !TALENT:49:연모 && !TALENT:49:사모
+		RETURNF 0
+	SIF CFLAG:49:현재위치 == CFLAG:MASTER:현재위치
+		RETURNF PLACE_ID
+CASE 1422
+	RETURNF PLACE_ID
+ENDSELECT

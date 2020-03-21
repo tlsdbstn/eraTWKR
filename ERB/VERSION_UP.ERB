@@ -1,0 +1,18 @@
+﻿;변수의 개서등을 따르는 버전 업용
+@VERSION_UP
+SIF !GETBIT(FLAG:1000, 1)
+	CALL KAISYONASI
+SIF !GETBIT(FLAG:1000, 2) && FLAG:지주
+	CALL MODE_NOUMIN
+
+@KAISYONASI
+SETBIT FLAG:1000, 1
+PRINTFORML 스스로 상대에게 고백할 수준의 배짱은 있어?
+CALL ASK_YN("그야 있지","못해요")
+IF !RESULT
+	PRINTFORMW 무능력 모드를 사용하지 않습니다
+	FLAG:생활능력무 = 0
+ELSE
+	PRINTFORMW 무능력 모드를 켭니다(일부 커맨드를 사용 불가·상대 쪽의 덮치기 강화)
+	FLAG:생활능력무 = 1
+ENDIF

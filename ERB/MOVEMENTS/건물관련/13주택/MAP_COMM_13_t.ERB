@@ -1,0 +1,47 @@
+﻿;--------------------------------------------------
+;	맵내 이동 처리 확장 패치 부속
+;	명련사MAP용 함수
+;--------------------------------------------------
+
+@MAP_PLACENAME_13(ARG)
+#FUNCTIONS
+#DIM PLACEID
+
+IF GET_MAPID(ARG) == MAIN_MAP
+	SELECTCASE ARG
+		CASE 1301 TO (MAXROOM - 1)
+			RETURNF STR:(ARG + 8000)
+		CASE 1398
+			RETURNF OMANEKI_PLACE()
+		CASE 1399
+			RETURNF "스키마 공간"
+		CASE MAXROOM
+			RETURNF "주택 밖"
+		CASEELSE
+			RETURNF "불명"
+	ENDSELECT
+ELSE
+	RETURNF "불명"
+ENDIF
+
+@MAP_VIEWING_13(AA)
+#DIMS REF AA, 0
+IF !TFLAG:맵변환
+	TFLAG:맵변환 = 1
+ENDIF
+CALL DRAW_INFORMATIONLINE(@"%MAPNAME:(TFLAG:맵변환)%")
+PRINTFORML 
+TRYCALLFORM MAP_OWN1_{TFLAG:맵변환}(AA)
+
+@MAP_CAN_MOVE_13(ARG, ARG:1)
+#FUNCTION
+RETURNF 1
+
+
+
+;@MAP_CANNOT_WORD_13(ARG)
+;SELECTCASE TFLAG:이동불능메시지
+;	CASE 1302
+;		PRINTFORMW 영업 시간외다
+;	CASEELSE
+;ENDSELECT

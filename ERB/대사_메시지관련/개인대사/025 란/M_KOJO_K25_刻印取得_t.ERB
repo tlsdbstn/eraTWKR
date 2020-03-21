@@ -1,0 +1,106 @@
+﻿;-------------------------------------------
+;각인 취득
+;-------------------------------------------
+@M_KOJO_MESSAGE_MARKCNG_K25
+;이대로라면 지문이 표시되지 않습니다
+;지문을 표시하고 싶은 (분)편은, 아래와 같은 코멘트 아웃을 삭제해 주세요
+CALL MARK_MESSAGE
+;고통각인
+IF TFLAG:고통각인취득 == 1
+	PRINTFORML 「아얏 무엇을 할까」
+	PRINTFORMW 아이가 아픔에 눈썹을 찡그린 것은 잠깐이었다
+ELSEIF TFLAG:고통각인취득 == 2
+	PRINTFORML 「아!―……!」
+	PRINTFORMW 당분간 아픈 장소를 억제해 얼굴을 올리지 않았다
+ELSEIF TFLAG:고통각인취득 == 3
+	PRINTFORML 「………………!」
+	PRINTFORML 아이가 이를 악물어 격렬한 고통에 참는다
+	PRINTFORMW 9개의 꼬리까지도 괴로워 하는 같게 실룩실룩하며 떨고 있었다
+ENDIF
+
+;시간각인
+IF TFLAG:시간각인취득 == 1
+	PRINTFORML 멈추었을 때 중(안)에서 아이의 풍만한 여체에 열락이 스며들고 건너 간다
+	PRINTFORMW 본인의 의식은 없어도, 착실하게 %CALLNAME:MASTER%의 침략은 진행되고 있었다
+ELSEIF TFLAG:시간각인취득 == 2
+	PRINTFORML 몸1개(살) 하지 않는 아이의 몸만을 %마스터는% 절정 계속 시킨다
+	PRINTFORML 시간이 움직이기 시작한 순간, 이것들의 쾌감이 모두 일제히 개방되어 그녀의 의식에 습 있고 걸릴 것이다
+	PRINTFORMW 한 장의 회화와 같이 맑은 미모가 음 기쁨에 물드는 모습을 상상해, %마스터는% 고간을 부풀렸다
+ELSEIF TFLAG:시간각인취득 == 3
+	PRINTFORML 남을 기쁨다투기 위해서(때문에) 있는 것 같은 완성된 여체를 %마스터는% 하고 싶은 대로 희롱한다
+	PRINTFORML 이미 혀와 손가락으로 닿지 않은 장소는 없고, 고혈에 이르러 안쪽의 안쪽까지 요다해, 본인 이상으로 자세할 수록이다
+	PRINTFORML 발기해 버린 유두를 깎아 궁리하면, 더욱 절정의 물결이 일어난 것을 알았다
+	PRINTFORMW 모두가 %CALLNAME:MASTER%의 뜻대로 반응을 돌려준다. 아이의 몸이 완전하게 저속해진 것을 확신했다……
+ENDIF
+
+;쾌락각인
+IF TFLAG:23 == 1
+	PRINTFORML 「응, 기분이 좋아. 꽤 능숙하다」
+	PRINTFORML 그런 식으로 %마스터를% 친절한 표정으로 칭찬해 온다
+	PRINTFORMW 아이의 여유를 무너뜨리는에는 아직도 자극이 부족한 것 같다
+ELSEIF TFLAG:23 == 2
+	PRINTFORML 「윽……갔다. 좀, 안정될 때까지 기다려 줘……」
+	PRINTFORML 아이가 온몸에 땀방울을 띄워 격렬한 절정의 여운에 숨을 할딱이며 있다
+	PRINTFORMW 이 기를 놓치지 않든지%마스터는% 문답무용으로 습격하였다
+ELSEIF TFLAG:23 == 3
+	PRINTFORML 활나름대로 키를 뒤로 젖히면서, 아이는 소리도 없고 대절정의 거센 파도에 번농 되고 있다
+	PRINTFORML %마스터는% 향상된 유방을 양손와 잡아, 유두를 손가락의 사이에 끼워 몹시 거칠게 비비어 하기 만
+	PRINTFORMW 엉성한 접하는 방법으로 더욱 흥분이 깊어져 버릴 만큼, 아이의 추잡한 육체는 %CALLNAME:MASTER%에 지배되고 있었다
+ENDIF
+
+;괘씸각인
+;쾌락에 의한 각인
+;LV1
+IF TFLAG:24 == 11
+	PRINTFORML 「, 이, 건방진……!」
+	PRINTFORML 그렇게 말하는 아이의 표정에는 유쾌인 기색이 있다
+	PRINTFORMW 이것이라면 좀 더 대담한 일도 용서(허락)해 받을 수 있을 것 같다
+;LV2
+ELSEIF TFLAG:24 == 12
+	PRINTFORML 아이는 황홀해 하는 얼굴로, 이루는 대로 %CALLNAME:MASTER%의 손에 몸을 바치고 있다
+	PRINTFORML 「……핫, 끝냈다」
+	PRINTFORMW 이제 와서 제정신을 되찾아도 늦다. %마스터는% 어깨를 잡아 탈진한 몸을 덮치기
+;LV3
+ELSEIF TFLAG:24 == 13
+	PRINTFORML 「하……하……하……하……」
+	PRINTFORML 깊게 절정 한 아이는 얼빠진 눈으로 위를 올려봐 떨면서 난폭한 호흡을 계속하고 있다
+	PRINTFORML %마스터는% 드디어 아이에게서 완전하게 주도권을 빼앗아 가, 한마리의 암컷으로서 굴복 시켰다
+	PRINTFORMW 이 극상의 여체를 어떻게 맛보는 것도 당신이 생각하는 대로다……
+;굴복, 복종에 의한 각인
+;LV1
+ELSEIF TFLAG:24 == 31
+	PRINTFORML 「흐응……」
+	PRINTFORML 초대면때와 같이 아이가 찬찬히 이분을 바라봐 온다
+	PRINTFORMW 무엇인가 1개(살) 수긍해, 지금까지와는 종류가 다른 미소를 입가에 띄웠다
+;LV2
+ELSEIF TFLAG:24 == 32
+	PRINTFORML 문득, 아이의 밝은 표정이 갑작스럽게 사라졌다
+	PRINTFORML 「너, 지금 무엇을 했는지 알고 있는 건가?」
+	PRINTFORML 완전한 무표정하게 압도되는 %마스터를% 잠깐 계속 응시하고
+	PRINTFORML 「……아니아니, 나빴다. 너는 다만 여자를 좋아해」
+	PRINTFORMW 이상한 이유로써 마음대로 납득하고, 또 아이는 평상시의 붙임성을 되찾았다
+;LV3
+ELSEIF TFLAG:24 == 33
+	PRINTFORML 아이의 손이 성장해 %CALLNAME:MASTER%의 머리를 나내와 어루만진다
+	PRINTFORML (뜻)이유는 모르지만 아프고 기분모습으로, %마스터는% 목을 궁리했다
+	PRINTFORML 「무슨 일이 있었던 걸까는?  자, 왜 그러는 걸까」
+	PRINTFORMW 나에게도 모른다고 아이는 익살스럽게 어깨를 움츠리고 있었다
+ENDIF
+
+;반발각인
+IF TFLAG:반발각인취득 == 1
+	PRINTFORML 「흠……」
+	PRINTFORML 「너, 조금 뜻대로 되어 우쭐대지는 않는가」
+	PRINTFORMW 돌연 진지한 얼굴이 된 아이의 평탄한 음성에, %마스터는% 전율 했다
+ELSEIF TFLAG:반발각인취득 == 2
+	PRINTFORML 「경고다」
+	PRINTFORML 진곧 늘린 검지와 중지 손가락이, 아니, 그 앞의 날카로운 손톱이 %CALLNAME:MASTER%의 액에 들이댈 수 있었다
+	PRINTFORML 「너와의 교제는 나개인의 일. 결국은 사적인 놀이의 범주이다」
+	PRINTFORML 「재미있는 것도 아닌 놀이라면 계속할 이유는 없다. 지금의 관계를 유지하고 싶으면 마음으로 명심해 두어」
+	PRINTFORMW 담담하게 그렇게 말해, 아이는 스위치를 바꾸었는지와 같이 평상시 그대로의 모습에 돌아왔다
+ELSEIF TFLAG:반발각인취득 == 3
+	PRINTFORML 아이는 아무것도 말하지 않고 애매한 미소만을 띄웠다
+	PRINTFORML 전혀 색미가 없는 가면인 듯한 표정에 %마스터는% 정체의 모르는 오한을 느낀다
+	PRINTFORML 아무래도 넘어선 안 되는 일선을 넘어 버린 것 같다
+	PRINTFORMW 무례하게 격노하는 것도 아니고, 아이는 다만 %CALLNAME:MASTER%에의 관심을 잃은 것 같다……
+ENDIF

@@ -1,0 +1,186 @@
+﻿;-------------------------------------------------
+;독서
+;일상계 커맨드, 레벨 1
+;-------------------------------------------------
+@COM436
+
+PRINTL 무엇을 읽자?  
+CALL ASK_M("문학", 1, "실용서", 1, "야한 책", 1, "캔슬", 1)
+IF RESULT == 0
+	SELECTCASE RAND:10
+		;인살
+		CASE 0
+			TFLAG:193 = 1
+		;실패
+		CASE 1 TO 3
+			TFLAG:193 = 2
+		;문학
+		CASEELSE
+			TFLAG:193 = 3
+	ENDSELECT
+ELSEIF RESULT == 1
+	SELECTCASE RAND:10
+		;실패
+		CASE 0 TO 2
+			TFLAG:193 = 4
+		;실용
+		CASEELSE
+			TFLAG:193 = 5
+	ENDSELECT
+ELSEIF RESULT == 2
+	SELECTCASE RAND:9
+		;우스이타카이혼
+		CASE 0 TO 2
+			TFLAG:193 = 6
+		;보건 체육
+		CASE 3 TO 5
+			TFLAG:193 = 7
+		;카 매스-호랑이
+		CASE 6 TO 8
+			TFLAG:193 = 8
+		;위험한 책
+;		CASEELSE
+;		IF !TALENT:MASTER:금단의지식
+;			TFLAG:193 = 9
+;		ELSE
+;			GOTO LOOP
+;		ENDIF
+	ENDSELECT
+ELSEIF RESULT == 3
+	RETURN -1
+ENDIF
+
+IF TARGET == 54 && CFLAG:325 == 5
+	IF TALENT:연모
+		PRINTFORM 파츄리와 함께 독서를 즐기기로 했다
+	ELSE
+		PRINTFORM 파츄리의 독서가 끝날 때까지 이쪽도 독서로 시간을 보내기로 했다
+	ENDIF
+ENDIF
+PRINTFORM %마스터는%, 책장에 있었다
+SELECTCASE TFLAG:193
+	CASE 1
+		PRINT 「닌자 슬레이어-」
+	CASE 2 TO 3
+		PRINT 문예서
+	CASE 4 TO 5
+		PRINT 실용서
+	CASE 6
+		PRINT 싱겁고 높은 책
+	CASE 7
+		PRINT 보건 체육의 책
+	CASE 8
+		PRINT 「카마·스트라」
+;	CASE 9
+;		PRINT 타이틀이 없는 가죽 장정의 습기를 띤 책
+ENDSELECT
+PRINTFORML 를 읽어 보았다
+
+;3분의 1으로 추가 이벤트
+SIF !RAND:3 && TARGET == 54
+	TFLAG:194 = 1
+;TARGET가 무지하고 H인 독서 또한 MASTER가 TARGET보다 교양이 높게 TARGET의 교양이 2이상 또한 5분의 1
+SIF !RAND:5 && TALENT:TARGET:무지 && TFLAG:193 >= 6 && TFLAG:193 <= 8 && ABL:MASTER:교양 > ABL:교양 && ABL:교양 >= 2
+	TFLAG:194 = 2
+
+
+SELECTCASE TFLAG:193
+	CASE 1
+		EXP:MASTER:74 += 5
+	CASE 3
+	;문학
+		EXP:MASTER:75 ++
+	CASE 5
+	;실용
+		SELECTCASE RAND:6
+			CASE 0
+				EXP:MASTER:71 ++
+			CASE 1
+				EXP:MASTER:72 ++
+			CASE 2
+				EXP:MASTER:76 ++
+			CASE 3
+				EXP:MASTER:82 ++
+			CASE 4
+				EXP:MASTER:84 ++
+			CASEELSE
+				EXP:MASTER:85 ++
+		ENDSELECT
+	CASE 6
+		CALL RECOVER(MASTER, 100,"정력")
+		CALL RECOVER(MASTER, 100,"발기")
+ENDSELECT
+
+IF TARGET > 0 && CFLAG:행동 != 5
+	;고정으로 획득하는 소스
+	SOURCE:환락 = 200
+	;신뢰
+	TFLAG:98 = 3
+
+	;ABL:순종을 본다
+	IF ABL:순종 <= 1
+		SOURCE:환락 += (ABL:순종 * 80)
+	ELSEIF ABL:순종 <= 3
+		SOURCE:환락 += 300 + (ABL:순종 * 80)
+	ELSEIF ABL:순종 <= 5
+		SOURCE:환락 += 700 + (ABL:순종 * 80)
+	ELSEIF ABL:순종 <= 8
+		SOURCE:환락 += 950 + (ABL:순종 * 100)
+	ELSEIF ABL:순종 <= 11
+		SOURCE:환락 += 1200 + (ABL:순종 * 90)
+	ELSE
+		SOURCE:환락 += 2000 + (ABL:순종 * 50)
+	ENDIF
+
+	;호감 도를 본다
+	IF CFLAG:2 <= 500
+		SOURCE:환락 += CFLAG:2 * 2
+	ELSEIF CFLAG:2 <= 5000
+		SOURCE:환락 += 1000 + (CFLAG:2 - 500) / 2
+	ELSE
+		SOURCE:환락 += 5000 + (CFLAG:2 - 5000) / 3
+	ENDIF
+	SIF SOURCE:환락 < 0
+		SOURCE:환락 = 0
+ENDIF
+
+DOWNBASE:MASTER:체력 = 50
+DOWNBASE:MASTER:기력 = 200
+TIME += 60
+RETURN 1
+
+
+;-------------------------------------------------
+;실행 가능 판정
+;-------------------------------------------------
+;독서
+@COM_ABLE436
+;실행 판정
+SIF !TFLAG:100
+	RETURN 0
+;일괄관리
+SIF GLOBAL_COMABLE(436)
+	RETURN RESULT
+;데이트 도중
+;SIF (CFLAG:현재위치 % 100) % 10 && CFLAG:MASTER:현재위치 != OMANEKIBEYA()
+;	RETURN 0
+;동침중
+SIF CFLAG:MASTER:동침중
+	RETURN 0
+;우후후 안도 안 돼
+SIF CFLAG:MASTER:우후후
+	RETURN 0
+;기력 0에서는 불가
+SIF BASE:MASTER:기력 <= 0
+	RETURN 0
+;도서관
+SIF !IS_LIBRARY(CFLAG:MASTER:현재위치)
+	RETURN 0
+;수면중
+SIF CFLAG:수면
+	RETURN 0
+;시간정지중
+SIF FLAG:70
+	RETURN 0
+RETURN 1
+

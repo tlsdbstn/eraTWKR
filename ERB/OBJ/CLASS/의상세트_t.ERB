@@ -1,0 +1,1260 @@
+﻿;요소명→ID변환용 함수의 존부 확인용 함수
+;변환 가능(ID와 요소명의 관계가 항상 변화하지 않는다)이라면 설치
+;상황에 의해 이름이 바뀌는 것 같은 것은 불가능
+@EXIST_의상세트_ID
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+;요소명→ID변환용 함수
+;필요하면 각 오브젝트로와 같이  작성
+@의상세트_ID(ARG:0, ARGS:0, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS V_NAME                  ;작성하는 변수명
+#DIMS C_NAME, OBJ_ID_LAST + 1 ;데이터 보유
+#DIM  O_ID                    ;참조용
+IF ARGS:0 == "RESET"
+	VARSET C_NAME
+	FOR O_ID, 1, OBJ_ID_LAST + 1
+		C_NAME:O_ID = %GET_STR(, "의상세트", O_ID, "이름")%
+	NEXT
+ELSE
+	O_ID = FINDELEMENT(C_NAME, ESCAPE(ARGS:0), , , 1)
+	CALLF MAKE_INT(V_NAME, O_ID)
+ENDIF
+
+
+
+;존부 함수
+;F함수는 TRYCALL계를 사용할 수 없기 때문에 통상 함수로 존부 배열을 만들어버린다
+@EXIST_의상세트1
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+;오브젝트 본체
+@의상세트1(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "남장 세트")
+CASE "기본 의상세트"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;여기서부터 의상 설정계
+CASE "구두"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("구두", "구두"))
+CASE "양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "바지"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("바지", "바지"))
+CASE "상반신속옷1"
+;한나라 여자는 사라시를 붙인다
+	IF GETBIT(TALENT:ARG:2, 0)
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신속옷1", "사라시"))
+	ELSE
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신속옷1", "T셔츠"))
+	ENDIF
+CASE "상반신윗도리1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리1", "윗도리"))
+ENDSELECT
+
+
+
+@EXIST_의상세트2
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트2(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "여장 세트")
+CASE "기본 의상세트"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;여기서부터 의상 설정계
+CASE "구두"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("구두", "구두"))
+CASE "양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "상반신속옷1"
+;오토코노코는 브래지어를 붙이지 않는다
+	SIF GETBIT(TALENT:ARG:2, 0)
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신속옷1", "브래지어"))
+CASE "상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+ENDSELECT
+
+
+
+@EXIST_의상세트3
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트3(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "집사 세트")
+CASE "기본 의상세트"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;여기서부터 의상 설정계
+CASE "상반신속옷1"
+;오토코노코는 브래지어를 붙이지 않는다
+	SIF GETBIT(TALENT:ARG:2, 0)
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신속옷1", "브래지어"))
+CASE "구두"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("구두", "구두"))
+CASE "양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "상반신윗도리1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리1", "셔츠"))
+CASE "상반신속옷1"
+;오토코노코는 브래지어를 붙이지 않는다
+	SIF GETBIT(TALENT:ARG:2, 0)
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신속옷1", "브래지어"))
+CASE "하반신속옷2"
+	SIF GETBIT(TALENT:ARG:2, 0)
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("하반신속옷2", "트렁크스"))
+CASE "외의"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "쟈켓"))
+CASE "그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "넥타이"))
+CASE "그외2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외2", "숄더백"))
+CASE "바지"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("바지", "슬랙스(평상복 바지)"))
+CASE "완부의복"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("완부의복", "실크 글로브"))
+ENDSELECT
+
+
+
+@EXIST_의상세트4
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트4(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "가정부 세트")
+CASE "기본 의상세트"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;여기서부터 의상 설정계
+CASE "모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "머리 치장"))
+CASE "구두"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("구두", "구두"))
+CASE "양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "기모노"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("기모노", "기모노"))
+CASE "상반신속옷1"
+;오토코노코는 브래지어를 붙이지 않는다
+	SIF GETBIT(TALENT:ARG:2, 0)
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신속옷1", "브래지어"))
+CASE "외의"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "앞치마"))
+ENDSELECT
+
+
+
+@EXIST_의상세트5
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트5(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "신관 세트")
+CASE "기본 의상세트"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;여기서부터 의상 설정계
+CASE "구두"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("구두", "눈이 올때 신는 신발"))
+CASE "양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "버선"))
+CASE "바지"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("바지", "하카마"))
+CASE "상반신속옷1"
+;한나라 여자는 사라시를 붙인다
+	SIF GETBIT(TALENT:ARG:2, 0)
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신속옷1", "사라시"))
+CASE "상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "흰색소소매"))
+ENDSELECT
+
+
+
+@EXIST_의상세트6
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트6(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "작업복 세트")
+CASE "기본 의상세트"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;여기서부터 의상 설정계
+CASE "구두"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("구두", "눈이 올때 신는 신발"))
+CASE "양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "버선"))
+CASE "상반신속옷1"
+;한나라 여자는 사라시를 붙인다
+	SIF GETBIT(TALENT:ARG:2, 0)
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신속옷1", "사라시"))
+CASE "상반신윗도리1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리1", "작업복(위)"))
+CASE "모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "손수건"))
+CASE "바지"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("바지", "작업복(아래)"))
+ENDSELECT
+
+
+
+@EXIST_의상세트7
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트7(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "평상복 차림 세트")
+CASE "기본 의상세트"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;여기서부터 의상 설정계
+CASE "구두"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("구두", "눈이 올때 신는 신발"))
+CASE "양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "버선"))
+CASE "상반신속옷1"
+;한나라 여자는 사라시를 붙인다
+	SIF GETBIT(TALENT:ARG:2, 0)
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신속옷1", "사라시"))
+CASE "기모노"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("기모노", "기모노"))
+CASE "그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "띠"))
+CASE "외의"
+	SIF DAY:2 == 3 || DAY:2 == 4
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "겉옷"))
+ENDSELECT
+
+
+
+@EXIST_의상세트8
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트8(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "도복 세트")
+CASE "기본 의상세트"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;여기서부터 의상 설정계
+CASE "구두"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("구두", "짚신"))
+CASE "양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "버선"))
+CASE "상반신속옷1"
+	;남장
+	SIF GETBIT(TALENT:ARG:2, 0)
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신속옷1", "사라시"))
+CASE "하반신속옷1"
+	;남자
+	SIF !GETBIT(TALENT:ARG:2, 0)
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("하반신속옷1", "곤"))
+CASE "상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "도복"))
+CASE "바지"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("바지", "하카마"))
+ENDSELECT
+
+
+
+@EXIST_의상세트9
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트9(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "학생 세트")
+CASE "기본 의상세트"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;여기서부터 의상 설정계
+CASE "구두"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("구두", "부츠"))
+CASE "양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "상반신속옷2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신속옷2", "컬러 셔츠"))
+CASE "상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "긴 일본옷"))
+CASE "바지"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("바지", "하카마"))
+CASE "외의"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "케이프 망토"))
+ENDSELECT
+
+
+
+@EXIST_의상세트10
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트10(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "여학생 세트")
+CASE "기본 의상세트"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;여기서부터 의상 설정계
+CASE "구두"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("구두", "부츠"))
+CASE "양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "상반신속옷1"
+	SIF GETBIT(TALENT:ARG:2, 0)
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신속옷1", "브래지어"))
+CASE "하반신속옷1"
+	SIF !GETBIT(TALENT:ARG:2, 0)
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("하반신속옷1", "곤"))
+CASE "상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "자잘한 무늬"))
+CASE "치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "안돈바카마"))
+CASE "모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "리본"))
+ENDSELECT
+
+;MOB 추가
+@EXIST_의상세트11
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트11(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "기모노세트")
+CASE "기본 의상세트"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;여기서부터 의상 설정계
+CASE "구두"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("구두", "구두"))
+CASE "양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "기모노"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("기모노", "기모노"))
+CASE "상반신속옷1"
+;오토코노코는 브래지어를 붙이지 않는다
+	SIF GETBIT(TALENT:ARG:2, 0)
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신속옷1", "브래지어"))
+ENDSELECT
+
+
+
+;------------------------------------
+;파자마
+;------------------------------------
+@EXIST_의상세트31
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트31(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+CASE "파자마 세트"
+	CALLF MAKE_INT(V_NAME, 1)
+;여기서부터 의상 설정계
+CASE "기모노"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("기모노", "속옷"))
+ENDSELECT
+
+
+
+@EXIST_의상세트32
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트32(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "파자마(실내 옷) 세트")
+CASE "파자마 세트"
+	CALLF MAKE_INT(V_NAME, 1)
+;여기서부터 의상 설정계
+CASE "원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "롱 실내 옷"))
+ENDSELECT
+
+
+
+@EXIST_의상세트33
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트33(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "파자마(천진난만한 여자) 세트")
+CASE "파자마 세트"
+	CALLF MAKE_INT(V_NAME, 1)
+;여기서부터 의상 설정계
+CASE "원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "천진난만한 여자"))
+ENDSELECT
+
+
+
+@EXIST_의상세트34
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트34(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+CASE "파자마 세트"
+	CALLF MAKE_INT(V_NAME, 1)
+;여기서부터 의상 설정계
+CASE "바지"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("바지", "파자마 바지"))
+CASE "상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "파자마 윗도리"))
+ENDSELECT
+
+
+
+@EXIST_의상세트35
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트35(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "파자마(치마) 세트")
+CASE "파자마 세트"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "파자마 치마"))
+CASE "상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "파자마 윗도리"))
+ENDSELECT
+
+
+
+@EXIST_의상세트36
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트36(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "파자마(바지＋후드) 세트")
+CASE "파자마 세트"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "후드"))
+CASE "바지"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("바지", "파자마 바지"))
+CASE "상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "파자마 윗도리"))
+ENDSELECT
+
+
+
+@EXIST_의상세트37
+#LOCALSIZE 1
+#LOCALSSIZE 1
+;우선 만들었지만 할당하지 않다
+
+@의상세트37(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "파자마(치마＋후드) 세트")
+CASE "파자마 세트"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "후드"))
+CASE "치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "파자마 치마"))
+CASE "상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "파자마 윗도리"))
+ENDSELECT
+
+
+
+@EXIST_의상세트38
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트38(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "파자마(바지＋캐치볼) 세트")
+CASE "파자마 세트"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "나이트캡"))
+CASE "바지"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("바지", "파자마 바지"))
+CASE "상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "파자마 윗도리"))
+ENDSELECT
+
+
+
+@EXIST_의상세트39
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트39(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "파자마(치마＋캐치볼) 세트")
+CASE "파자마 세트"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "나이트캡"))
+CASE "치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "파자마 치마"))
+CASE "상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "파자마 윗도리"))
+ENDSELECT
+
+
+
+@EXIST_의상세트40
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트40(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "파자마(실내 옷＋캐치볼) 세트")
+CASE "파자마 세트"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "나이트캡"))
+CASE "원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "롱 실내 옷"))
+ENDSELECT
+
+
+
+@EXIST_의상세트41
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트41(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "파자마(천진난만한 여자＋캐치볼) 세트")
+CASE "파자마 세트"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "나이트캡"))
+CASE "원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "천진난만한 여자"))
+ENDSELECT
+
+
+
+@EXIST_의상세트42
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트42(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "파자마(원피스) 세트")
+CASE "파자마 세트"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+ENDSELECT
+
+
+
+@EXIST_의상세트43
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트43(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "파자마(목욕타올) 세트")
+CASE "파자마 세트"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "목욕타올"))
+ENDSELECT
+
+
+
+
+
+
+;------------------------------------
+;코스프레 의상
+;------------------------------------
+@EXIST_의상세트50
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트50(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "양호실의 여교사 세트")
+CASE "코스프레 의상세트"
+	CALLF MAKE_INT(V_NAME, 1)
+;여기서부터 의상 설정계
+CASE "액세서리"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("액세서리", "안경"))
+CASE "구두"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("구두", "구두"))
+CASE "양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "가터 스타킹"))
+CASE "상반신속옷1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신속옷1", "브래지어"))
+CASE "상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "가슴 열림 터틀넥"))
+CASE "치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "외의"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "백의"))
+CASE "그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "벨트"))
+ENDSELECT
+
+
+
+@EXIST_의상세트51
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트51(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "메이드 세트")
+CASE "코스프레 의상세트"
+	CALLF MAKE_INT(V_NAME, 1)
+;여기서부터 의상 설정계
+CASE "모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "화이트브림"))
+CASE "구두"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("구두", "구두"))
+CASE "양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "가터 스타킹"))
+CASE "상반신속옷1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신속옷1", "브래지어"))
+CASE "원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "에이프런 드레스"))
+ENDSELECT
+
+
+
+@EXIST_의상세트52
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트52(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "비키니 세트")
+CASE "코스프레 의상세트"
+	CALLF MAKE_INT(V_NAME, 1)
+;여기서부터 의상 설정계
+CASE "상반신속옷2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신속옷2", "비키니 탑"))
+CASE "하반신속옷2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("하반신속옷2", "비키니 보텀"))
+ENDSELECT
+
+
+
+@EXIST_의상세트53
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트53(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "마이크로 비키니 세트")
+CASE "코스프레 의상세트"
+	CALLF MAKE_INT(V_NAME, 1)
+;여기서부터 의상 설정계
+CASE "상반신속옷2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신속옷2", "마이크로브라"))
+CASE "하반신속옷2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("하반신속옷2", "마이크로 보텀"))
+ENDSELECT
+
+
+
+@EXIST_의상세트54
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트54(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "곤 한나라 여자 세트")
+CASE "코스프레 의상세트"
+	CALLF MAKE_INT(V_NAME, 1)
+;여기서부터 의상 설정계
+CASE "상반신속옷1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신속옷1", "사라시"))
+CASE "하반신속옷1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("하반신속옷1", "곤"))
+ENDSELECT
+
+
+
+@EXIST_의상세트55
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트55(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "bunny girl 세트")
+CASE "코스프레 의상세트"
+	CALLF MAKE_INT(V_NAME, 1)
+;여기서부터 의상 설정계
+CASE "모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "우사미 헤어-밴드"))
+CASE "완부의복"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("완부의복", "커프스"))
+CASE "레오타드"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("레오타드", "바니 슈트(흑)"))
+CASE "양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "그물 타이츠"))
+CASE "구두"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("구두", "하이힐"))
+CASE "그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "넥타이"))
+ENDSELECT
+
+
+
+@EXIST_의상세트56
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트56(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "백의의 천사 세트")
+CASE "코스프레 의상세트"
+	CALLF MAKE_INT(V_NAME, 1)
+;여기서부터 의상 설정계
+CASE "모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "간호사 캐치볼"))
+CASE "원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "간호사 옷"))
+CASE "양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "팬티 스타킹"))
+CASE "구두"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("구두", "간호사 샌들"))
+ENDSELECT
+
+
+
+@EXIST_의상세트57
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트57(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "산타옷세트")
+CASE "코스프레 의상세트"
+	CALLF MAKE_INT(V_NAME, 1)
+;여기서부터 의상 설정계
+CASE "모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "산타모"))
+;수염
+CASE "그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "수염"))
+CASE "외의"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "케이프"))
+;상반신윗도리
+CASE "상반신윗도리1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리1", "윗도리"))
+;미니치마
+CASE "치마"
+	SIF GETBIT(TALENT:ARG:2, 0)
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "미니치마"))
+;브래지어
+CASE "상반신속옷1"
+	SIF GETBIT(TALENT:ARG:2, 0)
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신속옷1", "브래지어"))
+CASE "바지"
+	SIF !GETBIT(TALENT:ARG:2, 0)
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("바지", "바지"))
+;오늘의팬티
+;CASE "하반신속옷2"
+;	CALLF MAKE_INT(V_NAME, 오늘의팬티(ARG))
+;양말
+CASE "양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+;롱 부츠
+CASE "구두"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("구두", "롱 부츠"))
+ENDSELECT
+
+
+
+@EXIST_의상세트58
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트58(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "테니스 웨어 세트")
+CASE "코스프레 의상세트"
+	CALLF MAKE_INT(V_NAME, 1)
+;여기서부터 의상 설정계
+;산바이자
+CASE "모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "산바이자"))
+;반소매 블라우스
+CASE "상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "반소매 블라우스"))
+CASE "치마"
+	SIF GETBIT(TALENT:ARG:2, 0)
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "미니치마"))
+CASE "바지"
+	SIF !GETBIT(TALENT:ARG:2, 0)
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("바지", "쇼트 바지"))
+;스포트브라
+CASE "상반신속옷1"
+	SIF GETBIT(TALENT:ARG:2, 0)
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신속옷1", "스포트브라"))
+;양말
+CASE "양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+;모미지
+CASE "구두"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("구두", "구두"))
+ENDSELECT
+
+
+
+@EXIST_의상세트59
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트59(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "닌자 세트")
+CASE "코스프레 의상세트"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "갈아입히기 속성"
+	CALLF MAKE_STR(V_NAME, "「코스프레」")
+;여기서부터 의상 설정계
+CASE "구두"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("구두", "지카타비"))
+CASE "기모노"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("기모노", "인의복"))
+CASE "레오타드"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("레오타드", "쇠사슬 홑옷"))
+CASE "완부의복"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("완부의복", "토시"))
+CASE "모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "면"))
+ENDSELECT
+
+
+@EXIST_의상세트60
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트60(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "피부나 와이셔츠 세트")
+CASE "코스프레 의상세트"
+	CALLF MAKE_INT(V_NAME, 1)
+;여기서부터 의상 설정계
+;와이셔츠(유일한 복장. 외는 전해제)
+CASE "상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "와이셔츠"))
+ENDSELECT
+
+
+;------------------------------------
+;캐릭터 특수 의상(외부로부터 참조 가능)
+;------------------------------------
+@EXIST_의상세트70
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트70(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "카스 모포문 세트")
+CASE "캐릭터 특수 의상세트"
+	CALLF MAKE_INT(V_NAME, 1)
+;여기서부터 의상 설정계
+;카스 모포
+CASE "모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "카스 모포"))
+;펌프스
+CASE "구두"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("구두", "펌프스"))
+;양말
+CASE "양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+;와이셔츠
+CASE "상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "와이셔츠"))
+;숏 팬츠
+CASE "바지"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("바지", "숏 팬츠"))
+;넥타이
+CASE "그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "넥타이"))
+;숄더백
+CASE "그외2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외2", "숄더백"))
+;슈트 쟈켓
+CASE "외의"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "슈트 쟈켓"))
+ENDSELECT
+
+
+
+@EXIST_의상세트71
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트71(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "우동 약 행상인 세트")
+CASE "캐릭터 특수 의상세트"
+	CALLF MAKE_INT(V_NAME, 1)
+;여기서부터 의상 설정계
+CASE "모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "삿갓"))
+CASE "구두"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("구두", "눈이 올때 신는 신발"))
+CASE "양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "버선"))
+;오늘의팬티
+CASE "기모노"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("기모노", "기모노"))
+CASE "완부의복"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("완부의복", "토시"))
+CASE "그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "옷고리짝"))
+CASE "그외2"
+;다리의 게이톨 같은 아레는 붕대로 대용
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외2", "붕대"))
+ENDSELECT
+
+
+
+@EXIST_의상세트72
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트72(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "마미조 의복 세트")
+CASE "캐릭터 특수 의상세트"
+	CALLF MAKE_INT(V_NAME, 1)
+;여기서부터 의상 설정계
+;머리 치장
+CASE "모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "머리 치장"))
+;나막신
+CASE "구두"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("구두", "나막신"))
+;버선
+CASE "양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "버선"))
+CASE "그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "담뱃대"))
+CASE "그외2"
+	SIF DAY:2 == 4
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외2", "머플러-"))
+;안경
+CASE "액세서리"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("액세서리", "안경"))
+;겉옷
+CASE "외의"
+	SIF DAY:2 == 4 || DAY:2 == 3
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "겉옷"))
+;긴 일본옷
+CASE "상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "긴 일본옷"))
+CASE "치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+ENDSELECT
+
+
+@EXIST_의상세트73
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트73(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "맨다리 메이링 세트")
+CASE "캐릭터 특수 의상세트"
+	CALLF MAKE_INT(V_NAME, 1)
+;여기서부터 의상 설정계
+CASE "모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "구두"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("구두", "구두"))
+CASE "양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "차이나 드레스"))
+ENDSELECT
+
+
+@EXIST_의상세트74
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@의상세트74(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "이름"
+	CALLF MAKE_STR(V_NAME, "세일러 사나에 세트")
+CASE "캐릭터 특수 의상세트"
+	CALLF MAKE_INT(V_NAME, 1)
+;여기서부터 의상 설정계
+CASE "모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "머리 치장"))
+CASE "구두"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("구두", "가죽 구두"))
+CASE "양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "상반신윗도리1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리1", "세라복"))
+CASE "치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+ENDSELECT

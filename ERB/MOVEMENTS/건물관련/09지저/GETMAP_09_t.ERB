@@ -1,0 +1,39 @@
+﻿@GETMAP_9(ARG)
+#DIM 기색
+기색 = 0
+IF TALENT:MASTER:위치짐작 && FLAG:짐작모드 == 1
+	FOR LOCAL, 1, CHARANUM
+		IF CFLAG:LOCAL:현재위치 == ARG
+			IF CFLAG:LOCAL:행동 == 5
+				기색 = 2
+				BREAK
+			ELSEIF CFLAG:LOCAL:수면
+				기색 = 3
+				BREAK
+			ENDIF
+			기색 = 1
+		ENDIF
+		IF ARG == 927 && !GROUPMATCH(CFLAG:MASTER:현재위치, 927,928,929,930)
+			IF GROUPMATCH(CFLAG:LOCAL:현재위치, 927,928,929,930)
+				IF CFLAG:LOCAL:행동 == 5
+					기색 = 2
+					BREAK
+				ELSEIF CFLAG:LOCAL:수면
+					기색 = 3
+					BREAK
+				ENDIF
+				기색 = 1
+			ENDIF
+		ENDIF
+	NEXT
+	IF 기색 == 1
+		SETCOLOR 255, 100, 200
+	ELSEIF 기색 == 2
+		SETCOLOR 255, 100, 0
+	ELSEIF 기색 == 3
+		SETCOLOR 0, 120, 180
+	ELSEIF ROOMDATA:(ARG % 100) & 장소_모브
+		SETCOLOR C_D_PINK
+	ENDIF
+ENDIF
+CALL GETMAP_YOGORE(ARG)

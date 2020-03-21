@@ -1,0 +1,163 @@
+﻿@SKIP_MOVE_2(ARG:0, ARG:1)
+
+;LOCAL 일람
+;0	현재위치
+
+;현재위치 취득
+LOCAL = CFLAG:MASTER:현재위치
+SIF ARG:1
+	LOCAL = ARG:1
+
+;잠정 목적지에 직접 이동할 수 있는 경우
+IF CAN_MOVE(LOCAL, ARG) & 1
+	;거기에 이동
+	RETURN ARG
+ENDIF
+
+;막다른 골목으로부터 갈 수 있는 장소는 고정이므로, 거기를 목표로 한다
+SELECTCASE LOCAL
+;201마을의 문으로부터는 203 미나미토리만
+CASE 201
+	RETURN 203
+;211선술집, 212 카페, 218 간단한 요리점으로부터는 203 미나미토리만
+CASE 211,212,218
+	RETURN 203
+;217감미소로부터는 204 히가시도리마셔
+CASE 217
+	RETURN 204
+;225혼숙여관로부터는 206 니시도리마셔
+CASE 225
+	RETURN 206
+;코스즈룸으로부터는 스즈나안
+CASE 226
+	RETURN 213
+;연립 주택 각부가게로부터는 연립 주택앞
+CASE 230 TO 237
+	RETURN 214
+ENDSELECT
+
+;PRINTFORML LOCAL는{LOCAL}
+
+;직접 이동할 수 없는 경우,  1개가까운 위치를 잠정 목적지로 다시 설정해 루프
+;지점 추가시 요점 보충(전케이스 수정하는 것)
+SELECTCASE ARG
+	CASE 201,211,212,218
+		;마을의 문, 선술집, 카페, 간단한 요리 가게에 직접 갈 수 없는 경우 203 미나미토리를 목표로 한다
+		RETURN 203
+	CASE 202
+		SELECTCASE LOCAL
+			;중앙 광장에 직접 갈 수 없는 경우, 마을의 동쪽이라면 204 히가시도리를 목표로 한다
+			CASE 213,219,222,223
+				RETURN 204
+			CASE 224
+				RETURN 205
+			;주택가인가 혼숙여관나 아큐의 저택이라면 206 니시도리를 목표로 한다
+			CASE 214,221,225
+				RETURN 206
+		ENDSELECT
+	CASE 203 TO 206
+		;00방법에 직접 갈 수 없는 경우 202 중앙 광장을 목표로 한다
+		RETURN 202
+	CASE 207
+		SELECTCASE LOCAL
+		;207용신 상에 직접 갈 수 없는 경우, 마을의 키타가와라면 205 기타도리를 목표로 한다
+		CASE 219,221,222
+			RETURN 205
+		;그 이외라면 202 중앙 광장을 목표로 한다
+		CASEELSE
+			RETURN 202
+		ENDSELECT
+	CASE 217
+		;감미소에 직접 갈 수 없는 경우, 204 히가시도리를 목표로 한다
+		RETURN 204
+	CASE 213
+		SELECTCASE LOCAL
+		;코스즈이오리에 직접 갈 수 없는 경우, 마을의 문, 선술집, 카페, 주택가, 식료품점, 일품 요리점으로부터라면 미나미토리를 목표로 한다
+		CASE 201,211,212,214,216,218
+			RETURN 202
+		;그 이외는 히가시도리에
+		CASEELSE
+			RETURN 204
+		ENDSELECT
+	CASE 214
+		SELECTCASE LOCAL
+		;주택가에 직접 갈 수 없는 경우, 마을의 문, 코스즈이오리, 식료품점, 목욕탕으로부터라면 미나미토리를 목표로 한다
+		CASE 201,213,216,223
+			RETURN 203
+		;그 이외는 니시도리에
+		CASEELSE
+			RETURN 206
+		ENDSELECT
+	CASE 215
+		SELECTCASE LOCAL
+		;꽃집에 직접 갈 수 없는 경우, 주택가, 아큐의 저택으로부터라면 니시도리를 목표로 한다
+		CASE 214,221
+			RETURN 206
+		;그 이외는 중앙 광장에
+		CASEELSE
+			RETURN 202
+		ENDSELECT
+	CASE 216
+		SELECTCASE LOCAL
+		;식료품 가게에 직접 갈 수 없는 경우, 코스즈이오리, 주택가, 목욕탕으로부터라면 미나미토리를 목표로 한다
+		CASE 213,214,223
+			RETURN 203
+		;그 이외는 중앙 광장에
+		CASEELSE
+			RETURN 202
+		ENDSELECT
+	CASE 219
+		SELECTCASE LOCAL
+		;집회소에 직접 갈 수 없는 경우, 코스즈이오리, 서당, 목욕탕으로부터라면 히가시도리를 목표로 한다
+		CASE 213,222,223
+			RETURN 204
+		;그 이외는 기타도리에
+		CASEELSE
+			RETURN 205
+		ENDSELECT
+	CASE 220
+		SELECTCASE LOCAL
+		;구경노에 직접 갈 수 없는 경우, 주택가, 아큐의 저택으로부터라면 니시도리를 목표로 한다
+		CASE 214,221
+			RETURN 206
+		;그 이외는 중앙 광장에
+		CASEELSE
+			RETURN 202
+		ENDSELECT
+	CASE 221
+		SELECTCASE LOCAL
+		;아큐의 저택에 직접 갈 수 없는 경우, 주택가, 꽃집, 구경노로부터라면 니시도리를 목표로 한다
+		CASE 214,215,220
+			RETURN 206
+		;그 이외는 기타도리에
+		CASEELSE
+			RETURN 205
+		ENDSELECT
+	CASE 222,224
+		SELECTCASE LOCAL
+		;서당에 직접 갈 수 없는 경우, 아큐의 저택으로부터라면 기타도리를 목표로 한다
+		CASE 221
+			RETURN 205
+		;그 이외는 히가시도리에
+		CASEELSE
+			RETURN 204
+		ENDSELECT
+	CASE 223
+		SELECTCASE LOCAL
+		;목욕탕에 직접 갈 수 없는 경우, 집회소, 서당으로부터라면 히가시도리를 목표로 한다
+		CASE 221
+			RETURN 204
+		;그 이외는 미나미토리에
+		CASEELSE
+			RETURN 203
+		ENDSELECT
+	CASE 225
+		;혼숙여관에 직접 갈 수 없는 경우, 206 니시도리를 목표로 한다
+		RETURN 206
+	CASE 226
+		RETURN 213
+	CASE 230 TO 237
+		RETURN 214
+	CASEELSE
+		RETURN 201
+ENDSELECT

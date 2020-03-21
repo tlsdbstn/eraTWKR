@@ -1,0 +1,8142 @@
+﻿@EXIST_캐릭터데이터_ID
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+;통칭으로부터
+;요소명→ID변환용 함수
+;필요하면 각 오브젝트로와 같이  작성
+@캐릭터데이터_ID(ARG:0, ARGS:0, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS V_NAME                  ;작성하는 변수명
+#DIMS C_NAME, OBJ_ID_LAST + 1 ;데이터 보유
+#DIM  O_ID                    ;참조용
+IF ARGS:0 == "RESET"
+	VARSET C_NAME
+	FOR O_ID, 1, OBJ_ID_LAST + 1
+		C_NAME:O_ID = %GET_STR(, "캐릭터데이터", O_ID, "통칭")%
+	NEXT
+ELSE
+	O_ID = FINDELEMENT(C_NAME, ESCAPE(ARGS:0), , , 1)
+	CALLF MAKE_INT(V_NAME, O_ID)
+ENDIF
+
+
+
+;존부 함수
+;F함수는 TRYCALL계를 사용할 수 없기 때문에 통상 함수로 존부 배열을 만들어버린다
+@EXIST_캐릭터데이터1
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+;오브젝트 본체
+@캐릭터데이터1(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "레이무")
+
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：액세서리"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("액세서리", "소매"))
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "리본"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	IF FLAG:2 > 0
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "무릎까지 오는 양말"))
+	ELSE
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+	ENDIF
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리1", "하쿠레이의 무녀옷"))
+
+CASE "고유커맨드"
+	CALLF MAKE_STR(V_NAME, "운세뽑기계약")
+CASE "고유커맨드 실행 가능"
+	CALLF MAKE_INT(V_NAME, !FLAG:운세뽑기계약)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "디저트/검소/상품/일식/양식/고기 요리/쌀/야채/과일/팥소/단/담백/귀여운/장난/")
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/금단/" * 3)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "영험/행운/")
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "작은 붉은 리본이 프런트를 뒤따르고 있다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "프런트 리본 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "리본 브래지어")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;농민 관련
+;신사는 토지 가져 그렇게, 칸다
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "쌀 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "쌀")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "논")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "하쿠레이 신사")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 0)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 22)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 400)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 5)
+
+;여기는 의뢰 ID가 관련하지 않는 정보
+;의뢰 발생율 스카2/일반3/고유 5
+CASE "의뢰 없음 발생율"
+	CALLF MAKE_INT(V_NAME, 2)
+CASE "일반의뢰발생율"
+	CALLF MAKE_INT(V_NAME, 3)
+CASE "고유의뢰발생율"
+	CALLF MAKE_INT(V_NAME, 5)
+CASE "고유의뢰최종 요소"
+	CALLF MAKE_INT(V_NAME, 103)
+CASEELSE
+	;고유의뢰관련의 데이터에 바톤 터치
+	SIF STRCOUNT(O_DATA, "의뢰")
+		CALLF 고유의뢰1(ARG, O_DATA, V_NAME)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터2
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터2(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "루코토")
+
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "화이트브림"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "무릎까지 오는 양말"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "에이프런 드레스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "신품 같은")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "순백 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "순백 브라")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "디저트/검소/상품/일식/" + "고유의맛/귀여운/정밀/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "수수께끼 요리/튀김/빈상/불온/이상한/" * 2)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "메이드류/정밀/")
+
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터3
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터3(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "카나")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "에이프런 드레스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "그려진 고양이가 움직인다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "프린트 팬티(고양이)")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "하후툽브라")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "디저트/상품/양식/야채/" + "귀여운/산뜻한/불가사의/" * 2)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "수수께끼 요리/금단/" * 2 + "볼륨감/빈상/" * 3)
+;CASE "요리：조수 효과"
+;	CALLF MAKE_STR(V_NAME, "메이드류/정밀/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터4
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터4(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "미마")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：외의"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "케이프"))
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "롱 스커트"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "흰 피부에 빛난다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "장미 자수 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "장미 자수 브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(3 - (2 * 승부속옷판정([[미마]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "상품/일식/양식/장난/건강/달구경/" + "고기 요리/국물/면류/야채/마법/불가사의/" * 2)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "기름/농후/볼륨감/자비/정묘/마계풍/빈상/" * 2)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "마법/" * 2)
+
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터5
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터5(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "서니")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(실내 옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "화이트브림"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "태양의 마크가 자수 되었다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "원포인트 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "하후툽브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[서니]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;농민 관련
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "양상추 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "양상추")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "양상추밭")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "하쿠레이 신사")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 0)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 25)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 200)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 3)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "상품/중식/양식/" + "볼륨감/튀김/스파이스/" * 2 + "고기 요리/디저트/단/귀여운/반짝임/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "검소/금단/" * 2 + "야채/빈상/" * 4)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "장난/반짝임/예상외/")
+
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터6
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터6(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "루나")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(실내 옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "달의 마크가 자수 되었다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "원포인트 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "하후툽브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[루나]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;농민 관련
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "밤 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "밤")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "밤 밭")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "하쿠레이 신사")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 0)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 25)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 200)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 3)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "상품/양식/달구경/" + "국물/고유의맛/담백/" * 2 + "검소/디저트/단/귀여운/반짝임/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/수수께끼 요리/" * 2 + "기름/스파이스/빈상/" * 3)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "장난/반짝임/")
+
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터7
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터7(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "스타")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(실내 옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "리본"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "별의 마크가 자수 되었다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "원포인트 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "하후툽브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[스타]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+CASE "고유커맨드"
+	CALLF MAKE_STR(V_NAME, "기척을찾는다")
+CASE "고유커맨드 실행 가능"
+	SIF CFLAG:7:호감도 >= 200 && GET_MAPID(CFLAG:7:현재위치) == MAIN_MAP
+		CALLF MAKE_INT(V_NAME, 1)
+
+;농민 관련
+;무리 해스타 후르츠로부터 오크라(성형 단면)로 변경
+;오크라는 영어였는가···
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "오크라 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "오크라")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "오크라밭")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "하쿠레이 신사")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 0)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 25)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 200)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 3)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "상품/일식/양식/" + "국물/면류/심플/" * 2 + "생선 요리/디저트/단/귀여운/반짝임/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/수수께끼 요리/빈상/" * 3)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "장난/반짝임/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터8
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터8(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "치유리")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지＋후드) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：바지"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("바지", "쇼트 바지"))
+CASE "평상복：상반신윗도리1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리1", "세라복"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "푸른 라인이 들어갔다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "세일러풍 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "세일러풍브라")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/양식/디저트/" + "쌀/스파이스/농후/볼륨감/정밀/실험적/" * 2)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야채/심플/빈상/불온/" * 3)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "실험적/정밀/수병풍/")
+
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터9
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터9(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "유메미")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：외의"
+	SELECTCASE DAY:2
+	CASE 1
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "케이프"))
+	CASE 3
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "망토"))
+	CASE 4
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "케이프 망토"))
+	ENDSELECT
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "롱 스커트"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "깨져도 재생한다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "나노텍 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "나노테크브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[유메미]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 3)
+
+;농민 관련
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "딸기 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "딸기")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "딸기밭")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "몽환유적")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 0)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 36)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 400)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 5)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "양식/야채/고유의맛/농후/" + "디저트/과일/" * 2 + "딸기/마법/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "튀김/심플/빈상/불온/" * 3)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "실험적/정밀/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터10
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터10(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "스이카")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "리본"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "소매 없는 옷 해 블라우스"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "구속도구"))
+
+;어떻게 봐도 원작이 노브라
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "매우 튼튼한")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "오니의 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 0)
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[스이카]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;농민 관련
+;이 딸(아가씨)의 경우는 그 정도옆의 숲을 에이 겨우 밭으로 해 응이겠지
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "수박 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "수박")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "수박밭")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "하쿠레이 신사")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 0)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 22)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 300)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 4)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/고기 요리/생선 요리/텐구류/" + "볼륨감/미끄러운/심플/수박/쌀/진수성찬/팥소/고주망태/오니의 조미료/" * 2)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "소인족 비전의 맛/" + "수수께끼 요리/금단/실험적/정밀/빈상/" * 5)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "고주망태/")
+
+;여기는 의뢰 ID가 관련하지 않는 정보
+;의뢰 발생율 스카2/일반3/고유 5
+CASE "의뢰 없음 발생율"
+	CALLF MAKE_INT(V_NAME, 2)
+CASE "일반의뢰발생율"
+	CALLF MAKE_INT(V_NAME, 3)
+CASE "고유의뢰발생율"
+	CALLF MAKE_INT(V_NAME, 5)
+CASE "고유의뢰최종 요소"
+	CALLF MAKE_INT(V_NAME, 101)
+CASEELSE
+	;고유의뢰관련의 데이터에 바톤 터치
+	SIF STRCOUNT(O_DATA, "의뢰")
+		CALLF 고유의뢰10(ARG, O_DATA, V_NAME)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터11
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터11(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "마리사")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(실내 옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	IF FLAG:2 > 0
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "가터 스타킹"))
+	ELSE
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+	ENDIF
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+CASE "평상복：상반신윗도리1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리1", "민소매 윗도리"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "아가씨 틱한")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "프릴드로워즈")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "시미이즈")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;농민 관련
+;농가라고 할까 버섯 스폿을 가르쳐 주었던가
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "버섯 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "버섯")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "버섯 농원")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "마법의숲")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 5)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 507)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 450)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 6)
+
+CASE "고유커맨드"
+	CALLF MAKE_STR(V_NAME, "사람돕기")
+CASE "고유커맨드 실행 가능"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "디저트/일식/" + "고기 요리/생선 요리/면류/사각사각/미끄러운/단/장난/파워풀/" * 2 + "귀여운/산뜻한/대화력/" * 4)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "물기/금단/" * 3)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "파워풀/대화력/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터12
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터12(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "루미아")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "리본"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+CASE "평상복：상반신윗도리1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리1", "민소매 윗도리"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "어둠을 굳힌 것 같은")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "칠흑의 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "칠흑의 캐미숄")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[루미아]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 0)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "경식/주식/디저트/수수께끼 요리/예상외/" + "고기 요리/생선 요리/개구리 요리/진수성찬/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "담백/영험/" * 5)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "파워풀/불온/예상외/")
+
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터13
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터13(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "대요정")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "리본"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "자작한 것같다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "모사의 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "모사의 브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[대요정]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 0)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 3)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "생선 요리/국물/면류/야채/고유의맛/" * 2 + "과일/디저트/산뜻한/담백/장난/반짝임/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "수수께끼 요리/금단/벌레고기/볼륨감/스파이스/빈상/불온/" * 2)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "건강/")
+
+;여기는 의뢰 ID가 관련하지 않는 정보
+;의뢰 발생율 스카2/일반3/고유 5
+CASE "의뢰 없음 발생율"
+	CALLF MAKE_INT(V_NAME, 2)
+CASE "일반의뢰발생율"
+	CALLF MAKE_INT(V_NAME, 3)
+CASE "고유의뢰발생율"
+	CALLF MAKE_INT(V_NAME, 5)
+CASE "고유의뢰최종 요소"
+	CALLF MAKE_INT(V_NAME, 101)
+CASEELSE
+	;고유의뢰관련의 데이터에 바톤 터치
+	SIF STRCOUNT(O_DATA, "의뢰")
+		CALLF 고유의뢰13(ARG, O_DATA, V_NAME)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터14
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터14(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "치르노")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "리본"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "히에에엥 해 차갑다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "한기선호의 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "한기선호의 캐미숄")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[치르노]]) ))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+CASE "고유커맨드"
+	CALLF MAKE_STR(V_NAME, "아이스를산다")
+CASE "고유커맨드 실행 가능"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "쌀/고기 요리/농후/기름/" * 2 + "디저트/단/빙결/반짝임/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야채/금단/스파이스/빈상/" * 2)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "장난/파워풀/")
+
+;농민 관련
+;최강이라든지 천재라든지 그러한 말을 좋아할 것 같다
+;한랭지의작물이라는 느낌이 하고 이 아이에 맡기는 꺄 없다
+;수확한 텐사이는 홍마관에 출시되고 설탕에 가공되는 것에서 만났다
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "사탕무우 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "텐사이")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "사탕무우밭")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "안개의호수")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 3)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 343)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 250)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 9)
+
+;여기는 의뢰 ID가 관련하지 않는 정보
+;의뢰 발생율 스카2/일반3/고유 5
+CASE "의뢰 없음 발생율"
+	CALLF MAKE_INT(V_NAME, 2)
+CASE "일반의뢰발생율"
+	CALLF MAKE_INT(V_NAME, 3)
+CASE "고유의뢰발생율"
+	CALLF MAKE_INT(V_NAME, 5)
+CASE "고유의뢰최종 요소"
+	CALLF MAKE_INT(V_NAME, 101)
+CASEELSE
+	;고유의뢰관련의 데이터에 바톤 터치
+	SIF STRCOUNT(O_DATA, "의뢰")
+		CALLF 고유의뢰14(ARG, O_DATA, V_NAME)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터15
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터15(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "사쿠야")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "화이트브림"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	IF FLAG:2 > 0
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "가터 스타킹"))
+	ELSE
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "무릎까지 오는 양말"))
+	ENDIF
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "에이프런 드레스"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "리본"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "가터 부착의 품위있는")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "고급 실크 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "고급 시르크브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(3 - (2 * 승부속옷판정([[사쿠야]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+CASE "고유커맨드"
+	CALLF MAKE_STR(V_NAME, "홍마관출장서비스")
+CASE "고유커맨드 실행 가능"
+	IF TFLAG:출장청소 && (FLAG:물주기대행 || !ITEM:150)
+	ELSEIF GET_MAPNAME(MAIN_MAP) == "홍마관"
+	ELSE
+		CALLF MAKE_INT(V_NAME, 1)
+	ENDIF
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "디저트/" + "쌀/고유의맛/야채/스파이스/산뜻한/" * 2 + "고기 요리/생선 요리/단/화인소녀/" * 3 + "카리스마/" * 10)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/" * 2 + "수수께끼 요리/벌레고기/빈상/불온/" * 4)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "메이드류/소쇄/")
+
+;여기는 의뢰 ID가 관련하지 않는 정보
+;의뢰 발생율 스카2/일반3/고유 5
+CASE "의뢰 없음 발생율"
+	CALLF MAKE_INT(V_NAME, 2)
+CASE "일반의뢰발생율"
+	CALLF MAKE_INT(V_NAME, 3)
+CASE "고유의뢰발생율"
+	CALLF MAKE_INT(V_NAME, 5)
+CASE "고유의뢰최종 요소"
+	CALLF MAKE_INT(V_NAME, 101)
+CASEELSE
+	;고유의뢰관련의 데이터에 바톤 터치
+	SIF STRCOUNT(O_DATA, "의뢰")
+		CALLF 고유의뢰15(ARG, O_DATA, V_NAME)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터16
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터16(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "레밀리아")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(실내 옷) 세트")
+
+CASE "평상복：액세서리"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("액세서리", "우산"))
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "롱 스커트"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "굉장히 고급")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "풀 레이스 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "캐미숄")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(3 - (2 * 승부속옷판정([[레밀리아]]) ))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/경식/디저트/달구경/" + "미끄러운/계란/귀여운/상품/말랑말랑/" * 2 + "붉은/현란/" * 3 + "카리스마/소쇄/" * 10)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "금단/수수께끼 요리/벌레고기/" * 2 + "볼륨감/야취/빈상/" * 5)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "카리스마/현란/")
+
+;농민 관련
+;서양 같기 때문에 밀의 공급 바탕으로
+;안개의호수 부근은 냉해가 무섭다
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "밀농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "밀")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "밀밭")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "홍마관")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 3)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 301)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 600)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 16)
+ENDSELECT
+
+
+
+
+@EXIST_캐릭터데이터17
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+;섣달그믐
+;우선 이것 일단 봉인해 타처에서 합시다
+;어쩐지 나들이 옷으로도 설정에에에의?
+;「섣달그믐」으로 좋은가?
+;IF (DAY:2 == 1 && DAY:3 == 1) || (DAY:2 == 4 && DAY:3 == 31) 
+;ELSE
+;ENDIF
+@캐릭터데이터17(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "앨리스")
+CASE "오늘의 의상"
+	SIF (DAY:2 == 1 && DAY:3 == 1) || (DAY:2 == 4 && DAY:3 == 31)
+		CALLF MAKE_STR(V_NAME, "섣달그믐")
+CASE "내일의 의상"
+	SIF DAY:2 == 4 && (DAY:3 == 30 || DAY:3 == 31)
+		CALLF MAKE_STR(V_NAME, "섣달그믐")
+CASE "오늘의 파자마"
+	IF (DAY:2 == 1 && DAY:3 == 1) || (DAY:2 == 4 && DAY:3 == 31)
+		CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+	ELSEIF CFLAG:ARG:초기위치 == CFLAG:MASTER:초기위치
+		CALLF MAKE_STR(V_NAME, "파자마(천진난만한 여자) 세트")
+	ELSE
+		CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+	ENDIF
+
+CASE "평상복：외의"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "케이프"))
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "캬츄샤(헤어밴드)"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "롱 부츠"))
+CASE "평상복：양말"
+	IF FLAG:2 > 0
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "팬티 스타킹"))
+	ELSE
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "무릎까지 오는 양말"))
+	ENDIF
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+
+CASE "섣달그믐：기모노"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("기모노", "기모노"))
+CASE "섣달그믐：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "캬츄샤(헤어밴드)"))
+CASE "섣달그믐：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "롱 부츠"))
+CASE "섣달그믐：양말"
+	IF FLAG:2 > 0
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "팬티 스타킹"))
+	ELSE
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "무릎까지 오는 양말"))
+	ENDIF
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "앨리스수제의")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "손으로 짬 레이스 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "스립")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(3 - (2 * 승부속옷판정([[앨리스]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "양식/경식/디저트/" + "미끄러운/귀여운/상품/화려한/예술적/반짝임/" * 2 + "고유의맛/산뜻한/마계풍/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "금단/수수께끼 요리/벌레고기/기름/야취/빈상/불온/" * 2)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "화려한/마계풍/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터18
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터18(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "릴리 W")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "희미하게 따뜻하다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "하루츠게 정령의 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "하루츠게 정령의 캐미숄")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/디저트/야채/" + "심플/" * 2 + "생선 요리/단/산뜻한/춘풍/반짝임/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "볼륨감/검소/물기/빈상/빙결/" * 2)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "춘풍/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터19
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터19(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "릴리 B")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "희미하게 따뜻하다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "흑 하루츠게 정령의 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "흑 하루츠게 정령의 캐미숄")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "양식/디저트/과일/" + "농후/" * 2 + "고기 요리/스파이스/산뜻한/춘풍/반짝임/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "볼륨감/검소/물기/빈상/빙결/" * 2)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "춘풍/")
+ENDSELECT
+
+
+
+;홍천자매에 대해
+;아무래도 분기 조건 ARG == 23이 ARG == 22(루나사)의 잘못이 아닌 것인지라고 하는 기색이 했으므로 그처럼
+;(근거：리리카＆루나사가 스포브라 장비가 된다)
+;다만, 모자에 대해서는 리본은 아닐 것이라고 말하는 것으로 모자로 통일
+;(이)라고인가 삼녀→차녀→장녀의 줄서 군요 너희들
+@EXIST_캐릭터데이터20
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터20(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "리리카")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+CASE "평상복：외의"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "베스트"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "밤하늘 모양의")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "커튼 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "스포트브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[리리카]]) ))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "양식/일식/고유의맛/이상한/" + "스파이스/" * 2 + "고기 요리/스파이스/사각사각/불가사의/예술적/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야채/검소/빈상/불온/" * 2)
+;생각해내지 못하기 때문에 보류
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "이상한/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터21
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터21(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "메를랑")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+CASE "평상복：외의"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "베스트"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "해님 모양의")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "플랩 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "후르캅브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[메를랑]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "양식/일식/고유의맛/이상한/" + "볼륨감/" * 2 + "고기 요리/단/귀여운/팥소/불가사의/예술적/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "스파이스/검소/빈상/불온/" * 2)
+;생각해내지 못하기 때문에 보류
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "이상한/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터22
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터22(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "루나사")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+CASE "평상복：외의"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "베스트"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "초승달 모양의")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "미니 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "스트랍레스브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[루나사]]) ))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "양식/일식/고유의맛/이상한/달구경/" + "담백/심플/" * 2 + "생선 요리/산뜻한/미끄러운/불가사의/예술적/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "금단/수수께끼 요리/야취/기름/빈상/불온/" * 2)
+;생각해내지 못하기 때문에 보류
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "이상한/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터23
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터23(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "요우무")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "캬츄샤(헤어밴드)"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+CASE "평상복：외의"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "베스트"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "움직이기 쉬움 중시의")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "이너 스패츠")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "스포트브라")
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "고기 요리/생선 요리/면류/쌀/" + "심플/" * 2 + "귀여운/포도/쫄깃한/풍류/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "금단/수수께끼 요리/야취/빈상/불온/" * 3)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "건강/명검/")
+
+;여기는 의뢰 ID가 관련하지 않는 정보
+;의뢰 발생율 스카2/일반3/고유 5
+CASE "의뢰 없음 발생율"
+	CALLF MAKE_INT(V_NAME, 2)
+CASE "일반의뢰발생율"
+	CALLF MAKE_INT(V_NAME, 3)
+CASE "고유의뢰발생율"
+	CALLF MAKE_INT(V_NAME, 5)
+CASE "고유의뢰최종 요소"
+	CALLF MAKE_INT(V_NAME, 101)
+CASEELSE
+	;고유의뢰관련의 데이터에 바톤 터치
+	SIF STRCOUNT(O_DATA, "의뢰")
+		CALLF 고유의뢰23(ARG, O_DATA, V_NAME)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터24
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터24(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "첸")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：상반신속옷1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신속옷1", "스포트브라"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "Earring(귀걸이)"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "검은 고양이 자루의")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "손바느질 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 0)
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[첸]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 0)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "중식/일식/" + "면류/쌀/농후/기름/사각사각/" * 2 + "고기 요리/생선 요리/귀여운/가정적/" * 4)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "토마토/파/물기/불온/" * 3 + "스파이스/빈상/" * 5)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "건강/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터25
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터25(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "란")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	IF FLAG:2 > 0
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "무릎까지 오는 양말"))
+	ELSE
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+	ENDIF
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "도사옷"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "큰 꼬리구멍이 열렸다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "O 백 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "후르캅브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[란]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "상품/중식/일식/산뜻한/이상한/" + "고기 요리/생선 요리/면류/" * 2 + "건강/" * 5)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "수수께끼 요리/금단/야취/빈상/불온/" * 3)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "가정적/정밀/")
+
+;농민 관련
+;주고
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "대두 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "대두")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "대두밭")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "마을")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 2)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 205)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 600)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 5)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터26
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터26(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "유카리")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：액세서리"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("액세서리", "우산"))
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	IF FLAG:2 > 0
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "가터 스타킹"))
+	ELSE
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+	ENDIF
+CASE "평상복：원피스"
+	IF DAY:2 == 1
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "도사옷"))
+	ELSE
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "이브닝 드레스"))
+	ENDIF
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "수상한 광택을 발한다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "실크 새틴 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "시르크사텐브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(3 - (2 * 승부속옷판정([[유카리]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "상품/경식/디저트/이상한/" + "고기 요리/생선 요리/담백/건강/" * 2 + "일식/가정적/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/기름/볼륨감/빈상/천계류/월도풍/" * 3)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "이상한/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터27
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터27(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "리글")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：외의"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "망토"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：바지"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("바지", "쇼트 바지"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "요력이 깃들였다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "들명주실제 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "들명주실제 브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[리글]]) ))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;농민 관련
+;벌레 관련으로 누에
+;본인은 돈 가지고 없음 그렇지만 벌이가 꽤 크다고 하는 것으로 500
+;본래라면 좀 더 수고 걸리겠지만 와 지고-개 타 좋아!
+;오두막은 누가 세웠겠지
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "양잠 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "생사")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "양잠 오두막")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "마법의숲")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 5)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 540)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 500)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 4)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "고기 요리/생선 요리/쌀/야채/" + "담백/귀여운/가정적/화려한/" * 2)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "금단/수수께끼 요리/빈상/불온/" * 3 + "벌레고기/" * 20)
+;생각해내지 못하기 때문에 보류
+;CASE "요리：조수 효과"
+;	CALLF MAKE_STR(V_NAME, "이상한/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터28
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터28(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "미스티아")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "무릎까지 오는 양말"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+CASE "고유커맨드"
+	CALLF MAKE_STR(V_NAME, "포장마차에서식사")
+CASE "고유커맨드 실행 가능"
+	CALLF MAKE_INT(V_NAME, CFLAG:28:행동 == 5 && BASE:28:일량 < 3000)
+
+;노래=T 백
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "날개를 코끼리")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "노래 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "하후캅브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(3 - (2 * 승부속옷판정([[미스티아]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "고기 요리/생선 요리/쌀/" + "농후/산뜻한/귀여운/가정적/예술적/" * 2)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "빈상/불온/" * 3 + "계란/" * 10 + "닭고기/" * 20)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "가정적/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터29
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터29(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "아야")
+
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(치마) 세트")
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "두건"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "나막신"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "넥타이"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "까마귀의 칠흙 같고 윤나는 머리의")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "V컷 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "삼각 브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(3 - (2 * 승부속옷판정([[아야]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;특수 의상 설정
+CASE "집 데이트 의상"
+	SIF MAIN_MAP == 2
+		CALLF MAKE_INT(V_NAME, OBJNAME_TO_ID(ARG, "GET", "의상세트", "카스 모포문 세트"))
+CASE "마을 데이트 의상"
+	CALLF MAKE_INT(V_NAME, OBJNAME_TO_ID(ARG, "GET", "의상세트", "카스 모포문 세트"))
+
+CASE "고유커맨드"
+	CALLF MAKE_STR(V_NAME, "신문구독")
+CASE "고유커맨드 실행 가능"
+	CALLF MAKE_INT(V_NAME, !FLAG:신문구독)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "상품/면류/고기 요리/생선 요리/오니의 조미료/" + "농후/쌀/산뜻한/귀여운/장난/건강/반짝임/" * 2 + "영험/텐구류/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/닭고기/계란/" * 3)
+;생각해내지 못하기 때문에 보류
+;CASE "요리：조수 효과"
+;	CALLF MAKE_STR(V_NAME, "가정적/")
+
+;농민 관련
+;텐구도 논 가져 그렇게
+;산 같음을 낸다면 와사비등도 가능
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "쌀 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "쌀")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "논")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "요괴의 산·산록")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 7)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 732)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 450)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 12)
+
+;여기는 의뢰 ID가 관련하지 않는 정보
+;의뢰 발생율 스카2/일반3/고유 5
+CASE "의뢰 없음 발생율"
+	CALLF MAKE_INT(V_NAME, 2)
+CASE "일반의뢰발생율"
+	CALLF MAKE_INT(V_NAME, 3)
+CASE "고유의뢰발생율"
+	CALLF MAKE_INT(V_NAME, 5)
+CASE "고유의뢰최종 요소"
+	CALLF MAKE_INT(V_NAME, 102)
+CASEELSE
+	;고유의뢰관련의 데이터에 바톤 터치
+	SIF STRCOUNT(O_DATA, "의뢰")
+		CALLF 고유의뢰29(ARG, O_DATA, V_NAME)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터30
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터30(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "에이키")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+CASE "평상복：외의"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "베스트"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "소중하게는 나무고 했다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "무명의 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "무명의 브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[에이키]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/면류/쌀/야채/과일/" + "담백/심플/장난/건강/" * 2 + "검소/자비/명계풍/" * 5)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "벌레고기/불온/" * 3 + "금단/수수께끼 요리/이상한/정묘/마법/" * 10)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "자비/")
+
+;농민 관련
+;흑백으로 생각해 떠올랐던 것이 이것
+;보수는 넉넉하게 준다
+;입지가 마을인 것은 삼도천를 배회하는 것은 그만두세요라고 하는 배려
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "참깨 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "참깨")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "참깨밭")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "마을")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 2)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 204)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 450)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;여기는 의뢰 ID가 관련하지 않는 정보
+;의뢰 발생율 스카2/일반3/고유 5
+CASE "의뢰 없음 발생율"
+	CALLF MAKE_INT(V_NAME, 2)
+CASE "일반의뢰발생율"
+	CALLF MAKE_INT(V_NAME, 3)
+CASE "고유의뢰발생율"
+	CALLF MAKE_INT(V_NAME, 5)
+CASE "고유의뢰최종 요소"
+	CALLF MAKE_INT(V_NAME, 101)
+CASEELSE
+	;고유의뢰관련의 데이터에 바톤 터치
+	SIF STRCOUNT(O_DATA, "의뢰")
+		CALLF 고유의뢰30(ARG, O_DATA, V_NAME)
+ENDSELECT
+
+
+
+
+@EXIST_캐릭터데이터31
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터31(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "사나에")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+CASE "특수 의상 착용"
+	;봄이나 여름에1/7에 세라복 착용
+	SIF (DAY:2 == 1 || DAY:2 == 2) && !RAND:7
+		CALLF MAKE_STR(V_NAME, 74)
+CASE "평상복：액세서리"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("액세서리", "소매"))
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "머리 치장"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	IF FLAG:2 > 0
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "무릎까지 오는 양말"))
+	ELSE
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+	ENDIF
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "롱 스커트"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "모리야의 무녀옷"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "사나에 소중한")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "사이드 리본 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "후론트혹크브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(3 - (2 * 승부속옷판정([[사나에]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/디저트/야채/" + "쌀/고기 요리/생선 요리/귀여운/영험/기적/" * 2)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "개구리 요리/벌레고기/불온/" * 3 + "금단/수수께끼 요리/빈상/" * 4)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "기적/")
+
+;농민 관련
+;신사는 토지 가져 그렇게, 칸다
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "쌀 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "쌀")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "논")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "모리야 신사")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 8)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 814)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 500)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 5)
+ENDSELECT
+
+
+
+
+@EXIST_캐릭터데이터32
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터32(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "카나코")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "머리 치장"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "롱 스커트"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+CASE "평상복：상반신윗도리1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리1", "윗도리"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "제한 표지줄"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "신에게 바칠 수 있었다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "화묘의 속바지나무")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "사라시")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:3
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 3)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/생선 요리/개구리 요리/" + "닭고기/산뜻한/사각사각/쫄깃한/영험/건강/" * 2 + "기적/" * 10)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "금단/수수께끼 요리/빈상/불온/이상한/" * 5 + "벌레고기/" * 7)
+;CASE "요리：조수 효과"
+;	CALLF MAKE_STR(V_NAME, "기적/")
+
+;농민 관련
+;카나코 님고부가 가치 농업이라든지 좋아할 것 같다
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "멜론 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "멜론")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "온실")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "모리야 신사")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 8)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 814)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 700)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 18)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터33
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터33(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "스와코")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지＋후드) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	IF FLAG:2 > 0
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "무릎까지 오는 양말"))
+	ELSE
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+	ENDIF
+CASE "평상복：상반신속옷1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신속옷1", "사라시"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+CASE "평상복：상반신윗도리1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리1", "민소매 윗도리"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "소녀가 향기가 난다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "케로 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 0)
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[스와코]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/팥소/" + "생선 요리/면류/국물/물기/영험/건강/" * 2 + "기적/" * 10)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "빈상/" * 5 + "개구리 요리/" * 10)
+;CASE "요리：조수 효과"
+;	CALLF MAKE_STR(V_NAME, "기적/")
+
+;농민 관련
+;늪 같은 장소에 나는 같기 때문에
+;케로케로인 스와코 님에게 협력받자
+;재력도 있을 것 같지만 원래의 단가가 싸다고 하는 머리 속 설정
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "히시 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "히시")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "싶은 연못")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "요괴의 산·산록")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 7)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 708)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 400)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 12)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터34
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터34(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "텐시")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "복숭아"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "일절의 꿰맨 자리가 없다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "분홍색 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "브라캐미")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:3
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+CASE "고유커맨드"
+	CALLF MAKE_STR(V_NAME, "기후조작")
+CASE "고유커맨드 실행 가능"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "상품/일식/생선 요리/고기 요리/" + "기름/농후/볼륨감/고유의맛/스파이스/풍류/" * 2 + "현란/천계류/" * 10)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야채/" * 2 + "자비/정묘/" * 5 + "야취/검소/" * 10)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "장난/현란/")
+
+;농민 관련
+;모모
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "복숭아 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "복숭아")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "복숭아 농원")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "천계")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 8)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 833)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 600)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 7)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터35
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터35(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "이쿠")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：외의"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "케이프"))
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "롱 스커트"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "프릴 블라우스"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "날개옷"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "날개옷와 같이 경쾌한")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "명주의 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "명주의 브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(3 - (2 * 승부속옷판정([[이쿠]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "상품/일식/" + "면류/국물/물기/귀여운/담백/풍류/" * 2 + "천계류/" * 5)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/금단/수수께끼 요리/" * 2 + "생선 요리/" * 4)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "풍류/천계류/")
+
+ENDSELECT
+
+
+
+
+@EXIST_캐릭터데이터36
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터36(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "오린")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(실내 옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "리본"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "꼬리를 방해 하지 않는 로라이즈의")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "하프백 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "프릴브라")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "디저트/쌀/" + "농후/볼륨감/" * 2 + "고기 요리/생선 요리/" * 3 + "가정적/지저풍/" * 5)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "스파이스/심플/물기/빈상/" * 2)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "지옥풍/지저풍/")
+
+;농민 관련
+;키위는 마타타비의 동료로 고양이를 헤롱헤롱으로 한다
+;과실에 그 효과는 없는 것 같지만
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "키위 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "키위")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "키위 농원")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "지저")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 9)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 926)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 400)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 8)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터37
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터37(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "오쿠")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지＋후드) 세트")
+
+CASE "평상복：외의"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "망토"))
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "리본"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "【CAUTION!】(와)과 그려졌다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "프린트 팬티(핵)")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "프린트브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[오쿠]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "디저트/쌀/스파이스/" + "농후/기름/" * 2 + "고기 요리/볼륨감/" * 3 + "가정적/지저풍/" * 5)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "닭고기/계란/빈상/" * 3)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "지옥풍/지저풍/")
+
+;농민 관련
+;바보의 아이 캐릭터로부터 「땅두릅의 대목」이라고 하는 말을 연상
+;한층 더 지저 거주라고 하는 입지는 흰색 땅두릅의 재배에 적절하고 있다
+;폄의도는 않고하늘 가 싫어(뜻)이유이기도 하지 않습니다
+;지옥터에 계속되는 구멍에 횡혈에서도 파 재배?
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "땅두릅 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "흰색 땅두릅")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "땅두릅밭")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "지저")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 9)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 927)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 400)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 3)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터38
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터38(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "코이시")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	IF !RAND:2
+		IF RAND:1000 == 514
+			CALLF MAKE_STR(V_NAME, "전라")
+		ELSE
+			CALLF MAKE_STR(V_NAME, "판이치")
+		ENDIF
+	ELSE
+		CALLF MAKE_STR(V_NAME, "파자마(바지＋후드) 세트")
+	ENDIF
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "아마 코이시의 물건은 아니다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "섹시 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "세크시브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(3 - (2 * 승부속옷판정([[코이시]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "디저트/수수께끼 요리/야취/" + "농후/튀김/귀여운/산뜻한/" * 2 + "가정적/지저풍/" * 5)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "검소/야채/빈상/" * 3)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "장난/지저풍/예상외/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터39
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터39(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "나즈린")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지＋후드) 세트")
+
+CASE "평상복：외의"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "케이프"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+CASE "평상복：상반신윗도리1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리1", "민소매 윗도리"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "꼬리구멍이 연 쥐색의")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "니트 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "닛트브라")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 0)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 3)
+
+CASE "고유커맨드"
+	CALLF MAKE_STR(V_NAME, "다우징")
+CASE "고유커맨드 실행 가능"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;미각기호 121
+;0b1111001　진한 맛, 엄청 매운, 격감, 고추냉이, 레몬
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "양식/고기 요리/쌀/고유의맛/" + "볼륨감/농후/기름/사각사각/스파이스/섬세/" * 2 + "치즈/자비/" * 5)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "금단/빈상/현란/정묘/" * 3)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "자비/섬세/")
+
+;농민 관련
+;울며 매달리면(자) 잔소리를 하면서 어떻게든 해 줄 것 같다
+;특히 절의 무리가 보고 있으면(자) 거절하지 못한다
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "가지 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "가지")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "가지 밭")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "명련사")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 106)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 400)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 8)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터40
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터40(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "코가사")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "판이치")
+
+CASE "평상복：액세서리"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("액세서리", "우산"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "나막신"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+CASE "고유커맨드"
+	CALLF MAKE_STR(V_NAME, "우산의수리")
+CASE "고유커맨드 실행 가능"
+	CALLF MAKE_INT(V_NAME, FLAG:우산내구도 > 5000 || ITEM:망가진우산)
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "놀라게 해 용무의")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "눈 (무늬)격 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "눈 (무늬)격 브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[코가사]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+;미각기호 1
+;0b0000001　진한 맛
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/쌀/면류/생선 요리/" * 2 + "농후/예상외/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "금단/담백/빈상/불온/" * 3)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "예상외/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터41
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터41(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "누에")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "무릎까지 오는 양말"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "모자이크로 희미해진다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "정체 불명 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "정체 불명 브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:3
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 0)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 3)
+
+;요리 관련
+;미각기호 1
+;0b0000001　진한 맛
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/쌀/면류/불온/이상한/" + "고기 요리/농후/튀김/예상외/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야채/담백/빈상/" * 3)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "불온/이상한/예상외/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터42
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터42(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "하타테")
+
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "두건"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "나막신"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "넥타이"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "요즈음의 소녀답다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "프릴스캔티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "프릴브라")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "면류/고기 요리/생선 요리/" + "농후/볼륨감/산뜻한/귀여운/" * 2 + "텐구류/" * 5)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/검소/" + "토마토/닭고기/계란/빈상/불온/이상한/" * 3)
+;CASE "요리：조수 효과"
+;	CALLF MAKE_STR(V_NAME, "불온/이상한/예상외/")
+ENDSELECT
+
+
+;이바라키카센
+@EXIST_캐릭터데이터43
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터43(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "카센")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "시니욘캐프"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "도사옷"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "붕대"))
+CASE "평상복：그외2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외2", "구속도구"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "파스텔 핑크의")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "flare(타오르다) 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "후레아브라")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "디저트/상품/" + "쌀/면류/고기 요리/생선 요리/국물/고유의맛/산뜻한/귀여운/" * 2 + "단/볼륨감/진수성찬/" * 5)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "금단/수수께끼 요리/빈상/명계풍/" * 10)
+;CASE "요리：조수 효과"
+;	CALLF MAKE_STR(V_NAME, "/")
+
+;특수 의상 설정, 집 데이트로 드물게 무녀 하천
+CASE "집 데이트 의상"
+	SIF MAIN_MAP == 0 && !RAND:15
+		CALLF MAKE_INT(V_NAME, 101)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터44
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터44(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "엘렌")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(실내 옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "리본"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "에이프런 드레스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "내려 거절해 둥실둥실의")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "리본 프릴 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "캐미숄")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "디저트/쌀/면류/" * 2 + "고유의맛/산뜻한/귀여운/마법/예술적/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "금단/수수께끼 요리/기름/농후/빈상/불온/" * 2)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "건강/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터45
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터45(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "리카코")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：액세서리"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("액세서리", "안경"))
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "리본"))
+CASE "평상복：외의"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "백의"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "롱 스커트"))
+CASE "평상복：상반신윗도리1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리1", "윗도리"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "염가로 심플한")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "흰색 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "흰색 브래지어")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[리카코]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "디저트/담백/미끄러운/" + "쌀/고유의맛/산뜻한/귀여운/정밀/" * 2)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/수수께끼 요리/개구리 요리/벌레고기/빈상/불온/" * 3)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "정밀/")
+ENDSELECT
+
+
+;여러 가지 부자연
+;신발：눈이 올때 신는 신발, 양말：버선, 바지：하카마 근처가 타당한가?
+@EXIST_캐릭터데이터46
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터46(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "메이라")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "눈이 올때 신는 신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "버선"))
+CASE "평상복：기모노"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("기모노", "기모노"))
+CASE "평상복：바지"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("바지", "하카마"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "고대 법식 그윽하다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "망태곤")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "사라시")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[메이라]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 3)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/쌀/생선 요리/" + "담백/미끄러운/심플/" * 2)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/수수께끼 요리/금단/빈상/불온/" * 2 + "단/" * 3)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "명검/")
+ENDSELECT
+
+
+@EXIST_캐릭터데이터47
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터47(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "리카")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：바지"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("바지", "쇼트 바지"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "평상시구멍을 뚫음나무의 방심했다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "수수함 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "스포트브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[리카]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "쌀/고유의맛/고기 요리/귀여운/" * 2 + "단/농후/볼륨감/정밀/실험적/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/개구리 요리/벌레고기/빈상/불온/" * 2)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "정밀/실험적/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터48
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터48(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "루이즈")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "롱 스커트"))
+CASE "평상복：상반신윗도리1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리1", "세라복"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "여행용의")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "캐쥬얼 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "카쥬아르브라")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "양식/고유의맛/" + "고기 요리/귀여운/단/볼륨감/마계풍/" * 2)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/개구리 요리/벌레고기/빈상/불온/" * 2)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "마계풍/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터49
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터49(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "사토리")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(실내 옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "캬츄샤(헤어밴드)"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "장미의 자수가 아름답다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "쿠츄르쇼트")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "쿠츄르브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(3 - (2 * 승부속옷판정([[사토리]]) ))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "상품/과일/쌀/고유의맛/고기 요리/생선 요리/담백/" + "귀여운/산뜻한/지저풍/" * 2)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/볼륨감/빈상/불온/예상외/" * 3)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "지저풍/배려/가정적/")
+
+;농민 관련
+;농가라고 할까 정원사?
+;출하용은 아니고 사토리 님의 취미의 범주라고 하는 것으로 보수는 적은에
+;반드시 방에 활충분하고 여동생이 장식한 시체에게 데코레이션(장식물) 하고 있다
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "장미 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "장미의 꽃")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "장미원")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "지저")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 9)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 925)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 350)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 6)
+
+;여기는 의뢰 ID가 관련하지 않는 정보
+;의뢰 발생율 스카2/일반3/고유 5
+CASE "의뢰 없음 발생율"
+	CALLF MAKE_INT(V_NAME, 2)
+CASE "일반의뢰발생율"
+	CALLF MAKE_INT(V_NAME, 3)
+CASE "고유의뢰발생율"
+	CALLF MAKE_INT(V_NAME, 5)
+CASE "고유의뢰최종 요소"
+	CALLF MAKE_INT(V_NAME, 103)
+CASEELSE
+	;고유의뢰관련의 데이터에 바톤 터치
+	SIF STRCOUNT(O_DATA, "의뢰")
+		CALLF 고유의뢰49(ARG, O_DATA, V_NAME)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터50
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터50(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "플랑")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지＋후드) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+CASE "평상복：상반신윗도리1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리1", "민소매 윗도리"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "조금 발돋움했다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "프릴탄가")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "캐미숄")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(3 - (2 * 승부속옷판정([[플랑]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "쌀/고유의맛/" + "미끄러운/귀여운/상품/말랑말랑/" * 2 + "고기 요리/붉은/단/마법/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "수수께끼 요리/야채/" * 2 + "야취/빈상/" * 4)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "불온/마법/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터51
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터51(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "니토리")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：액세서리"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("액세서리", "고글"))
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "카스 모포"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "륙섹"))
+CASE "평상복：상반신윗도리2"
+	;IF DAY:2 == 2
+	;	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "탱크 톱"))
+	;ELSE
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+	;ENDIF
+CASE "평상복：상반신윗도리1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리1", "윗도리"))
+;CASE "평상복：바지"
+;	SIF DAY:2 == 2
+;		CALLF MAKE_INT(V_NAME, CLOTHES_ID("바지", "작업 바지"))
+CASE "평상복：치마"
+	;SIF DAY:2 != 2
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "방수 사양의")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "비키니 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "츄브툽브라")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 0)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+CASE "고유커맨드"
+	CALLF MAKE_STR(V_NAME, "도구를산다")
+CASE "고유커맨드 실행 가능"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "쌀/생선 요리/면류/물기/미끄러운/실험적/" * 2 + "오이/" * 5)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/스파이스/심플/빈상/불온/" * 3)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "실험적/")
+
+;농민 관련
+;박봉
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "오이 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "오이")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "오이밭")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "요괴의 산·산록")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 7)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 703)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 300)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 4)
+
+;여기는 의뢰 ID가 관련하지 않는 정보
+;의뢰 발생율 스카2/일반3/고유 5
+CASE "의뢰 없음 발생율"
+	CALLF MAKE_INT(V_NAME, 2)
+CASE "일반의뢰발생율"
+	CALLF MAKE_INT(V_NAME, 3)
+CASE "고유의뢰발생율"
+	CALLF MAKE_INT(V_NAME, 5)
+CASE "고유의뢰최종 요소"
+	CALLF MAKE_INT(V_NAME, 102)
+CASEELSE
+	;고유의뢰관련의 데이터에 바톤 터치
+	SIF STRCOUNT(O_DATA, "의뢰")
+		CALLF 고유의뢰51(ARG, O_DATA, V_NAME)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터52
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터52(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "우동게")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "와이셔츠"))
+CASE "평상복：상반신윗도리1"
+;여름은 블레이저 코트를 벗는다
+	SIF DAY:2 != 2
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리1", "블레이저 코트"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "넥타이"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "토끼 꼬리에 리본으로 매었다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "경계 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "보다브라")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "상품/쌀/고유의맛/달구경/" + "야채/사각사각/쫄깃한/" * 2 + "당근/월도풍/" * 5)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/기름/스파이스/빈상/불온/" * 3 + "금단/수수께끼 요리/벌레고기/예상외/" * 5)
+;CASE "요리：조수 효과"
+;	CALLF MAKE_STR(V_NAME, "실험적/")
+
+;특수 의상
+CASE "집 데이트 의상"
+	SIF MAIN_MAP == 2
+		CALLF MAKE_INT(V_NAME, OBJNAME_TO_ID(ARG, "GET", "의상세트", "우동 약 행상인 세트"))
+CASE "마을 데이트 의상"
+	CALLF MAKE_INT(V_NAME, OBJNAME_TO_ID(ARG, "GET", "의상세트", "우동 약 행상인 세트"))
+
+CASE "고유커맨드"
+	CALLF MAKE_STR(V_NAME, "약을산다")
+CASE "고유커맨드 실행 가능"
+	CALLF MAKE_INT(V_NAME, 1)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터53
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터53(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "테위")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：액세서리"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("액세서리", "목걸이"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+
+CASE "고유커맨드"
+	CALLF MAKE_STR(V_NAME, "약을산다")
+CASE "고유커맨드 실행 가능"
+	CALLF MAKE_INT(V_NAME, 1)
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "풍수적으로 금전운 확실히의")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "새틴 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "사텐캐미")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "상품/쌀/일식/달구경/" + "야채/사각사각/쫄깃한/" * 2 + "당근/행운/" * 5)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/검소/스파이스/" * 2 + "금단/수수께끼 요리/벌레고기/빈상/불온/" * 3)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "예상외/행운/")
+
+;농민 관련
+;돈 가지고 그렇게
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "당근 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "당근")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "당근밭")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "미혹의 죽림")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 4)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 433)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 450)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 15)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터54
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터54(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "파츄리")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(실내 옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "부드러운 옷감의")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "시폰 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "황동 립")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "경식/디저트/상품/과일/" + "미끄러운/" * 2 + "고유의맛/산뜻한/실험적/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "볼륨감/기름/농후/야취/빈상/" * 5)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "정밀/실험적/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터55
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터55(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "뱌쿠렌")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：외의"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "망토"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "롱 부츠"))
+CASE "평상복：양말"
+	IF FLAG:2 > 0
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "가터 스타킹"))
+	ELSE
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+	ENDIF
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "고스로리(고딕 로리타) 드레스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "몇 번이나 고친 자취가 있다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "표백함옷감의 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "표백함옷감의 가슴에 대는 갑옷")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[뱌쿠렌]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 3)
+
+;요리 관련
+;0b1100010　단백 한 맛, 고추냉이, 레몬
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "쌀/야채/과일/" + "검소/야취/마계풍/" * 2 + "담백/자비/장난/건강/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "농후/상품/현란/" * 2 + "고기 요리/생선 요리/명계풍/정묘/" * 5)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "자비/마계풍/")
+
+;농민 관련
+;정진 요리용
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "대두 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "대두")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "대두밭")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "명련사")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 106)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 400)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 2)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터56
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터56(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "미코")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "머리 치장"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리1", "민소매 윗도리"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "브레스 렛"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "오더 메이드의")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "본견 레이스 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "본견 소후트브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(3 - (2 * 승부속옷판정([[미코]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "쌀/야채/과일/산뜻한/담백/" + "고기 요리/생선 요리/천계류/월도풍/건강/" * 2 + "상품/풍류/현란/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "수수께끼 요리/기름/농후/자비/명계풍/빈상/" * 3)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "풍류/현란/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터57
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터57(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "코코로")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지＋후드) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "면"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "롱 스커트"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+
+;지워 오픈 팬티는 아니다
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "스릿트가 웃는 얼굴을 코끼리")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "구멍 열어 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 0)
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[코코로]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "디저트/쌀/과일/산뜻한/귀여운/" + "고기 요리/생선 요리/풍류/영험/" * 2 + "상품/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "농후/수수께끼 요리/빈상/불온/" * 3)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "풍류/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터58
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터58(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "메이링")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+CASE "특수 의상 착용"
+	SIF (TALENT:58:연모 || TALENT:58:섹프) && CFLAG:58:욕구불만도 >= 700
+		CALLF MAKE_INT(V_NAME, 73)
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：바지"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("바지", "바지"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "차이나 드레스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "라인이 영향을 주지 않는다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "하이레그 T 백")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "스포트브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[메이링]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "디저트/중식/귀여운/고유의맛/농후/붉은/" + "고기 요리/생선 요리/장난/" * 2 + "볼륨감/산뜻한/소쇄/메이드류/카리스마/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "금단/수수께끼 요리/담백/빈상/" * 3)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "대화력/화인소녀/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터59
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터59(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "소악마")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "무릎까지 오는 양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "롱 스커트"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+CASE "평상복：외의"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "베스트"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "넥타이"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "도발적인")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "레이스 T백")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "시스르레이스브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(3 - (2 * 승부속옷판정([[소악마]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "디저트/귀여운/고유의맛/단/산뜻한/" + "양식/마계풍/마법/" * 2)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "금단/수수께끼 요리/기름/빈상/자비/" * 2)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "마계풍/마법/")
+
+;농민 관련
+;설마의 실내 재배
+;주인을 조롱하는 것이 목적이지만 눈치채지지 않은 모습
+;전혀 득을 보지 않는다
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "콩나물 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "콩나물")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "콩나물 방")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "홍마관")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 3)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 310)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 150)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 10)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터60
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터60(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "파르시")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+CASE "평상복：상반신윗도리1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리1", "윗도리"))
+CASE "평상복：완부의복"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("완부의복", "암 커버"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "머플러-"))
+CASE "평상복：그외2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외2", "띠"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "함부로 과격한")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "string 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "스트링브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(3 - (2 * 승부속옷판정([[파르시]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "디저트/야채/과일/" + "생선 요리/면류/고유의맛/산뜻한/불온/질투/지저풍/" * 2)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "단/농후/볼륨감/" * 3 + "애정/" * 10)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "불온/질투/지저풍/")
+
+;농민 관련
+;(은)는 시가 보고
+;선명한 초록이든지 먹었을 때의 얼얼 감도 어떻게든(어쩐지) 이미지에 맞을까
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "산초 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "상 쇼")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "산초밭")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "지저")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 9)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 945)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 400)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 8)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터61
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터61(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "모코우")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "리본"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：바지"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("바지", "사시누키하카마"))
+CASE "평상복：상반신윗도리2"
+	IF DAY:2 == 2
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "반소매 블라우스"))
+	ELSE
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+	ENDIF
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "서스펜더"))
+CASE "평상복：그외2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외2", "부적"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "무자각세련된")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "부적 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 0)
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 0)
+
+;요리 관련
+;미각기호 120
+;0b1111001　보통, 엄청 매운, 격감, 고추냉이, 레몬
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "상품/야채/고기 요리/생선 요리/" + "귀여운/산뜻한/심플/담백/대화력/장난/건강/" * 2)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "단/농후/볼륨감/" * 3 + "월도풍/" * 5)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "대화력/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터62
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터62(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "카구야")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "롱 스커트"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+CASE "평상복：상반신윗도리1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리1", "윗도리"))
+
+;하나님이 짠 옷감의 팬티라든지 달은 보통이라고 생각한다
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "별의 빛이 포함시켜졌다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "문포의 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "문포의 브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(3 - (2 * 승부속옷판정([[카구야]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "상품/쌀/미끄러운/쫄깃한/귀여운/산뜻한/월도풍/풍류/장난/건강/달구경/")
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "수수께끼 요리/금단/" * 5 + "검소/" * 10 + "야취/벌레고기/빈상/" * 20)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "월도풍/풍류/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터63
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터63(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "카게로")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：외의"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "케이프"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "롱 스커트"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "브로치"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "“국화에 잔”의 도안을 다루었다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "삼베의 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "삼베의 브라")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "디저트/쌀/귀여운/산뜻한/볼륨감/생선 요리/기름/계란/달구경/" + "고기 요리/" * 5)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "금단/수수께끼 요리/스파이스/빈상/불온/" * 2)
+;CASE "요리：조수 효과"
+;	CALLF MAKE_STR(V_NAME, "가정적/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터64
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터64(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "유기")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "나막신"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "구속도구"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "매우 강하다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "호피의 오니 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "사라시")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[유기]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 3)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/쌀/농후/볼륨감/텐구류/" + "스파이스/" * 2 + "고기 요리/지저풍/오니의 조미료/파워풀/고주망태/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "금단/수수께끼 요리/단/빈상/" * 2 + "소인족 비전의 맛/반역/정밀/" * 5)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "지저풍/대화력/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터65
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터65(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "모미지")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "두건"))
+CASE "평상복：액세서리"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("액세서리", "소매"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "나막신"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리1", "민소매 윗도리"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "실용성 제일의")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "자투리 훈도시")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "사라시")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[모미지]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 3)
+
+CASE "고유커맨드"
+	CALLF MAKE_STR(V_NAME, "천리안")
+CASE "고유커맨드 실행 가능"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/쌀/농후/볼륨감/단/" + "생선 요리/고기 요리/텐구류/가을풍/" * 2)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "금단/수수께끼 요리/빈상/불온/" * 4)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "명검/")
+
+;농민 관련
+;산 같은 작물을
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "메밀국수 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "메밀국수")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "메밀국수밭")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "요괴의 산·산정")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 8)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 801)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 400)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 7)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터66
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터66(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "유유코")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：모자"
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：기모노"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("기모노", "기모노"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "피부 속옷"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "띠"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "벚꽃 무늬가 선명한")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "전통복 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "전통복 브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(3 - (2 * 승부속옷판정([[유유코]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "상품/일식/양식/중식/고기 요리/생선 요리/쌀/닭고기/산뜻한/이상한/풍류/춘풍/예술적/달구경/"  + "볼륨감/건강/" * 5)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/담백/빈상/불온/" * 3)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "풍류/")
+
+;농민 관련
+;석류나무로 설정한 것은 독단
+;명계(죽음)＆여성에게 인연이 있는 과일로서 선택
+;처음은 미 농가로 했지만 피안에서 미 재배하고 있는 것은 매우 위화감이
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "석류 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "석류나무")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "석류밭")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "명계")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 6)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 630)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 500)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 13)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터67
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터67(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "케이네")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：상반신윗도리2"
+	;IF DAY:2 == 2
+	;	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "반소매 블라우스"))
+	;ELSE
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+	;ENDIF
+;CASE "평상복：바지"
+;	SIF DAY:2 == 2
+;		CALLF MAKE_INT(V_NAME, CLOTHES_ID("바지", "바지"))
+;CASE "평상복：그외1"
+;	SIF DAY:2 == 2
+;		CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "넥타이"))
+;CASE "평상복：그외2"
+;	SIF DAY:2 == 2
+;		CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외2", "벨트"))
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：원피스"
+	SIF DAY:2 != 2
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "미리 꼬리 구멍을 뚫어 있다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "람염의 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "람염의 브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[케이네]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "검소/일식/쌀/쫄깃한/달구경/" + "사각사각/담백/장난/건강/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "금단/수수께끼 요리/벌레고기/빈상/불온/" * 5)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "가정적/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터68
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터68(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "유카")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：액세서리"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("액세서리", "우산"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	IF FLAG:2 > 0
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "가터 스타킹"))
+	ELSE
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+	ENDIF
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "롱 스커트"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+CASE "평상복：외의"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "베스트"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "스카프 타이"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "성적 매력과 사랑스러움과 양립한다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "꽃무늬 플리츠 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "꽃무늬 브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(3 - (2 * 승부속옷판정([[유카]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 1)
+	
+;CASE "고유커맨드"
+;	CALLF MAKE_STR(V_NAME, "탄막승부")
+;CASE "고유커맨드 실행 가능"
+;	CALLF MAKE_INT(V_NAME, 1)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "디저트/일식/고유의맛/야채/" + "사각사각/담백/화려한/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/검소/금단/수수께끼 요리/벌레고기/빈상/" * 7)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "화려한/대화력/")
+
+;농민 관련
+;「써」라고 읽습니다
+;원예용의 풀꽃
+;일의 심부름과 감싸고 있지만 어떻게 하지
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "화훼 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "꽃의모종")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "꽃밭")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "미혹의 죽림")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 4)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 438)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 400)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 15)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터69
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터69(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "마미조")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "머리 치장"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "나막신"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+CASE "평상복：액세서리"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("액세서리", "안경"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "잎이 그려진 풍류인")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "리넨 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "리넨브라")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;특수 의상
+CASE "집 데이트 의상"
+	SIF MAIN_MAP == 2
+		CALLF MAKE_INT(V_NAME, OBJNAME_TO_ID(ARG, "GET", "의상세트", "마미조 의복 세트"))
+CASE "마을 데이트 의상"
+	CALLF MAKE_INT(V_NAME, OBJNAME_TO_ID(ARG, "GET", "의상세트", "마미조 의복 세트"))
+
+;요리 관련
+;0b0101000　보통, 엄청 매운, 고추냉이
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "상질/고기 요리/생선 요리/스파이스/" + "일식/담백/튀김/이상한/" * 2)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "금단/수수께끼 요리/벌레고기/빈상/" * 2)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "이상한/")
+
+;농민 관련
+;지주에게 위화감이 없다
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "쌀 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "쌀")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "논")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "명련사")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 101)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 500)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 20)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터70
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터70(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "코스즈")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "머리 치장"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "안돈바카마"))
+CASE "평상복：기모노"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("기모노", "기모노"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "피부 속옷"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "영문자 신문 자루의")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "모노톤 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "모노토브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[코스즈]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "디저트/진수성찬/일식/쌀/쫄깃한/" + "미끄러운/담백/풍류/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "스파이스/개구리 요리/" + "야취/검소/빈상/불온/" * 2 + "벌레고기/" * 5)
+;CASE "요리：조수 효과"
+;	CALLF MAKE_STR(V_NAME, "가정적/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터71
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터71(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "신묘마루")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "완"))
+CASE "평상복：기모노"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("기모노", "기모노"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "피부 속옷"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "띠"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "커서도 작아도 적합 사이즈인")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "난쟁이의 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "난쟁이의 캐미숄")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[신묘마루]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "디저트/일식/면류/국물/과일/" + "귀여운/단/산뜻한/소인족 비전의 맛/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/검소/금단/수수께끼 요리/벌레고기/빈상/불온/" * 2 + "오니의 조미료/" * 3)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "소인족 비전의 맛/")
+
+;농민 관련
+;온다
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "머위 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "머위")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "머위밭")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "하쿠레이 신사")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 0)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 22)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 350)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 3)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터72
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터72(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "에이린")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "롱 스커트"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "리본"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "깊은 신비의 기색이 한다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "빨강·파랑으로 짠 일본고대의 직옷감의 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "빨강·파랑으로 짠 일본고대의 직옷감의 브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:3
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+CASE "고유커맨드"
+	CALLF MAKE_STR(V_NAME, "생약을판다")
+CASE "고유커맨드 실행 가능"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "달구경/" + "상품/쌀/고유의맛/쫄깃한/건강/풍류/실험적/허브/" * 2 + "월도풍/" * 5)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "기름/볼륨감/야취/빈상/불온/" * 2)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "월도풍/풍류/")
+
+;농민 관련
+;정말로 약?
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "약초 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "약초")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "약초밭")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "미혹의 죽림")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 4)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 436)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 600)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 14)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터73
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터73(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "반키")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：외의"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "케이프 망토"))
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "리본"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+CASE "평상복：그외1"
+;우선 동 한정으로 해 본다
+	SIF DAY:2 == 4
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "머플러-"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "그라데이션이 아름답다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "담홍색의 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "담홍색의 브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(3 - (2 * 승부속옷판정([[반키]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/양식/스파이스/이상한/")
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "볼륨감/야취/빈상/" * 2)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "이상한/")
+
+;농민 관련
+;목이 떨어지는＋적색
+;별로(호빵) 교제 안되겠지만 일단
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "동백 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "동백 기름")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "동백 농원")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "마을")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 2)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 206)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 350)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 6)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터74
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터74(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "레티")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "turban 캐치볼"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+CASE "평상복：외의"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "베스트"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "머플러-"))
+CASE "평상복：그외2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외2", "브로치"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "서리와 같이 희고 차갑다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "설녀의 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "설녀의 브라")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/양식/볼륨감/심플/가을풍/" + "생선 요리/빙결/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "금단/야취/빈상/불온/" * 2 + "춘풍/" * 10)
+;CASE "요리：조수 효과"
+;	CALLF MAKE_STR(V_NAME, "이상한/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터75
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터75(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "메디슨")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "리본"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "아마 독이 스며들고 붐비고 있다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "보라색 물들이고의 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "보라색 물들이고의 캐미숄")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[메디슨]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "디저트/고유의맛/단/불온/반역/" )
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "스파이스/볼륨감/" * 5)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "불온/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터76
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터76(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "코마치")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "머리 치장"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "나막신"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "버선"))
+CASE "평상복：기모노"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("기모노", "기모노"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "피부 속옷"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "롱 스커트"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "띠"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "어른의 매력 흘러넘친다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "탄가쇼트")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "레이스브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(3 - (2 * 승부속옷판정([[코마치]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "디저트/일식/쌀/볼륨감/" + "고기 요리/생선 요리/명계풍/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/검소/담백/벌레고기/정묘/마법/정밀/빈상/불온/" * 2)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "자비/")
+
+;여기는 의뢰 ID가 관련하지 않는 정보
+;의뢰 발생율 스카2/일반3/고유 5
+CASE "의뢰 없음 발생율"
+	CALLF MAKE_INT(V_NAME, 2)
+CASE "일반의뢰발생율"
+	CALLF MAKE_INT(V_NAME, 3)
+CASE "고유의뢰발생율"
+	CALLF MAKE_INT(V_NAME, 5)
+CASE "고유의뢰최종 요소"
+	CALLF MAKE_INT(V_NAME, 101)
+CASEELSE
+	;고유의뢰관련의 데이터에 바톤 터치
+	SIF STRCOUNT(O_DATA, "의뢰")
+		CALLF 고유의뢰76(ARG, O_DATA, V_NAME)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터77
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터77(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "시즈하")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "머리 치장"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "롱 스커트"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "가을의 임종을 체현하는")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "단풍의 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "단풍의 브래지어")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "디저트/쌀/" + "고유의맛/면류/담백/가을풍/화려한/예술적/풍요/영험/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/검소/벌레고기/빈상/불온/" * 2 + "빙결/" * 5)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "가을풍/화려한/예술적/")
+
+;농민 관련
+;포도가 붙고 있는 것은 여동생 쪽이지만
+;포도라면 오사레감 있고 단풍도 하고 과실도 물들고
+;바꾼다면 미노리코를 포도로 해 시즈하은 옻나무(비식용의 유용 식물, 한편 단풍 한다)라든지?
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "머루 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "머루")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "머루밭")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "요괴의 산·산록")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 7)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 715)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 400)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 4)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터78
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터78(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "미노리코")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "에이프런 드레스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "희미하게 단 향기가 난다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "군고구마색의 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "군고구마색의 브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[미노리코]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "고구마/단/" + "쌀/고유의맛/농후/가을풍/풍요/영험/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/검소/벌레고기/빈상/불온/" * 2 + "빙결/" * 5)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "가을풍/풍요/")
+
+;농민 관련
+;미라도 좋지만 텐구와 입는다
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "감자 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "감자")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "우전")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "요괴의 산·산록")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 7)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 715)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 400)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 4)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터79
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터79(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "히나")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "리본"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "흑과 초록으로 중후하게 물들여졌다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "고딕 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "고식크브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(3 - (2 * 승부속옷판정([[히나]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "야채/쌀/고유의맛/담백/" * 2 + "빈상/불온/이상한/영험/" * 5)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "상품/농후/볼륨감/" * 2)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "불온/건강/")
+
+;농민 관련
+;옷의 모양을 닮아 있는＆산에서 나 그렇게
+;너무 유복한 이미지는 없다
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "산채 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "태엽")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "태엽밭")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "요괴의 산·산록")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 7)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 705)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 350)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 3)
+
+;여기는 의뢰 ID가 관련하지 않는 정보
+;의뢰 발생율 스카2/일반3/고유 5
+CASE "의뢰 없음 발생율"
+	CALLF MAKE_INT(V_NAME, 2)
+CASE "일반의뢰발생율"
+	CALLF MAKE_INT(V_NAME, 3)
+CASE "고유의뢰발생율"
+	CALLF MAKE_INT(V_NAME, 5)
+CASE "고유의뢰최종 요소"
+	CALLF MAKE_INT(V_NAME, 101)
+CASEELSE
+	;고유의뢰관련의 데이터에 바톤 터치
+	SIF STRCOUNT(O_DATA, "의뢰")
+		CALLF 고유의뢰79(ARG, O_DATA, V_NAME)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터80
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터80(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "아큐")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "머리 치장"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "안돈바카마"))
+CASE "평상복：기모노"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("기모노", "기모노"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "피부에 상냥한 비단 100%의")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "심리스 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 0)
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/야채/쌀/" + "담백/풍류/명계풍/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/농후/볼륨감/빈상/" * 2 + "요정풍/반짝임/" * 10)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "풍류/")
+
+;농민 관련
+;마을에 군림한다
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "쌀 농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "쌀")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "논")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "마을")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 2)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 206)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 550)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 9)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터81
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터81(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "렌코")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：외의"
+	SIF DAY:2 == 1
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "케이프"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "롱 스커트"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "하반신이 탄탄해보이는")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "도트 (무늬)격 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "누브라")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/쌀/고기 요리/생선 요리/" + "면류/담백/" * 2)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/벌레고기/빈상/불온/" * 4)
+;CASE "요리：조수 효과"
+;	CALLF MAKE_STR(V_NAME, "풍류/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터82
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터82(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "메리")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "침착한 인상의")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "스트라이프 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "스트라이프브라")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "양식/쌀/고기 요리/생선 요리/" + "고유의맛/담백/" * 2)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/벌레고기/빈상/불온/" * 4)
+;CASE "요리：조수 효과"
+;	CALLF MAKE_STR(V_NAME, "풍류/")
+ENDSELECT
+
+
+
+
+@EXIST_캐릭터데이터83
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터83(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "키스메")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "머리 치장"))
+CASE "평상복：기모노"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("기모노", "기모노"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "작고 사랑스럽다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "분홍색 훈도시")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 0)
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[키스메]]) ))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/쌀/" + "담백/귀여운/단/산뜻한/예상외/지저풍/" * 2)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/수수께끼 요리/고기/볼륨감/빈상/" * 2)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "지저풍/예상외/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터84
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터84(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "야마메")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "리본"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：상반신윗도리1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리1", "윗도리"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "점퍼치마"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "검은 천에 거미집을 자수 했다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "spider(무늬)격 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "spider(무늬)격 브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[야마메]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/쌀/농후/이상한/" + "귀여운/산뜻한/" * 2 + "면류/불온/지저풍/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/수수께끼 요리/빈상/" * 2)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "지저풍/불온/")
+ENDSELECT
+
+
+
+
+@EXIST_캐릭터데이터85
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터85(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "이치린")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "두건"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "법의"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "말향의 냄새가 난다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "고물의 무명 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "고물의 무명 브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[이치린]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 3)
+
+;0b0100000　보통, 고추냉이
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "검소/일식/쌀/" + "면류/담백/파워풀/" * 2 + "자비/" * 5)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "상품/야취/벌레고기/고기 요리/현란/풍류/정묘/" * 3)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "자비/파워풀/")
+ENDSELECT
+
+
+
+
+@EXIST_캐릭터데이터86
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터86(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "무라사")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：바지"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("바지", "쇼트 바지"))
+CASE "평상복：상반신윗도리1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리1", "세라복"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "이름 대신에 닻의 마크가 쓰여졌다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "보이쉬 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "탄크툽브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[무라사]]) ))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+;0b0001000　보통, 엄청 매운
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/쌀/물기/고기 요리/생선 요리/" + "붉은/농후/스파이스/" * 2 + "자비/" * 5)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/벌레고기/빈상/" * 2)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "불온/수병풍/")
+ENDSELECT
+
+
+
+
+@EXIST_캐릭터데이터87
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터87(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "쇼")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "법의"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "날개옷"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "그녀들 해 있고")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "인 자루의 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "인 자루의 브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[쇼]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+;0b0001001　진한 맛, 엄청 매운
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/쌀/면류/볼륨감/단/" + "농후/고기 요리/섬세/" * 3 + "자비/" * 5)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "금단/수수께끼 요리/야취/벌레고기/스파이스/빈상/정묘/" * 3)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "자비/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터88
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터88(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "쿄코")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "차분한 요괴의 그림이 그려졌다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "프린트 팬티(메아리)")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 0)
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[쿄코]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;요리 관련
+;0b1010010　단백 한 맛, 격감, 레몬
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "디저트/고유의맛/단/귀여운/팥소/" + "단/담백/자비/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "금단/수수께끼 요리/야취/벌레고기/빈상/" * 2)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "건강/")
+ENDSELECT
+
+
+
+
+@EXIST_캐릭터데이터89
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터89(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "요시카")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：액세서리"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("액세서리", "부적"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리1", "윗도리"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "청아가 덮어 씌웠다고 생각되는")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "삼단 프릴 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "프릴브라")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "단/농후/고기 요리/생선 요리/정묘/" * 3 + "볼륨감/" * 10)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "따뜻한/담백/빈상/" * 3)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "불온/")
+ENDSELECT
+
+
+
+
+@EXIST_캐릭터데이터90
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터90(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "청아")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(천진난만한 여자) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "머리 치장"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+CASE "평상복：상반신윗도리1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리1", "민소매 윗도리"))
+CASE "평상복：외의"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "베스트"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "날개옷"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "육감적인 몸을 두드러지게 한다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "짜고 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "가슴팍 편상화 브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(3 - (2 * 승부속옷판정([[청아]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "중식/쌀/과일/" + "산뜻한/상품/풍류/예술적/정묘/" * 2 + "불온/이상한/" * 5)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/빈상/명계풍/자비/" * 3)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "불온/이상한/풍류/")
+ENDSELECT
+
+
+
+
+@EXIST_캐릭터데이터91
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터91(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "토지코")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "까마귀 모자"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "부적"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "무게가 없다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "영체 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "영체 브라")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/쌀/야채/과일/산뜻한/담백/생선 요리/" + "상품/가정적/풍류/정묘/현란/건강/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "수수께끼 요리/기름/농후/벌레고기/빈상/불온/이상한/자비/명계풍/" * 2)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "풍류/가정적/")
+
+;농민 관련
+;호족조로 상담하면(자) 토지도 준비할 수 있을 것 같지만 거기까지 해 줄까?
+CASE "농민：설명"
+	CALLF MAKE_STR(V_NAME, "무농가")
+CASE "농민：작물"
+	CALLF MAKE_STR(V_NAME, "무")
+CASE "농민：밭의 종류"
+	CALLF MAKE_STR(V_NAME, "다이콤바타케")
+CASE "농민：밭의 맵"
+	CALLF MAKE_STR(V_NAME, "마을")
+
+CASE "농민：맵 ID"
+	CALLF MAKE_INT(V_NAME, 2)
+CASE "농민：장소 ID"
+	CALLF MAKE_INT(V_NAME, 205)
+CASE "농민：보수"
+	CALLF MAKE_INT(V_NAME, 400)
+CASE "농민：금리"
+	CALLF MAKE_INT(V_NAME, 12)
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터92
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터92(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "후토")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "까마귀 모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：상반신윗도리1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리1", "물에 담갔다가 말린 비단"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "미니치마"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "누군가에게 속아 입고 있는 것 같다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "여아 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "사라시")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 3)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/쌀/고기 요리/생선 요리/볼륨감/" + "디저트/상품/단/풍류/정묘/현란/가정적/" * 2)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "수수께끼 요리/스파이스/기름/농후/벌레고기/빈상/자비/" * 2)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "풍류/건강/")
+ENDSELECT
+
+
+
+
+@EXIST_캐릭터데이터93
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터93(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "와카사기히메")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：기모노"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("기모노", "기모노"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "띠"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "인어의 왕도일 것이다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "패각 비키니")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "패각 브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(3 - (2 * 승부속옷판정([[와카사기히메]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 0)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 99)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/쌀/고유의맛/면류/국물/물기/가정적/" * 2)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "수수께끼 요리/금단/빈상/불온/" * 2 + "생선 요리/" * 10)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "가정적/")
+ENDSELECT
+
+
+
+
+@EXIST_캐릭터데이터94
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터94(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "벤벤")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "머리 치장"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+
+;낡은 것 버리거나 하지 않지요는만의 발상
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "헌 옷을 리메이크 했다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "좌우 비대칭 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "아신메트리브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[벤벤]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/쌀/면류/생선 요리/" * 2 + "산뜻한/가정적/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "수수께끼 요리/기름/농후/빈상/불온/" * 2)
+;CASE "요리：조수 효과"
+;	CALLF MAKE_STR(V_NAME, "가정적/")
+ENDSELECT
+
+
+
+
+@EXIST_캐릭터데이터95
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터95(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "야츠하시")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "캬츄샤(헤어밴드)"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "헌 옷을 리메이크 했다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "느슨한 끈 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "소박한 끈브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[야츠하시]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/쌀/면류/고기 요리/" * 2 + "산뜻한/가정적/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "수수께끼 요리/담백/빈상/불온/" * 2)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "가정적/")
+ENDSELECT
+
+
+
+
+@EXIST_캐릭터데이터96
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터96(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "라이코")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：외의"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "쟈켓"))
+CASE "평상복：상반신윗도리1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리1", "셔츠"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "넥타이"))
+CASE "평상복：그외2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외2", "벨트"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "락에 공격한 디자인의")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "사이드 현악기")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "흑브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(3 - (2 * 승부속옷판정([[라이코]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "쌀/기름/농후/산뜻한/미끄러운/" + "고기 요리/볼륨감/파워풀/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "수수께끼 요리/담백/빈상/불온/" * 2)
+;CASE "요리：조수 효과"
+;	CALLF MAKE_STR(V_NAME, "가정적/")
+ENDSELECT
+
+
+
+
+@EXIST_캐릭터데이터97
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터97(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "세이자")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "브레스 렛"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "고생과 즐거움을 함께 했다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "닳아 떨어지고 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "더러워진 사라시")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[세이자]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 3)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "쌀/고기 요리/생선 요리/" + "야취/수수께끼 요리/금단/" * 2 + "불온/반역/소인족 비전의 맛/요정풍/" * 5)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야채/양식/일식/중식/농후/담백/빈상/풍류/영험/행운/메이드류/가정적/풍요/텐구류/오니의 조미료/")
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "불온/반역/")
+ENDSELECT
+
+
+
+
+@EXIST_캐릭터데이터98
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터98(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "요리히메")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "리본"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "뽀빠이 바지치마"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "반소매 블라우스"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "브레스 렛"))
+CASE "평상복：그외2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외2", "새시 벨트"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "일절의 예울어")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "무사의 하의")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "청정의 기의")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:3
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "상품/검소/야채/쌀/미끄러운/담백/쫄깃한/귀여운/산뜻한/영험/풍류/월도풍/건강/달구경/")
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "수수께끼 요리/금단/빈상/불온/이상한/" * 5 + "야취/벌레고기/" * 20)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "풍류/영험/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터99
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터99(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "토요히메")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "뽀빠이 바지치마"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "프릴 블라우스"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "새시 벨트"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "영원불괴의")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "F섬유 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "F파이바브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:3
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 3)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/상품/검소/쌀/달구경/" + "단/쫄깃한/귀여운/산뜻한/풍류/영험/월도풍/예술적/건강/" * 2)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "수수께끼 요리/금단/벌레고기/빈상/불온/이상한/" * 2)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "풍류/")
+ENDSELECT
+
+
+
+
+@EXIST_캐릭터데이터100
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터100(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "레이센")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "와이셔츠"))
+CASE "평상복：상반신윗도리1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리1", "블레이저 코트"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "넥타이"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "수수함 이외로 트집잡을 데가 없다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "옥토지급 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "옥토지급 브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[레이센]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "상품/검소/야채/쌀/달구경/" + "담백/쫄깃한/귀여운/" * 2 + "당근/월도풍/" * 5)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "수수께끼 요리/금단/빈상/불온/" * 2 + "야취/벌레고기/" * 5)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "월도풍/건강/")
+ENDSELECT
+
+
+
+
+@EXIST_캐릭터데이터101
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터101(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "토키코")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "흰 바탕에 희미한 다홍색을 당겼다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "토키 색 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "토키 색브라")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "상품/검소/고유의맛/쌀/" + "사각사각/귀여운/" * 2)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/수수께끼 요리/금단/빈상/불온/" * 2)
+;CASE "요리：조수 효과"
+;	CALLF MAKE_STR(V_NAME, "월도풍/건강/")
+ENDSELECT
+
+
+
+
+@EXIST_캐릭터데이터102
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터102(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "신키")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "이브닝 드레스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "무로부터 창조되었다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "마계 하나님의 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "마계 하나님의 브라")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/양식/상품/고유의맛/쌀/" + "단/귀여운/마법/마계풍/메이드류/화려한/장난/건강/" * 2)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/수수께끼 요리/기름/빈상/불온/" * 2)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "마계풍/")
+ENDSELECT
+
+
+
+
+@EXIST_캐릭터데이터103
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터103(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "유메코")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "화이트브림"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "무릎까지 오는 양말"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "에이프런 드레스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "수수께끼의 중량감과 차가움이 있다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "유메코의 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "유메코의 브라")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "양식/상품/고유의맛/과일/" + "단/귀여운/마계풍/마법/" * 2)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/수수께끼 요리/농후/빈상/불온/" * 2)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "마계풍/메이드류/")
+ENDSELECT
+
+
+
+
+@EXIST_캐릭터데이터104
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터104(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "유키")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "롱 스커트"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "마계에서 유행의")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "flare(타오르다) 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "브라렛트")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/면류/고유의맛/농후/" + "단/귀여운/마계풍/" * 2)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/수수께끼 요리/금단/빈상/" * 2)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "마계풍/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터105
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터105(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "마이")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "리본"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "마계에서도 변종의")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "마법진 (무늬)격 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "사라시")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[마이]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 3)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "양식/고기 요리/고유의맛/농후/" + "단/귀여운/마계풍/" * 2)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/수수께끼 요리/금단/빈상/" * 2)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "마계풍/")
+ENDSELECT
+
+
+
+
+@EXIST_캐릭터데이터106
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터106(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "스미레코")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：액세서리"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("액세서리", "안경"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "무릎까지 오는 양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리1", "세라복"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "여고생치고는 밋밋한")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "스탠다드 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "민무늬 브래지어")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[스미레코]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/양식/고기 요리/농후/사각사각/이상한/" + "단/귀여운/마법/" * 2)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/수수께끼 요리/빈상/불온/" * 3 + "벌레고기/" * 5)
+;CASE "요리：조수 효과"
+;	CALLF MAKE_STR(V_NAME, "초능력자/")
+ENDSELECT
+
+
+
+
+@EXIST_캐릭터데이터107
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터107(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "세이란")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "옷자락이 굉장한")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "시스루드로워즈")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 0)
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "상품/쌀/면류/달구경/" + "야채/쫄깃한/담백/" * 2 + "당근/월도풍/" * 5)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/기름/스파이스/빈상/불온/이상한/" * 3 + "금단/수수께끼 요리/벌레고기/" * 5)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "월도풍/건강/")
+ENDSELECT
+
+
+
+
+@EXIST_캐릭터데이터108
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터108(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "링고")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "카스 모포"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "T셔츠"))
+CASE "평상복：바지"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("바지", "호박 바지"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "【링고가게】와 호쾌하게 일필 되었다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "선전용 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "논와이야브라쟈")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[링고]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/양식/중식/쌀/면류/달구경/" + "쫄깃한/농후/" * 2 + "볼륨감/당근/월도풍/" * 5)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/검소/빈상/불온/" * 2 + "금단/수수께끼 요리/벌레고기/" * 3)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "월도풍/")
+ENDSELECT
+
+
+
+
+@EXIST_캐릭터데이터109
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터109(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "도레미")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "산타모"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "부드럽고 날씬해 가역성이 높다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "몽혼 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "몽혼브라")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 0)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/양식/쌀/야채/면류/고유의맛/쫄깃한/담백/예상외/예술적/이상한/")
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "농후/빈상/불온/" * 2 + "야취/검소/벌레고기/" * 3)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "예상외/예술적/이상한/")
+ENDSELECT
+
+
+
+
+@EXIST_캐릭터데이터110
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터110(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "사구메")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：외의"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "쟈켓"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리1", "윗도리"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "의상의 치마와 갖춤의")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "화살표(무늬)격 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "화살표(무늬)격 브라")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "상품/쌀/면류/미끄러운/담백/예상외/월도풍/달구경/")
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "농후/빈상/불온/" * 2 + "야취/검소/벌레고기/" * 3)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "예상외/")
+ENDSELECT
+
+
+
+
+@EXIST_캐릭터데이터111
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터111(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "클라운피스")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(실내 옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "피에로모"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "타이츠"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "타이츠에 라인이 영향을 주지 않는다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "스트링 T백")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "미니캐미")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(3 - (2 * 승부속옷판정([[클라운피스]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "디저트/금단/단/양식/불온/반짝임/마법/지옥풍/햄버거/" + "과일/고유의맛/스파이스/산뜻한/치즈/" * 2 + "귀여운/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/심플/담백/" * 2 + "야채/" * 5)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "지옥풍/불온/장난/")
+ENDSELECT
+
+
+
+
+@EXIST_캐릭터데이터112
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터112(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "순호")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(속옷) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "면관"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：기모노"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("기모노", "기모노"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "띠"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "히프 라인을 아름답게 지지한다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "가드르쇼트")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "레이스브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(3 - (2 * 승부속옷판정([[순호]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "중식/야채/고기 요리/기름/불온/풍류/" + "산뜻한/장난/건강/지옥풍/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/수수께끼 요리/벌레고기/빈상/" * 3 + "월도풍/" * 20)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "가정적/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터113
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터113(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "헤카티아")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：액세서리"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("액세서리", "쇠사슬"))
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "T셔츠"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "목걸이"))
+CASE "평상복：그외2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외2", "벨트"))
+CASE "평상복：그외3"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외3", "혹성"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "보는 것만으로 지옥에 떨어질 것 같은")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "「GoToHell」팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "츄브툽브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:3
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "양식/고기 요리/고유의맛/농후/마법/" + "스파이스/건강/" * 2 + "장난/지옥풍/" * 5)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/검소/빈상/" * 3)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "지옥풍/마법/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터114
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터114(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "쿠루미")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "리본"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "롱 스커트"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "소녀 취미의 사랑스럽다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "하트 리본 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "리본브라")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "양식/고기 요리/미끄러운/스파이스/" * 2)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/검소/수수께끼 요리/빈상/" * 2)
+;CASE "요리：조수 효과"
+;	CALLF MAKE_STR(V_NAME, "지옥풍/")
+ENDSELECT
+
+
+
+@EXIST_캐릭터데이터115
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터115(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "엘리")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(실내 옷) 세트")
+
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "우아하게 레이스를 다루었다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "elegant 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "에레간트브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(3 - (2 * 승부속옷판정([[엘리]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "양식/고유의맛/면류/담백/")
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/금단/수수께끼 요리/스파이스/빈상/" * 2)
+;CASE "요리：조수 효과"
+;	CALLF MAKE_STR(V_NAME, "지옥풍/")
+ENDSELECT
+
+@EXIST_캐릭터데이터116
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터116(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "무게츠")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(실내 옷) 세트")
+
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "무릎까지 오는 양말"))
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "화이트브림"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "에이프런 드레스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "그야말로 메이드 같다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "꽃무늬흰색 레이스 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "꽃무늬흰색 레이스브라")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "양식/고유의맛/계란/달구경/" + "사각사각/담백/메이드류/화려한/" * 2)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/금단/수수께끼 요리/스파이스/빈상/" * 2)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "메이드류/")
+ENDSELECT
+
+
+@EXIST_캐릭터데이터117
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터117(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "겐게츠")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "리본"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "롱 스커트"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "블라우스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "완만하게 표면의 (무늬)격이 바뀐다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "몽환 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "몽환 브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:3
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "양식/고기 요리/닭고기/달구경/" + "사각사각/스파이스/메이드류/화려한/" * 2)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/금단/수수께끼 요리/빈상/" * 2)
+;CASE "요리：조수 효과"
+;	CALLF MAKE_STR(V_NAME, "지옥풍/")
+ENDSELECT
+
+
+@EXIST_캐릭터데이터118
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터118(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "라바")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "벽색에 반짝이는")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "인분 물들이고 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "캐미숄")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "디저트/단/귀여운/산뜻한/" + "야채/반짝임/" * 4)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/검소/고기 요리/생선 요리/치즈/빈상/불온/" * 2)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "장난/")
+ENDSELECT
+
+
+@EXIST_캐릭터데이터119
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터119(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "네무노")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+
+;굳이 색은 결정하지 않는다
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "색의 농담이 재미있다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "손수 물들임 훈도시")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "표백함")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[네무노]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 3)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "검소/일식/쌀/생선 요리/볼륨감/기름/" + "고기 요리/농후/" * 2)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "금단/수수께끼 요리/단/치즈/빈상/" * 2)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "가정적/")
+ENDSELECT
+
+@EXIST_캐릭터데이터120
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터120(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "아운")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "나막신"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：상반신윗도리1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리1", "셔츠"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "두 가지 색의 옷감이 짜 합쳐졌다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "홍백 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "홍백 브라")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/쌀/생선 요리/귀여운/산뜻한/" + "고기 요리/농후/기름/" * 3 + "영험/류큐풍/" * 5)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "금단/수수께끼 요리/" * 2 + "빈상/불온/" * 5)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "건강/류큐풍/")
+ENDSELECT
+
+@EXIST_캐릭터데이터121
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터121(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "나루미")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "삿갓"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "눈이 올때 신는 신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "버선"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "법의"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "고마운 말씀이 쓰여졌다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "주포 훈도시")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "표백함")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[나루미]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 3)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "검소/일식/산뜻한/" + "쌀/담백/" * 2 + "장난/건강/자비/마법/" * 5)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "금단/수수께끼 요리/" * 2 + "빈상/불온/" * 5)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "건강/자비/마법/")
+ENDSELECT
+
+@EXIST_캐릭터데이터122
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터122(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "마이")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "까마귀 모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "무릎까지 오는 양말"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "춤추기 쉬운 것 같은")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "보이즈 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "스포트브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[마이]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "상품/일식/이상한/" + "귀여운/고기 요리/면류/파워풀/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/수수께끼 요리/담백/" * 2 + "빈상/" * 5)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "이상한/")
+ENDSELECT
+
+@EXIST_캐릭터데이터123
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터123(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "사토노")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "까마귀 모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "신발"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "무릎까지 오는 양말"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "춤추기 쉬운 것 같은")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "이너 스패츠")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "탄크툽브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[사토노]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "상품/일식/이상한/" + "산뜻한/생선 요리/고유의맛/파워풀/" * 3)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/수수께끼 요리/담백/" * 2 + "빈상/" * 5)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "이상한/")
+ENDSELECT
+
+@EXIST_캐릭터데이터124
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터124(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "오키나")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "까마귀 모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "롱 부츠"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "도사옷"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "밤하늘을 투영 했다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "별의 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "별의 브라")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:3
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "상품/경식/일식/고유의맛/면류/산뜻한/이상한/현란/" + "미끄러운/담백/파워풀/" * 3 + "예술적/" * 5)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "야취/수수께끼 요리/" * 2 + "볼륨감/" * 3 + "빈상/" * 5)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "이상한/현란/")
+ENDSELECT
+
+@EXIST_캐릭터데이터125
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터125(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "조온")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：액세서리"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("액세서리", "선글라스"))
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "모자"))
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "롱 부츠"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：원피스"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("원피스", "원피스"))
+CASE "평상복：외의"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "쟈켓"))
+CASE "평상복：그외1"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "브레스 렛"))
+CASE "평상복：그외2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외2", "Earring(귀걸이)"))
+CASE "평상복：그외3"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외3", "숄더백"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "어쨌든 화려한")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "라메 들어와 팬티")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "라메들이 브라")
+CASE "고유 속옷 착용 조건"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "고기 요리/농후/기름/튀김/현란/" + "상품/검소/자비/가정적/" * 5)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "수수께끼 요리/금단/" * 2 + "야취/빈상/" * 10)
+CASE "요리：조수 효과"
+	CALLF MAKE_STR(V_NAME, "현란/")
+ENDSELECT
+
+@EXIST_캐릭터데이터126
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터126(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "시온")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("모자", "리본"))
+CASE "평상복：상반신윗도리2"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("상반신윗도리2", "T셔츠"))
+CASE "평상복：외의"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("외의", "파커"))
+CASE "평상복：치마"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("치마", "치마"))
+CASE "평상복：그외3"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("그외1", "브레스 렛"))
+
+CASE "고유 속옷 형용사"
+	CALLF MAKE_STR(V_NAME, "이미 속옷은 아니다")
+CASE "고유 하반신속옷명"
+	CALLF MAKE_STR(V_NAME, "「압류하고」부적")
+CASE "고유 상반신속옷"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 상반신속옷명"
+	CALLF MAKE_STR(V_NAME, "「염가 대매출」부적")
+CASE "고유 속옷 착용 조건"
+	SIF !RAND:(1 + (2 * 승부속옷판정([[시온]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 틈이 날 수 있다"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "고유 속옷 옷감 두께"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;요리 관련
+CASE "요리：좋아하는 맛"
+	CALLF MAKE_STR(V_NAME, "일식/양식/중식/야채/과일/면류/국물/고유의맛/산뜻한/현란/" + "쌀/" * 5 + "볼륨감/" * 10)
+CASE "요리：싫어하는 맛"
+	CALLF MAKE_STR(V_NAME, "금단/" * 2 + "기름/" * 5)
+CASE "요리：조수 효과"
+	IF TALENT:[[시온]]:사모 || TALENT:[[시온]]:연모
+		CALLF MAKE_STR(V_NAME, "가정적/")
+	ELSE
+		CALLF MAKE_STR(V_NAME, "빈상/")
+	ENDIF
+ENDSELECT
+
+@EXIST_캐릭터데이터127
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@캐릭터데이터127(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "통칭"
+	CALLF MAKE_STR(V_NAME, "모브코")
+;여기서부터 의상 설정
+CASE "오늘의 파자마"
+	CALLF MAKE_STR(V_NAME, "파자마(바지) 세트")
+
+CASE "평상복：모자"
+
+CASE "평상복：신발"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("신발", "나막신"))
+CASE "평상복：양말"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("양말", "양말"))
+CASE "평상복：기모노"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("기모노", "기모노"))
+
+;요리 관련 우선 미설정으로
+CASE "요리：좋아하는 맛"
+CASE "요리：싫어하는 맛"
+ENDSELECT

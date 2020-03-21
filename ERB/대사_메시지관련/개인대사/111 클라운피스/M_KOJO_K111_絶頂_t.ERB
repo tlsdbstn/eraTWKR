@@ -1,0 +1,1011 @@
+﻿;-------------------------------------------------
+;노예의 절정시의 말
+;NOWEX:0~4 CVABM 절정
+;NOWEX:6 이중절정
+;NOWEX:7 삼중절정
+;NOWEX:8 사중절정
+;NOWEX:9 오중절정
+;NOWEX:10 분유
+;NOWEX:11 사정
+;NOWEX:12 방뇨
+;적당하게 조합해 사용해 주세요
+;-------------------------------------------------
+@M_KOJO_MESSAGE_PALAMCNG_B_K111
+CALL PALAM_MESSAGE_B
+SIF FLAG:시간정지
+	RETURN 1
+;-------------------------------------------------
+;분유
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && NOWEX:분유
+	PRINTFORMW 「, , 나와버리는∼~\/\/\/」
+ENDIF
+;-------------------------------------------------
+;사정
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL && NOWEX:사정
+	PRINTFORMW 
+ENDIF
+;-------------------------------------------------
+;방뇨
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && NOWEX:방뇨
+	PRINTFORMW 「오줌 나와버리는∼~~\/\/\///」
+ENDIF
+;-------------------------------------------------
+;절정
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+;미안해요, 부실입니다. 주인님 용서(허락)해……. M절정에서 없는 것은 사양입니다.
+IF LOCAL
+	IF NOWEX:오중절정 || NOWEX:사중절정 || NOWEX:삼중절정 || NOWEX:이중절정 || NOWEX:C절정 || NOWEX:V절정 || NOWEX:B절정 || NOWEX:A절정
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORMW 「아%UNICODE(0x2764)% 아%UNICODE(0x2764)% 아~, 이!이, 이구∼~~%UNICODE(0x2764)%%UNICODE(0x2764) %%UNICODE(0x2764)%」
+		CASE 1
+			PRINTFORML 「아앗 %UNICODE(0x2764)% 기분 있고 %UNICODE(0x2764)%」
+			PRINTFORMW 「%CALLNAME:MASTER%%UNICODE(0x2764)% 이구%UNICODE(0x2764)% 이 윽∼~~%UNICODE(0x2764)%」
+		CASE 2
+			PRINTFORML 「아%UNICODE(0x2764)% 안 돼 %UNICODE(0x2764)% 이이%UNICODE(0x2764)%」
+			PRINTFORMW 「이∼~~~~%UNICODE(0x2764)%%UNICODE(0x2764)%」
+		CASE 3
+			PRINTFORMW 「아왓 %UNICODE(0x2764)% 원%UNICODE(0x2764)% 이구%UNICODE(0x2764)% 이구이구%UNICODE(0x2764)% 이∼~~~%UNICODE(0x2764)%」
+		CASE 4
+			PRINTFORMW 「앗, 아핫 %UNICODE(0x2764)% 이구%UNICODE(0x2764)% 미안 사의%UNICODE(0x2764)% 아앗,∼~~%UNICODE(0x2764)%」
+		ENDSELECT
+		;만족 플래그, 클라운피스는 코스즈와 비교해 느슨합니다
+		IF EX:111:C절정 + EX:111:V절정 + EX:111:A절정 + EX:111:B절정 + EX:111:M절정 >= 24 && CFLAG:111:욕구불만도 < 500
+			TCVAR:111:355 = 1
+			TALENT:111:기분 = 1
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;오중절정
+	;기입 체크(=0, 비표시, 1, 표시)
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF NOWEX:오중절정
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;사중절정
+	;기입 체크(=0, 비표시, 1, 표시)
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF NOWEX:사중절정
+		;부위를 지정하지 않고 간이적으로 쓰는 경우,[SKIPSTART]&[SKIPEND]의 코멘트 아웃을 제외해,[SKIPSTART]곳의 코멘트의 사이에 써 주세요
+		;[SKIPSTART]
+		SELECTCASE NOWEX:사중절정
+			;C＆V＆A＆B절정
+			CASE 1
+				PRINTFORMW 
+				RETURN 1
+			;C＆V＆A＆M절정
+			CASE 2
+				PRINTFORMW 
+				RETURN 1
+			;C＆V＆B＆M절정
+			CASE 3
+				PRINTFORMW 
+				RETURN 1
+			;C＆A＆B＆M절정
+			CASE 4
+				PRINTFORMW 
+				RETURN 1
+			;V＆A＆B＆M절정
+			CASE 5
+				PRINTFORMW 
+				RETURN 1
+		ENDSELECT
+		;[SKIPEND]
+	ENDIF
+	;-------------------------------------------------
+	;삼중절정
+	;기입 체크(=0, 비표시, 1, 표시)
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF NOWEX:삼중절정
+		;부위를 지정하지 않고 간이적으로 쓰는 경우,[SKIPSTART]&[SKIPEND]의 코멘트 아웃을 제외해,[SKIPSTART]곳의 코멘트의 사이에 써 주세요
+		;[SKIPSTART]
+		SELECTCASE NOWEX:삼중절정
+			;C＆V＆A절정
+			CASE 1
+				PRINTFORMW 
+				RETURN 1
+			;B＆V＆A절정
+			CASE 2
+				PRINTFORMW 
+				RETURN 1
+			;C＆B＆A절정
+			CASE 3
+				PRINTFORMW 
+				RETURN 1
+			;C＆V＆B절정
+			CASE 4
+				PRINTFORMW 
+				RETURN 1
+			;C＆V＆M절정
+			CASE 5
+				PRINTFORMW 
+				RETURN 1
+			;B＆V＆M절정
+			CASE 6
+				PRINTFORMW 
+				RETURN 1
+			;A＆V＆M절정
+			CASE 7
+				PRINTFORMW 
+				RETURN 1
+			;C＆B＆M절정
+			CASE 8
+				PRINTFORMW 
+				RETURN 1
+			;A＆B＆M절정
+			CASE 9
+				PRINTFORMW 
+				RETURN 1
+			;C＆A＆M절정
+			CASE 10
+				PRINTFORMW 
+				RETURN 1
+		ENDSELECT
+		;[SKIPEND]
+	ENDIF
+	;-------------------------------------------------
+	;이중절정
+	;기입 체크(=0, 비표시, 1, 표시)
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF NOWEX:이중절정
+		;부위를 지정하지 않고 간이적으로 쓰는 경우,[SKIPSTART]&[SKIPEND]의 코멘트 아웃을 제외해,[SKIPSTART]곳의 코멘트의 사이에 써 주세요
+		;[SKIPSTART]
+		SELECTCASE NOWEX:이중절정
+			;C＆V절정
+			CASE 1
+				PRINTFORMW 
+				RETURN 1
+			;C＆A절정
+			CASE 2
+				PRINTFORMW 
+				RETURN 1
+			;V＆A절정
+			CASE 3
+				PRINTFORMW 
+				RETURN 1
+			;C＆B절정
+			CASE 4
+				PRINTFORMW 
+				RETURN 1
+			;V＆B절정
+			CASE 5
+				PRINTFORMW 
+				RETURN 1
+			;A＆B절정
+			CASE 6
+				PRINTFORMW 
+				RETURN 1
+			;A＆M절정
+			CASE 7
+				PRINTFORMW 
+				RETURN 1
+			;V＆M절정
+			CASE 8
+				PRINTFORMW 
+				RETURN 1
+			;C＆M절정
+			CASE 9
+				PRINTFORMW 
+				RETURN 1
+			;B＆M절정
+			CASE 10
+				PRINTFORMW 
+				RETURN 1
+		ENDSELECT
+		;[SKIPEND]
+	ENDIF
+	IF NOWEX:C절정
+		;초강 절정 C
+		IF NOWEX:C절정 == 3
+			PRINTFORMW 
+		;강절정 C
+		ELSEIF NOWEX:C절정 == 2
+			PRINTFORMW 
+		;절정 C
+		ELSE
+			PRINTFORMW 
+		ENDIF
+	ENDIF
+	IF NOWEX:V절정
+		;초강 절정 V
+		IF NOWEX:V절정 == 3
+			PRINTFORMW 
+		;강절정 V
+		ELSEIF NOWEX:V절정 == 2
+			PRINTFORMW 
+		;절정 V
+		ELSE
+			PRINTFORMW 
+		ENDIF
+	ENDIF
+	IF NOWEX:A절정
+		;초강 절정 A
+		IF NOWEX:A절정 == 3
+			PRINTFORMW 
+		;강절정 A
+		ELSEIF NOWEX:A절정 == 2
+			PRINTFORMW 
+		;절정 A
+		ELSE
+			PRINTFORMW 
+		ENDIF
+	ENDIF
+	IF NOWEX:B절정
+		;강절정 B
+		IF NOWEX:B절정 == 3
+			PRINTFORMW 
+		;강절정 B
+		ELSEIF NOWEX:B절정 == 2
+			PRINTFORMW 
+		;절정 B
+		ELSE
+			PRINTFORMW 
+		ENDIF
+	ENDIF
+	IF NOWEX:M절정
+		;초강 절정 M
+		IF NOWEX:M절정 == 3
+			PRINTFORMW 
+		;강절정 M
+		ELSEIF NOWEX:M절정 == 2
+			PRINTFORMW 
+		;절정 M
+		ELSE
+			PRINTFORMW 
+		ENDIF
+	ENDIF
+ENDIF
+;-------------------------------------------------
+;노예의 수면 절정시의 말
+;-------------------------------------------------
+@M_KOJO_MESSAGE_PALAMCNG_B2_K111
+CALL PALAM_MESSAGE_B
+;-------------------------------------------------
+;분유
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL && NOWEX:분유
+	PRINTFORMW 
+ENDIF
+;-------------------------------------------------
+;사정
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL && NOWEX:사정
+	PRINTFORMW 
+ENDIF
+;-------------------------------------------------
+;방뇨
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL && NOWEX:방뇨
+	PRINTFORMW 
+ENDIF
+;-------------------------------------------------
+;절정
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;오중절정
+	;기입 체크(=0, 비표시, 1, 표시)
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF NOWEX:오중절정
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;사중절정
+	;기입 체크(=0, 비표시, 1, 표시)
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF NOWEX:사중절정
+		;부위를 지정하지 않고 간이적으로 쓰는 경우,[SKIPSTART]&[SKIPEND]의 코멘트 아웃을 제외해,[SKIPSTART]곳의 코멘트의 사이에 써 주세요
+		;[SKIPSTART]
+		SELECTCASE NOWEX:사중절정
+			;C＆V＆A＆B절정
+			CASE 1
+				PRINTFORMW 
+				RETURN 1
+			;C＆V＆A＆M절정
+			CASE 2
+				PRINTFORMW 
+				RETURN 1
+			;C＆V＆B＆M절정
+			CASE 3
+				PRINTFORMW 
+				RETURN 1
+			;C＆A＆B＆M절정
+			CASE 4
+				PRINTFORMW 
+				RETURN 1
+			;V＆A＆B＆M절정
+			CASE 5
+				PRINTFORMW 
+				RETURN 1
+		ENDSELECT
+		;[SKIPEND]
+	ENDIF
+	;-------------------------------------------------
+	;삼중절정
+	;기입 체크(=0, 비표시, 1, 표시)
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF NOWEX:삼중절정
+		;부위를 지정하지 않고 간이적으로 쓰는 경우,[SKIPSTART]&[SKIPEND]의 코멘트 아웃을 제외해,[SKIPSTART]곳의 코멘트의 사이에 써 주세요
+		;[SKIPSTART]
+		SELECTCASE NOWEX:삼중절정
+			;C＆V＆A절정
+			CASE 1
+				PRINTFORMW 
+				RETURN 1
+			;B＆V＆A절정
+			CASE 2
+				PRINTFORMW 
+				RETURN 1
+			;C＆B＆A절정
+			CASE 3
+				PRINTFORMW 
+				RETURN 1
+			;C＆V＆B절정
+			CASE 4
+				PRINTFORMW 
+				RETURN 1
+			;C＆V＆M절정
+			CASE 5
+				PRINTFORMW 
+				RETURN 1
+			;B＆V＆M절정
+			CASE 6
+				PRINTFORMW 
+				RETURN 1
+			;A＆V＆M절정
+			CASE 7
+				PRINTFORMW 
+				RETURN 1
+			;C＆B＆M절정
+			CASE 8
+				PRINTFORMW 
+				RETURN 1
+			;A＆B＆M절정
+			CASE 9
+				PRINTFORMW 
+				RETURN 1
+			;C＆A＆M절정
+			CASE 10
+				PRINTFORMW 
+				RETURN 1
+		ENDSELECT
+		;[SKIPEND]
+	ENDIF
+	;-------------------------------------------------
+	;이중절정
+	;기입 체크(=0, 비표시, 1, 표시)
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF NOWEX:이중절정
+		;부위를 지정하지 않고 간이적으로 쓰는 경우,[SKIPSTART]&[SKIPEND]의 코멘트 아웃을 제외해,[SKIPSTART]곳의 코멘트의 사이에 써 주세요
+		;[SKIPSTART]
+		SELECTCASE NOWEX:이중절정
+			;C＆V절정
+			CASE 1
+				PRINTFORMW 
+				RETURN 1
+			;C＆A절정
+			CASE 2
+				PRINTFORMW 
+				RETURN 1
+			;V＆A절정
+			CASE 3
+				PRINTFORMW 
+				RETURN 1
+			;C＆B절정
+			CASE 4
+				PRINTFORMW 
+				RETURN 1
+			;V＆B절정
+			CASE 5
+				PRINTFORMW 
+				RETURN 1
+			;A＆B절정
+			CASE 6
+				PRINTFORMW 
+				RETURN 1
+			;A＆M절정
+			CASE 7
+				PRINTFORMW 
+				RETURN 1
+			;V＆M절정
+			CASE 8
+				PRINTFORMW 
+				RETURN 1
+			;C＆M절정
+			CASE 9
+				PRINTFORMW 
+				RETURN 1
+			;B＆M절정
+			CASE 10
+				PRINTFORMW 
+				RETURN 1
+		ENDSELECT
+		;[SKIPEND]
+	ENDIF
+	IF NOWEX:C절정
+		;초강 절정 C
+		IF NOWEX:C절정 == 3
+			PRINTFORMW 
+		;강절정 C
+		ELSEIF NOWEX:C절정 == 2
+			PRINTFORMW 
+		;절정 C
+		ELSE
+			PRINTFORMW 
+		ENDIF
+	ENDIF
+	IF NOWEX:V절정
+		;초강 절정 V
+		IF NOWEX:V절정 == 3
+			PRINTFORMW 
+		;강절정 V
+		ELSEIF NOWEX:V절정 == 2
+			PRINTFORMW 
+		;절정 V
+		ELSE
+			PRINTFORMW 
+		ENDIF
+	ENDIF
+	IF NOWEX:A절정
+		;초강 절정 A
+		IF NOWEX:A절정 == 3
+			PRINTFORMW 
+		;강절정 A
+		ELSEIF NOWEX:A절정 == 2
+			PRINTFORMW 
+		;절정 A
+		ELSE
+			PRINTFORMW 
+		ENDIF
+	ENDIF
+	IF NOWEX:B절정
+		;강절정 B
+		IF NOWEX:B절정 == 3
+			PRINTFORMW 
+		;강절정 B
+		ELSEIF NOWEX:B절정 == 2
+			PRINTFORMW 
+		;절정 B
+		ELSE
+			PRINTFORMW 
+		ENDIF
+	ENDIF
+	IF NOWEX:M절정
+		;초강 절정 M
+		IF NOWEX:M절정 == 3
+			PRINTFORMW 
+		;강절정 M
+		ELSEIF NOWEX:M절정 == 2
+			PRINTFORMW 
+		;절정 M
+		ELSE
+			PRINTFORMW 
+		ENDIF
+	ENDIF
+ENDIF
+
+
+;-------------------------------------------------
+;사정에 관한 말의 표시
+;일시적으로 TARGET를 말 주인의 설정해 있다
+;-------------------------------------------------
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K111_0(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;콘돔
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF !FLAG:시간정지
+		PRINTFORMW 「원∼, 가득 나오고 있다……」
+	ENDIF
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K111_23(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;이라마치오
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF !FLAG:시간정지
+		IF FIRSTTIME("정액의 맛")
+			PRINTFORMW 「콜록, 콜록콜록 ……끝내고……」
+		ELSE
+			PRINTFORML 「콜록, 콜록콜록 ……」
+			PRINTFORMW 「%CALLNAME:MASTER%, 상태 너무 타고!」
+		ENDIF
+	ENDIF
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K111_22(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;식스나인
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;동시 사정
+	IF NOWEX:사정 && NOWEX:MASTER:사정
+		RETURN 1
+	;TARGET만 사정
+	ELSEIF NOWEX:사정
+		;PLAYER에 대하고 있다
+		IF GETBIT(TALENT:PLAYER:성별, 1)
+			RETURN 1
+		;붙지 않다
+		ELSE
+			RETURN 1
+		ENDIF
+	;PLAYER만 사정
+	ELSE
+		;TARGET에 대하고 있다
+		IF GETBIT(TALENT:성별, 1)
+			RETURN 1
+		;붙지 않다
+		ELSE
+			PRINTFORMW 「꺄핫♪ 가득 나왔군요―♪」
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K111_21(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;파이즈리 펠라
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+;작은 가슴이라면 할 수 없었던 것 같은 생각이 든다
+IF LOCAL
+	IF !FLAG:시간정지
+		IF FIRSTTIME("정액의 맛")
+			PRINTFORMW 「응!, ……, 에, 씁쓸하다……」
+		ELSE
+			PRINTFORMW 「응, 응 %UNICODE(0x2764)% 에헤헤 %UNICODE(0x2764)% 기분이 좋았어 응이구나♪」
+		ENDIF
+	ENDIF
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K111_20(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;수음 펠라
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF !FLAG:시간정지
+		IF FIRSTTIME("정액의 맛")
+			PRINTFORMW 「응!, ……, 에, 씁쓸하다……」
+		;정음
+		ELSEIF EXP_UP(15) == NOWEX:PLAYER:사정 * 3
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「꿀꺽꿀꺽……매우 응」
+				PRINTFORMW 「음∼%UNICODE(0x2764)% 이것, 힘이 강하게 되어 갈 생각이 든다!」
+			CASE 1
+				PRINTFORML 「응―, 꿀꺽꿀꺽……쮸웁……」
+				PRINTFORMW 「전부 짜 취해 줄게―♪」
+			CASE 2
+				PRINTFORML 「우물쭈물……매우 응」
+				PRINTFORMW 「응―%UNICODE(0x2764)% 어이~ 쉿 %UNICODE(0x2764)%」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORMW 「응―, ? ♪―, 상쾌해졌어?」
+			CASE 1
+				PRINTFORML 「흥 흥,―」
+				PRINTFORMW 「원!이렇게 나온 ♪」
+			CASE 2
+				PRINTFORML 「응, 응―……, ……」
+				PRINTFORMW 「응 헤에 %UNICODE(0x2764)% %CALLNAME:MASTER%도 마셔 봐?」
+			ENDSELECT
+		ENDIF
+	ENDIF
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K111_9(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;애널 봉사
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K111_8(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;거품춤
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;동시 사정
+	IF NOWEX:사정 && NOWEX:MASTER:사정
+		RETURN 1
+	;TARGET만 사정
+	ELSEIF NOWEX:사정
+		;PLAYER에 대하고 있다
+		IF GETBIT(TALENT:PLAYER:성별, 1)
+			RETURN 1
+		;붙지 않다
+		ELSE
+			RETURN 1
+		ENDIF
+	;PLAYER만 사정
+	ELSE
+		;TARGET에 대하고 있다
+		IF GETBIT(TALENT:성별, 1)
+			RETURN 1
+		;붙지 않다
+		ELSE
+			PRINTFORMW 「아앙 %UNICODE(0x2764)% %CALLNAME:MASTER%태우고-역에서 전신 끈적끈적이 되어 버려∼%UNICODE(0x2764)%」
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K111_7(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;풋잡
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF !FLAG:시간정지
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORMW 「꺄하하 ♪ 값의 다리가 그렇게 좋았어의―？」
+		CASE 1
+			PRINTFORMW 「꺄하-♪ 라고, 재미있다♪」
+		CASE 2
+			PRINTFORML 「위―, 정말로 다리만으로 이♪」
+			PRINTFORMW 「%CALLNAME:MASTER% 좀 더 참아∼！」
+		ENDSELECT
+	ENDIF
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K111_6(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;가랑이
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF !FLAG:시간정지
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML 「원∼♪ 값의 허리 사용으로 이나 키라고 했어 %UNICODE(0x2764)%」
+		CASE 1
+			PRINTFORML 「응도―, 이런 것으로 이는……♪―, 쭙 %UNICODE(0x2764)%」
+		CASE 2
+			PRINTFORML 「이나다, 끈적끈적이 되어 버리잖아 %UNICODE(0x2764)%」
+		CASE 3
+			PRINTFORML 「아하……%UNICODE(0x2764)% 이대로 부? 부? 말하고 날라고로 엉망진창으로 하면―♪」
+		CASE 4
+			PRINTFORML 「꺄핫♪ 가득 나왔군요♪ 이대로 꽉 해%UNICODE(0x2764)%∼~♪」
+		ENDSELECT
+		SIF TALENT:111:처녀
+			PRINTFORML (아……이것, 안에……괜찮아요……)
+		WAIT
+	ENDIF
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K111_5(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;파이즈리
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF !FLAG:시간정지
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORMW 「꺅♪ 에헤헤―♪ 젖가슴 어땠습니까―？」
+		CASE 1
+			PRINTFORMW 「아앙 %UNICODE(0x2764)% %마스터는% 정말로 젖가슴을 좋아하구나―♪」
+		CASE 2
+			PRINTFORMW 「원♪ 흐~흥, 값의 가슴으로 이나 키라고 했어요♪」
+		ENDSELECT
+	ENDIF
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K111_4(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;펠라치오
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF !FLAG:시간정지
+		IF FIRSTTIME("정액의 맛")
+			PRINTFORMW 「응!, ……, 에, 씁쓸하다……」
+		;정음
+		ELSEIF EXP_UP(15) == NOWEX:PLAYER:사정 * 3
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「꿀꺽꿀꺽……매우 응」
+				PRINTFORMW 「음∼%UNICODE(0x2764)% 이것, 힘이 강하게 되어 갈 생각이 든다!」
+			CASE 1
+				PRINTFORML 「응―, 꿀꺽꿀꺽……쮸웁……」
+				PRINTFORMW 「전부 짜 취해 줄게―♪」
+			CASE 2
+				PRINTFORML 「우물쭈물……매우 응」
+				PRINTFORMW 「응―%UNICODE(0x2764)% 어이~ 쉿 %UNICODE(0x2764)%」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORMW 「응―, ? ♪―, 상쾌해졌어?」
+			CASE 1
+				PRINTFORML 「흥 흥,―」
+				PRINTFORMW 「원!이렇게 나온 ♪」
+			CASE 2
+				PRINTFORML 「응, 응―……, ……」
+				PRINTFORMW 「응 헤에 %UNICODE(0x2764)% %CALLNAME:MASTER%도 마셔 봐?」
+			ENDSELECT
+		ENDIF
+	ENDIF
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K111_3(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;수음
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF !FLAG:시간정지
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORMW 「꺄하하 ♪ %마스터가% 감사할 수 있다-재미있다♪」
+		CASE 1
+			PRINTFORMW 「꺄하-♪―♪」
+		CASE 2
+			PRINTFORML 「―, 대단히 힘차게 나왔어요」
+			PRINTFORMW 「모이고 있다고 녀석인가?」
+		ENDSELECT
+	ENDIF
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K111_2(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;애널
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K111_1(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;질내
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF !FLAG:시간정지
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORMW 「하앙……%UNICODE(0x2764)% %CALLNAME:MASTER%의 정액 따뜻하다 %UNICODE(0x2764) * 2%」
+		CASE 1
+			PRINTFORMW 「하아……%UNICODE(0x2764)% 느끼는……가득 나왔군요 %UNICODE(0x2764) * 2%」
+		CASE 2
+			PRINTFORMW 「후아아∼~%UNICODE(0x2764)% 두꺼운 것 가득 왔다%UNICODE(0x2764) *2%」
+		CASE 3
+			PRINTFORMW 「하앙 %UNICODE(0x2764)% 해 집 나무 가득 기분 있고……%UNICODE(0x2764) * 2%」
+		CASE 4
+			PRINTFORMW 「흐응 %UNICODE(0x2764)% 고마워 %CALLNAME:MASTER%♪」
+		ENDSELECT
+		;위험일, 임신중은 생리주기 플래그 어떻게 되고 있어 잘 모르겠어의로 제외
+		IF CFLAG:111:생리주기 == 7 && !TALENT:111:임신
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORMW 「이것으로 아기 할 수 있을까∼%UNICODE(0x2764)%」
+			CASE 1
+				PRINTFORMW 「꺄∼♪ 임신해버려∼♪ 안 돼~∼~♪」
+			CASE 2
+				PRINTFORMW 「아기 할 수 있을까―？ 기다려진다∼%UNICODE(0x2764)%」
+			ENDSELECT
+		ENDIF
+	ENDIF
+	RETURN 1
+ENDIF
+RETURN 1
+
+;-------------------------------------------------
+;면간사정에 관한 말의 표시
+;일시적으로 TARGET를 말 주인의 설정해 있다
+;-------------------------------------------------
+
+@M_KOJO_MESSAGE_PALAMCNG_A2_K111_0(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;콘돔
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A2_K111_23(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;이라마치오
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A2_K111_7(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;풋잡
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+	RETURN 1
+ENDIF
+RETURN 1
+
+
+@M_KOJO_MESSAGE_PALAMCNG_A2_K111_5(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;파이즈리
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A2_K111_4(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;펠라치오
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A2_K111_3(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;수음
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A2_K111_2(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;애널
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A2_K111_1(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;질내
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+	RETURN 1
+ENDIF
+RETURN 1
+
+
+@M_KOJO_MESSAGE_PALAMCNG_F_K111(ARG)
+CALL PALAM_MESSAGE_F
+;-------------------------------------------------
+;초조하게 해
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+	RETURN 1
+ENDIF
+RETURN 1

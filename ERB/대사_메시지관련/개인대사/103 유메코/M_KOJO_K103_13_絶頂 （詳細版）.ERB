@@ -1,0 +1,868 @@
+﻿;-------------------------------------------------
+;奴隷の絶頂時の口上
+;NOWEX:0～4 CVABM絶頂
+;NOWEX:6 二重絶頂
+;NOWEX:7 三重絶頂
+;NOWEX:8 四重絶頂
+;NOWEX:9 五重絶頂
+;NOWEX:10 噴乳
+;NOWEX:11 射精
+;NOWEX:12 放尿
+;適当に組み合わせて使ってください
+;-------------------------------------------------
+@M_KOJO_MESSAGE_PALAMCNG_B_K103
+#DIM 絶頂強度
+CALL PALAM_MESSAGE_B
+絶頂強度 = NOWEX:0 + NOWEX:1 + NOWEX:2 + NOWEX:3 + NOWEX:4 + NOWEX:10 + NOWEX:11 + NOWEX:12
+;この口上では全てをおっぱい基準で進めます
+;-------------------------------------------------
+;絶頂
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;時止めの時は表示しない
+	SIF FLAG:70
+		RETURN 1
+	;1行挟みたい
+	PRINTFORML
+	;-------------------------------------------------
+	;五重絶頂
+	;記入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && NOWEX:오중절정
+		PRINTFORML 「이크이크…있고………………아″…아……%M_KOJO_K103_HEART(2)%………아…%M_KOJO_K103_HEART(2)%」
+		PRINTFORMDL
+		IF NOWEX:분유
+			IF TEQUIP:유두빨기
+				PRINTFORML 「%M_KOJO_K103_OG(2)%%M_KOJO_K103_HEART(1)%%CALLNAME:MASTER%, 마셔%M_KOJO_K103_HEART(1)% 많이 마셔！%M_KOJO_K103_HEART(2)%」
+				PRINTFORMDL
+				PRINTFORMDL 모유를 도들과 불기 시작하는 유두에 좀 더 달라붙기를 원하면 몽자는%CALLNAME:MASTER%의 머리를 가슴에 꽉 누르도록(듯이) 긁어 안았다
+				PRINTFORMDL %CALLNAME:MASTER%하지만 거기에 응하도록(듯이), 불거져 나오는 모유를 마시면서 다시 유두를 강하게 빨아 올리면(자), 몽자는 등을 뒤로 젖혀 야무짐이 없는 미소를 띄웠다
+			ELSE
+				PRINTFORML 「아%M_KOJO_K103_HEART(1)% 젖 멈추지 않는다%M_KOJO_K103_HEART(2)% 멈추는거야…%M_KOJO_K103_HEART(2)%」
+				PRINTFORMDL 사와 더욱더 계속 힘차게 불기 시작하는 모유를 봐, 이미 젖소와 같다고 생각하면서
+			ENDIF
+		ENDIF
+		PRINTFORMDL 몽자의 얼굴을 바라보면(자), 경련해 위를 향한 채로 얼굴을 내릴 수 있지 못하고, 교성을 올리는 것조차 마음대로 되지 않는 것 같다
+		PRINTFORMDL 
+		PRINTFORML 「……%CALLNAME:MASTER%……%CALLNAME:MASTER%%M_KOJO_K103_HEART(2)%」
+		PRINTFORMDL
+		PRINTFORMDL 절의 부엌, 움찍 떨리면서%CALLNAME:MASTER%의 이름을 중얼거리는 그 모습을 보고 있으면(자), 자신안의 지배욕구가 채워져 가는 것을 느낀다…
+		PRINTFORMDL 몽자는 지금, 머리의 꼭대기로부터 발부리에 이를 때까지, 자신으로부터 주어지는 쾌감에 잠겨 있다
+		PRINTFORMDL
+		IF NOWEX:방뇨
+			PRINTFORMDL 몽자의 질로부터 한 없게 나오는 액체는, 이미 애액인가, 조수인가, 뇨인가의 구별이 되지 않는다
+		ENDIF
+		PRINTFORMDL 두 명이 있는 곳(중)은, 체내의 수분을 내 버렸지 않을까 생각할 정도로 바보 바보가 되어 있었다…
+		PRINTFORMDW
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;四重絶頂
+	;記入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && NOWEX:사중절정
+		PRINTFORML 「%M_KOJO_K103_AEGI()%%M_KOJO_K103_AEGI()%…%M_KOJO_K103_HEART(1)%……%M_KOJO_K103_IKU(3)%……아″…！！！%M_KOJO_K103_HEART(2)%」
+		IF NOWEX:분유
+			IF TEQUIP:유두빨기
+				PRINTFORML 「%M_KOJO_K103_OG(2)%%M_KOJO_K103_HEART(1)%%CALLNAME:MASTER%, 마셔%M_KOJO_K103_HEART(1)% 마셔！%M_KOJO_K103_HEART(2)%」
+				PRINTFORMDL
+				PRINTFORMDL 모유를 불기 시작하는 유두에 좀 더 달라붙기를 원하면 몽자는%CALLNAME:MASTER%의 머리를 가슴에 꽉 누르도록(듯이) 긁어 안았다
+				PRINTFORMDL %CALLNAME:MASTER%하지만 거기에 응하도록(듯이) 다시 유두를 강하게 빨아 올리면(자), 몽자는 등을 뒤로 젖혀 야무짐이 없는 미소를 띄웠다
+			ELSE
+				PRINTFORML 「아%M_KOJO_K103_HEART(1)% 젖 멈추지 않는다%M_KOJO_K103_HEART(2)% 멈추지 않아%M_KOJO_K103_HEART(2)%」
+				PRINTFORMDL
+				PRINTFORMDL 이미 아무것도 생각할 수 없는 것인지, 모유가 나오는 감각이 아직도 쾌감을 이음과 째라고 있는지, 몽자가 떨릴 때, 모유는, 사, 라고 불기 시작하고 있다
+				PRINTFORMDL 그대로 경련하는 몽자의 신체는 모유를 마구 따돌려 , 근처 상관하지 않고 백색으로 염색해 내 갔다
+			ENDIF
+		ENDIF
+		IF NOWEX:방뇨
+			PRINTFORMDL
+			PRINTFORML 「아, 아―…%M_KOJO_K103_HEART(1)%……주되들 해…아………네에에…%M_KOJO_K103_HEART(2)%」
+			PRINTFORMDL
+			PRINTFORMDL 이미 몽자에게는 참는다고 하는 사고가 누락이라고 있는지, 망가진 수도꼭지와 같이 뇨가 흐르기 시작하고 있다
+		ENDIF
+		PRINTFORMDL
+		PRINTFORML 「대단한 이…%CALLNAME:MASTER%%M_KOJO_K103_HEART(1)%……이제(벌써), 모두 아무래도 좋을 정도…기분이 좋은거야…%M_KOJO_K103_HEART(1)%」
+		PRINTFORMDL
+		PRINTFORMDL 그렇게 말하는 몽자는 초점이 약간 정해지지 않은 눈을 하면서%CALLNAME:MASTER%에 미소지어 걸친다
+		PRINTFORMDW 그 얼굴을 봐,%CALLNAME:MASTER%(은)는 만족했음이 분명한 지배욕구가 다시 겸수를 대의 것을 느꼈다…
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;三重絶頂
+	;記入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && NOWEX:삼중절정
+		PRINTFORML 「%M_KOJO_K103_AEGI()%…%M_KOJO_K103_IKU(2)%…%M_KOJO_K103_HEART(1)%……%M_KOJO_K103_IKU(3)%…！！%M_KOJO_K103_HEART(1)% 굉장한 것 온다…！！%M_KOJO_K103_HEART(1)%」
+		IF NOWEX:분유
+			IF TEQUIP:유두빨기
+				PRINTFORML 「%CALLNAME:MASTER%, 마셔%M_KOJO_K103_HEART(1)% %M_KOJO_K103_OG(2)%%M_KOJO_K103_HEART(1)%유두 좋은 것, 머리 망가져버릴 것 같아！%M_KOJO_K103_HEART(2)%」
+				PRINTFORMDL
+				PRINTFORMDL 모유를 불기 시작하는 유두에 좀 더 달라붙기를 원하면 몽자는%CALLNAME:MASTER%의 머리를 가슴에 안았다
+				PRINTFORMDL %CALLNAME:MASTER%하지만 거기에 응하도록(듯이) 유두를 빨아 올리면(자), 몽자는 등을 뒤로 젖혀 쾌감을 탐내고 있다
+			ELSE
+				PRINTFORML 「아%M_KOJO_K103_HEART(1)% 젖 대단해%M_KOJO_K103_HEART(1)% 응 봐%CALLNAME:MASTER%%M_KOJO_K103_HEART(1)%」
+				PRINTFORMDL
+				PRINTFORMDL 몽자는 넘쳐 나오는 모유를%CALLNAME:MASTER%에 과시해 온다
+				PRINTFORMDL 근처는 모유의 미숙함과 달콤함이 섞인 냄새로 충만하고 있다…
+			ENDIF
+		ENDIF
+		IF NOWEX:방뇨
+			PRINTFORMDL
+			PRINTFORML 「아, 아―……%M_KOJO_K103_HEART(1)%」
+			PRINTFORMDL
+			PRINTFORMDL 한심한 소리를 낸 후, 다시 몽자의 음순으로부터 뇨가 분출했다
+			PRINTFORMDL 모두 내 끝내면(자) 몽자는 탈진해, 스스로의 낸 뇨를 도군요 키라고 채팅 소리를 냈다
+		ENDIF
+		PRINTFORMDL
+		PRINTFORML 「 어째서 이렇게 기분이 좋은거야…%CALLNAME:MASTER%%M_KOJO_K103_HEART(1)%……어째서…？%M_KOJO_K103_HEART(1)%」
+		PRINTFORMDL
+		PRINTFORMDL %CALLNAME:MASTER%(을)를 보면서 몽자는 입을 반쯤 열려 있는 상태로 해 방심하고 있다
+		PRINTFORMDW
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;二重絶頂
+	;記入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && NOWEX:이중절정
+		PRINTFORML 「%M_KOJO_K103_AEGI()%…이제(벌써) 안 됨……%M_KOJO_K103_IKU(2)%…%M_KOJO_K103_HEART(1)%……%M_KOJO_K103_IKU(2)%…！！%M_KOJO_K103_HEART(1)%」
+		IF NOWEX:분유
+			IF TEQUIP:유두빨기
+				PRINTFORML 「 좀 더 마셔%M_KOJO_K103_HEART(1)% %CALLNAME:MASTER%%M_KOJO_K103_HEART(1)% %CALLNAME:MASTER%%M_KOJO_K103_HEART(1)%%M_KOJO_K103_OG(2)%%M_KOJO_K103_HEART(1)%」
+				PRINTFORMDL
+				PRINTFORMDL 모유를 불기 시작하는 유두에 좀 더 달라붙기를 원하면 몽자는%CALLNAME:MASTER%의 머리를 가슴에 안았다
+				PRINTFORMDL %CALLNAME:MASTER%하지만 거기에 응하도록(듯이) 유두를 빨아 올리면(자), 몽자는 표정을 녹게 했다
+			ELSE
+				PRINTFORML 「아%M_KOJO_K103_HEART(1)% 젖 아직 나와버린다%M_KOJO_K103_HEART(1)%」
+				PRINTFORMDL
+				PRINTFORMDL 몽자는 나오는 모유를%CALLNAME:MASTER%에 과시해 온다
+				PRINTFORMDL 근처는 모유의 미숙함과 달콤함이 섞인 냄새로 충만하고 있다…
+			ENDIF
+		ENDIF
+		IF NOWEX:방뇨
+			PRINTFORMDL
+			PRINTFORML 「아, 아, 나다……%M_KOJO_K103_HEART(1)%」
+			PRINTFORMDL
+			PRINTFORMDL 인내가 듣지 않았던 것일까, 다시 몽자의 음순으로부터 뇨가 분출했다
+			PRINTFORMDL 모두 내 끝내면(자) 몽자는 남아 있던 긴장이 없어졌는지, 스스로의 낸 뇨의 따뜻함을 느끼고 있었다
+		ENDIF
+		PRINTFORMDL
+		PRINTFORML 「기분이 좋다…%CALLNAME:MASTER%%M_KOJO_K103_HEART(1)%……지금의, 대단히 좋았다…%M_KOJO_K103_HEART(1)%」
+		PRINTFORMDL
+		PRINTFORMDL %CALLNAME:MASTER%(을)를 보면서 몽자는 눈응과 시켜 방심하고 있다
+		PRINTFORMDW
+		RETURN 1
+	ENDIF
+	IF NOWEX:C절정
+		;超強絶頂Ｃ
+		IF NOWEX:C절정 == 3
+			PRINTFORMW 「아%M_KOJO_K103_HEART(1)% %M_KOJO_K103_IKU(2)%%M_KOJO_K103_HEART(1)% %M_KOJO_K103_IKU(3)%%M_KOJO_K103_HEART(1)% %M_KOJO_K103_OG(1)%…아 이제(벌써) 굳이 모르는, 생각할 수 없어！！%M_KOJO_K103_HEART(2)%」
+		;強絶頂Ｃ
+		ELSEIF NOWEX:C절정 == 2
+			PRINTFORMW 「아%M_KOJO_K103_HEART(1)% %M_KOJO_K103_OG(1)%%M_KOJO_K103_HEART(1)% %M_KOJO_K103_IKU(2)%%M_KOJO_K103_HEART(1)%」
+		;絶頂Ｃ
+		ELSE
+			PRINTFORMW 「아%M_KOJO_K103_HEART(1)% %M_KOJO_K103_OG(1)%%M_KOJO_K103_HEART(1)% 아…아……%M_KOJO_K103_IKU(1)%%M_KOJO_K103_HEART(1)%」
+		ENDIF
+	ENDIF
+	IF NOWEX:V절정
+		;超強絶頂Ｖ
+		IF NOWEX:V절정 == 3
+			PRINTFORMW 「아 응%M_KOJO_K103_HEART(1)% %CALLNAME:MASTER%%M_KOJO_K103_HEART(1)%,%CALLNAME:MASTER%%M_KOJO_K103_HEART(1)%,%M_KOJO_K103_OG(4)%%M_KOJO_K103_HEART(1)% %M_KOJO_K103_GET("ヴァギナ")%삐걱삐걱은…아…%M_KOJO_K103_IKU(3)%！！！%M_KOJO_K103_HEART(2)%」
+		;強絶頂Ｖ
+		ELSEIF NOWEX:V절정 == 2
+			PRINTFORMW 「%M_KOJO_K103_OG(4)%…기분이 좋아…%CALLNAME:MASTER%%M_KOJO_K103_HEART(1)% 아…아…%M_KOJO_K103_IKU(2)%…이！！%M_KOJO_K103_HEART(2)%」
+		;絶頂Ｖ
+		ELSE
+			PRINTFORMW 「%M_KOJO_K103_OG(4)%…%M_KOJO_K103_HEART(1)% 아……%M_KOJO_K103_IKU(1)%！！%M_KOJO_K103_HEART(1)%」
+		ENDIF
+	ENDIF
+	IF NOWEX:A절정
+		;超強絶頂Ａ
+		IF NOWEX:A절정 == 3
+			PRINTFORMW 「%M_KOJO_K103_AEGI()%%M_KOJO_K103_AEGI()%…%M_KOJO_K103_OG(5)%…%M_KOJO_K103_HEART(1)% 아…%M_KOJO_K103_AEGI()%…%M_KOJO_K103_IKU(3)%！！%M_KOJO_K103_HEART(2)%」
+		;強絶頂Ａ
+		ELSEIF NOWEX:A절정 == 2
+			PRINTFORMW 「%M_KOJO_K103_AEGI()%…%M_KOJO_K103_HEART(1)% 아…%M_KOJO_K103_OG(5)%%M_KOJO_K103_AEGI()%…%M_KOJO_K103_IKU(2)%！！%M_KOJO_K103_HEART(1)%」
+		;絶頂Ａ
+		ELSE
+			PRINTFORMW 「%M_KOJO_K103_AEGI()%…%M_KOJO_K103_OG(5)%…%CALLNAME:MASTER%…%M_KOJO_K103_HEART(1)% %M_KOJO_K103_AEGI()%……%M_KOJO_K103_IKU(1)%！！%M_KOJO_K103_HEART(1)%」
+		ENDIF
+	ENDIF
+	IF NOWEX:B절정
+		;強絶頂Ｂ
+		IF NOWEX:B절정 == 3
+			PRINTFORMW 「%M_KOJO_K103_AEGI()%%M_KOJO_K103_AEGI()%…%M_KOJO_K103_OG(2)%…%M_KOJO_K103_HEART(1)% %M_KOJO_K103_AEGI()%%M_KOJO_K103_AEGI()%%M_KOJO_K103_IKU(3)%！！%M_KOJO_K103_HEART(2)%」
+		;強絶頂Ｂ
+		ELSEIF NOWEX:B절정 == 2
+			PRINTFORMW 「%M_KOJO_K103_AEGI()%%M_KOJO_K103_AEGI()%…%M_KOJO_K103_OG(2)%…%M_KOJO_K103_HEART(1)% %M_KOJO_K103_AEGI()%…유두…%M_KOJO_K103_IKU(2)%！！%M_KOJO_K103_HEART(1)%」
+		;絶頂Ｂ
+		ELSE
+			PRINTFORMW 「%M_KOJO_K103_AEGI()%…%M_KOJO_K103_OG(2)%…%M_KOJO_K103_HEART(1)% %M_KOJO_K103_AEGI()%…젖가슴으로……%M_KOJO_K103_IKU(1)%！！%M_KOJO_K103_HEART(1)%」
+		ENDIF
+	ENDIF
+	IF NOWEX:M절정
+		;超強絶頂Ｍ
+		IF NOWEX:M절정 == 3
+			PRINTFORMW 「%M_KOJO_K103_AEGI()%%M_KOJO_K103_AEGI()%…%M_KOJO_K103_HEART(1)% %M_KOJO_K103_AEGI()%…%M_KOJO_K103_OG(3)%…%M_KOJO_K103_IKU(3)%！！%M_KOJO_K103_HEART(2)%」
+		;強絶頂Ｍ
+		ELSEIF NOWEX:M절정 == 2
+			PRINTFORMW 「%M_KOJO_K103_AEGI()%%M_KOJO_K103_AEGI()%…%M_KOJO_K103_OG(3)%…%M_KOJO_K103_HEART(1)% %M_KOJO_K103_AEGI()%…안돼…%M_KOJO_K103_IKU(2)%！！%M_KOJO_K103_HEART(1)%」
+		;絶頂Ｍ
+		ELSE
+			PRINTFORMW 「%M_KOJO_K103_AEGI()%…%M_KOJO_K103_OG(3)%…%M_KOJO_K103_HEART(1)% 아……%M_KOJO_K103_IKU(1)%！！%M_KOJO_K103_HEART(1)%」
+		ENDIF
+	ENDIF
+	;1行挟みたい
+	PRINTFORML
+ENDIF
+;-------------------------------------------------
+;奴隷の睡眠絶頂時の口上
+;-------------------------------------------------
+@M_KOJO_MESSAGE_PALAMCNG_B2_K103
+CALL PALAM_MESSAGE_B
+;-------------------------------------------------
+;噴乳
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL && NOWEX:분유
+	PRINTFORMW 
+ENDIF
+;-------------------------------------------------
+;射精
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL && NOWEX:사정
+	PRINTFORMW 
+ENDIF
+;-------------------------------------------------
+;放尿
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL && NOWEX:방뇨
+	PRINTFORMW 
+ENDIF
+;-------------------------------------------------
+;絶頂
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;五重絶頂
+	;記入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF NOWEX:오중절정
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;四重絶頂
+	;記入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF NOWEX:사중절정
+		;部位を指定せず簡易的に書く場合、[SKIPSTART]&[SKIPEND]のコメントアウトを外して、[SKIPSTART]とこのコメントの間に書いてください
+		;[SKIPSTART]
+		SELECTCASE NOWEX:사중절정
+			;Ｃ＆Ｖ＆Ａ＆Ｂ絶頂
+			CASE 1
+				PRINTFORMW 
+				RETURN 1
+			;Ｃ＆Ｖ＆Ａ＆Ｍ絶頂
+			CASE 2
+				PRINTFORMW 
+				RETURN 1
+			;Ｃ＆Ｖ＆Ｂ＆Ｍ絶頂
+			CASE 3
+				PRINTFORMW 
+				RETURN 1
+			;Ｃ＆Ａ＆Ｂ＆Ｍ絶頂
+			CASE 4
+				PRINTFORMW 
+				RETURN 1
+			;Ｖ＆Ａ＆Ｂ＆Ｍ絶頂
+			CASE 5
+				PRINTFORMW 
+				RETURN 1
+		ENDSELECT
+		;[SKIPEND]
+	ENDIF
+	;-------------------------------------------------
+	;三重絶頂
+	;記入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF NOWEX:삼중절정
+		;部位を指定せず簡易的に書く場合、[SKIPSTART]&[SKIPEND]のコメントアウトを外して、[SKIPSTART]とこのコメントの間に書いてください
+		;[SKIPSTART]
+		SELECTCASE NOWEX:삼중절정
+			;Ｃ＆Ｖ＆Ａ絶頂
+			CASE 1
+				PRINTFORMW 
+				RETURN 1
+			;Ｂ＆Ｖ＆Ａ絶頂
+			CASE 2
+				PRINTFORMW 
+				RETURN 1
+			;Ｃ＆Ｂ＆Ａ絶頂
+			CASE 3
+				PRINTFORMW 
+				RETURN 1
+			;Ｃ＆Ｖ＆Ｂ絶頂
+			CASE 4
+				PRINTFORMW 
+				RETURN 1
+			;Ｃ＆Ｖ＆Ｍ絶頂
+			CASE 5
+				PRINTFORMW 
+				RETURN 1
+			;Ｂ＆Ｖ＆Ｍ絶頂
+			CASE 6
+				PRINTFORMW 
+				RETURN 1
+			;Ａ＆Ｖ＆Ｍ絶頂
+			CASE 7
+				PRINTFORMW 
+				RETURN 1
+			;Ｃ＆Ｂ＆Ｍ絶頂
+			CASE 8
+				PRINTFORMW 
+				RETURN 1
+			;Ａ＆Ｂ＆Ｍ絶頂
+			CASE 9
+				PRINTFORMW 
+				RETURN 1
+			;Ｃ＆Ａ＆Ｍ絶頂
+			CASE 10
+				PRINTFORMW 
+				RETURN 1
+		ENDSELECT
+		;[SKIPEND]
+	ENDIF
+	;-------------------------------------------------
+	;二重絶頂
+	;記入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF NOWEX:이중절정
+		;部位を指定せず簡易的に書く場合、[SKIPSTART]&[SKIPEND]のコメントアウトを外して、[SKIPSTART]とこのコメントの間に書いてください
+		;[SKIPSTART]
+		SELECTCASE NOWEX:이중절정
+			;Ｃ＆Ｖ絶頂
+			CASE 1
+				PRINTFORMW 
+				RETURN 1
+			;Ｃ＆Ａ絶頂
+			CASE 2
+				PRINTFORMW 
+				RETURN 1
+			;Ｖ＆Ａ絶頂
+			CASE 3
+				PRINTFORMW 
+				RETURN 1
+			;Ｃ＆Ｂ絶頂
+			CASE 4
+				PRINTFORMW 
+				RETURN 1
+			;Ｖ＆Ｂ絶頂
+			CASE 5
+				PRINTFORMW 
+				RETURN 1
+			;Ａ＆Ｂ絶頂
+			CASE 6
+				PRINTFORMW 
+				RETURN 1
+			;Ａ＆Ｍ絶頂
+			CASE 7
+				PRINTFORMW 
+				RETURN 1
+			;Ｖ＆Ｍ絶頂
+			CASE 8
+				PRINTFORMW 
+				RETURN 1
+			;Ｃ＆Ｍ絶頂
+			CASE 9
+				PRINTFORMW 
+				RETURN 1
+			;Ｂ＆Ｍ絶頂
+			CASE 10
+				PRINTFORMW 
+				RETURN 1
+		ENDSELECT
+		;[SKIPEND]
+	ENDIF
+	IF NOWEX:C절정
+		;超強絶頂Ｃ
+		IF NOWEX:C절정 == 3
+			PRINTFORMW 
+		;強絶頂Ｃ
+		ELSEIF NOWEX:C절정 == 2
+			PRINTFORMW 
+		;絶頂Ｃ
+		ELSE
+			PRINTFORMW 
+		ENDIF
+	ENDIF
+	IF NOWEX:V절정
+		;超強絶頂Ｖ
+		IF NOWEX:V절정 == 3
+			PRINTFORMW 
+		;強絶頂Ｖ
+		ELSEIF NOWEX:V절정 == 2
+			PRINTFORMW 
+		;絶頂Ｖ
+		ELSE
+			PRINTFORMW 
+		ENDIF
+	ENDIF
+	IF NOWEX:A절정
+		;超強絶頂Ａ
+		IF NOWEX:A절정 == 3
+			PRINTFORMW 
+		;強絶頂Ａ
+		ELSEIF NOWEX:A절정 == 2
+			PRINTFORMW 
+		;絶頂Ａ
+		ELSE
+			PRINTFORMW 
+		ENDIF
+	ENDIF
+	IF NOWEX:B절정
+		;強絶頂Ｂ
+		IF NOWEX:B절정 == 3
+			PRINTFORMW 
+		;強絶頂Ｂ
+		ELSEIF NOWEX:B절정 == 2
+			PRINTFORMW 
+		;絶頂Ｂ
+		ELSE
+			PRINTFORMW 
+		ENDIF
+	ENDIF
+	IF NOWEX:M절정
+		;超強絶頂Ｍ
+		IF NOWEX:M절정 == 3
+			PRINTFORMW 
+		;強絶頂Ｍ
+		ELSEIF NOWEX:M절정 == 2
+			PRINTFORMW 
+		;絶頂Ｍ
+		ELSE
+			PRINTFORMW 
+		ENDIF
+	ENDIF
+ENDIF
+
+
+;-------------------------------------------------
+;射精に関する口上の表示
+;一時的にTARGETを口上主に設定している
+;-------------------------------------------------
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K103_00(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;TARGETの手による射精で、射精対象が非TARGET
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K103_0(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;コンドーム
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORML
+	CALL M_KOJO_K103_CALL_ZAMEN()
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K103_23(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;イラマチオ
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K103_26(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;授乳プレイ
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORML
+	CALL M_KOJO_K103_CALL_ZAMEN()
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K103_22(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;シックスナイン
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;同時射精
+	IF NOWEX:사정 && NOWEX:MASTER:사정
+		PRINTFORMW
+		RETURN 1
+	;TARGETだけ射精
+	ELSEIF NOWEX:사정
+		;PLAYERについてる
+		IF GETBIT(TALENT:PLAYER:성별,1)
+			PRINTFORMW
+			RETURN 1
+		;付いてない
+		ELSE
+			PRINTFORMW
+			RETURN 1
+		ENDIF
+	;PLAYERだけ射精
+	ELSE
+		PRINTFORML
+		CALL M_KOJO_K103_CALL_ZAMEN()
+		;TARGETについてる
+		IF GETBIT(TALENT:성별,1)
+			PRINTFORMW
+			RETURN 1
+		;付いてない
+		ELSE
+			PRINTFORMW
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K103_21(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;パイズリフェラ
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORML
+	CALL M_KOJO_K103_CALL_ZAMEN()
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K103_20(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;手淫フェラ
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORML
+	CALL M_KOJO_K103_CALL_ZAMEN()
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K103_9(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;アナル奉仕
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K103_8(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;泡踊り
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;同時射精
+	IF NOWEX:사정 && NOWEX:MASTER:사정
+		PRINTFORMW
+		RETURN 1
+	;TARGETだけ射精
+	ELSEIF NOWEX:사정
+		;PLAYERについてる
+		IF GETBIT(TALENT:PLAYER:성별,1)
+			PRINTFORMW
+			RETURN 1
+		;付いてない
+		ELSE
+			PRINTFORMW
+			RETURN 1
+		ENDIF
+	;PLAYERだけ射精
+	ELSE
+		PRINTFORML
+		CALL M_KOJO_K103_CALL_ZAMEN()
+		;TARGETについてる
+		IF GETBIT(TALENT:성별,1)
+			PRINTFORMW
+			RETURN 1
+		;付いてない
+		ELSE
+			PRINTFORMW
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K103_7(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;足コキ
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORML
+	CALL M_KOJO_K103_CALL_ZAMEN()
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K103_6(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;素股
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORML
+	CALL M_KOJO_K103_CALL_ZAMEN()
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K103_5(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;パイズリ
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORML
+	CALL M_KOJO_K103_CALL_ZAMEN()
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K103_4(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;フェラチオ
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORML
+	CALL M_KOJO_K103_CALL_ZAMEN()
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K103_3(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;手淫
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORML
+	CALL M_KOJO_K103_CALL_ZAMEN()
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K103_2(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;アナル
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORML
+	CALL M_KOJO_K103_CALL_ZAMEN()
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K103_1(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;膣内
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORML
+	CALL M_KOJO_K103_CALL_ZAMEN()
+	RETURN 1
+ENDIF
+RETURN 1
+
+;-------------------------------------------------
+;眠姦射精に関する口上の表示
+;一時的にTARGETを口上主に設定している
+;-------------------------------------------------
+
+@M_KOJO_MESSAGE_PALAMCNG_A2_K103_0(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;コンドーム
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A2_K103_23(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;イラマチオ
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A2_K103_7(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;足コキ
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+	RETURN 1
+ENDIF
+RETURN 1
+
+
+@M_KOJO_MESSAGE_PALAMCNG_A2_K103_5(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;パイズリ
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A2_K103_4(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;フェラチオ
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A2_K103_3(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;手淫
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A2_K103_2(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;アナル
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+	RETURN 1
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_A2_K103_1(ARG)
+CALL PALAM_MESSAGE_A
+;-------------------------------------------------
+;膣内
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+	RETURN 1
+ENDIF
+RETURN 1
+
+
+@M_KOJO_MESSAGE_PALAMCNG_F_K103(ARG)
+CALL PALAM_MESSAGE_F
+;-------------------------------------------------
+;焦らし
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+	RETURN 1
+ENDIF
+RETURN 1

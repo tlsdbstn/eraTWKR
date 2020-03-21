@@ -1,0 +1,1097 @@
+﻿;※※※※※※※※※※※※※※※※※※※※※※※※※
+;愛撫系コマンド
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;0,愛撫
+;==================================================
+@M_KOJO_MESSAGE_COM_K123_0
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K123_0_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K123_0_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;挿入中
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	;V挿入
+	IF LOCAL:1 && TEQUIP:50 == PLAYER
+		;射精した
+		IF NOWEX:PLAYER:11
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;A挿入
+	ELSEIF LOCAL:1 && TEQUIP:51 == PLAYER
+		;射精した
+		IF NOWEX:PLAYER:11
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;ふたなり
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && (TALENT:2 & 3) == 3
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	ELSEIF TALENT:광기
+		IF TALENT:연인
+			PRINTFORML 「후~……%UNICODE(0x2764)% 후후,%CALLNAME:MASTER%, 기분이 좋다…%UNICODE(0x2764)%」
+			PRINTFORMW 리내는 넑을 잃은 표정을 띄워%CALLNAME:MASTER%의 손을 받아들이고 있다.
+		ELSE
+			PRINTFORML 「……………」
+			PRINTFORMW 몸은 쾌락에 반응하고 있는 것 같지만, 리내의 눈은 허공을 응시한 채 그대로다….
+		ENDIF
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORML 「후~……%UNICODE(0x2764)% 후후,%CALLNAME:MASTER%, 기분이 좋다…%UNICODE(0x2764)%」
+		PRINTFORMW 리내는 넑을 잃은 표정을 띄워%CALLNAME:MASTER%의 손을 받아들이고 있다.
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORML 「후후, 가득 손대어♪」
+		PRINTFORMW 리내는 방글방글 사랑스러운 미소를 띄우고 있다.
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;1,クンニ
+;==================================================
+@M_KOJO_MESSAGE_COM_K123_1
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K123_1_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K123_1_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;膣内射精直後
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:100 == PLAYER
+		IF TCVAR:102
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;絶頂した
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && NOWEX:0
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	ELSEIF TALENT:광기
+		IF TALENT:연인
+			PRINTFORML 「응아, 는, 아%UNICODE(0x2764)% 거기, 괴롭히면 안 됨…%UNICODE(0x2764)%」
+			PRINTFORMW %CALLNAME:MASTER%하지만 혀로 위를 덧쓸 때마다, 리내는 사랑스러운 반응을 보여 주었다.
+		ELSE
+			PRINTFORML 「응……………」
+			PRINTFORMW 비소로부터는 애액이 흘러넘치고 나와 있지만, 리내는 일절 표정을 바꾸지 않는다….
+		ENDIF
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORML 「응아, 는, 아%UNICODE(0x2764)% 거기, 괴롭히면 안 됨…%UNICODE(0x2764)%」
+		PRINTFORMW %CALLNAME:MASTER%하지만 혀로 위를 덧쓸 때마다, 리내는 사랑스러운 반응을 보여 주었다.
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORML 「그렇게 빨면(자), 더러워……？」
+		PRINTFORMW 리내는 곤혹 기색이지만, 주어지는 쾌락에는 솔직하게 응하고 있다.
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;あとは適当な分岐を追加してください
+;==================================================
+;2,フェラする
+;==================================================
+@M_KOJO_MESSAGE_COM_K123_2
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K123_2_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K123_2_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	ELSEIF TALENT:광기
+		IF TALENT:연인
+			PRINTFORML 
+			PRINTFORMW 
+		ELSE
+			PRINTFORML 
+			PRINTFORMW 
+		ENDIF
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORML 
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORML 
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;3,指挿入れ
+;==================================================
+@M_KOJO_MESSAGE_COM_K123_3
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K123_3_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K123_3_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	ELSEIF TALENT:처녀 == 1
+		PRINTFORML 「이나……그만두어, 그렇게 작동되면(자)……무섭다……」
+		PRINTFORMW 리내는 파과의 가능성에 무서워하고 있는 것 같다….
+		RETURN 1
+	ELSEIF TALENT:광기
+		PRINTFORML 「…………………」
+		PRINTFORMW 질에 손가락이 삽입되어 리내는 조금 눈썹을 찡그리고 있다.
+		RETURN 1
+	ELSEIF ABL:V감각 < 1
+		PRINTFORML 「응, 이런 것인가……」
+		PRINTFORMW 리내는 아직 질로 느낄 수가 없는 것 같다.
+		RETURN 1
+	ELSE
+		PRINTFORML 「응%UNICODE(0x2764)% 이제(벌써), 휘젓지 마……, 아%UNICODE(0x2764)%」
+		PRINTFORMW %CALLNAME:MASTER%하지만 손가락을 움직일 때마다, 리내는 느끼고 자른 소리를 높였다.
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;4,アナル舐め
+;==================================================
+@M_KOJO_MESSAGE_COM_K123_4
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K123_4_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K123_4_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	ELSEIF TALENT:광기
+		IF TALENT:연인
+			IF ABL:A감각 <= 1
+				PRINTFORML 「, 어쩐지 기분 나쁠지도……」
+				PRINTFORMW 항문에 혀를 넣을 수 있어 리내는 싫은 듯이  얼굴을 찡그렸다.
+			ELSEIF ABL:A감각 <= 3
+				PRINTFORML 「그렇게 빨면(자) 더럽다고 생각하는데……응」
+				PRINTFORMW 리내는 조금 뺨을 붉혀 걱정스러운 듯이%CALLNAME:MASTER%(을)를 응시하고 있다.
+			ELSE
+				PRINTFORML 「아%UNICODE(0x2764)% %CALLNAME:MASTER%, 응응%UNICODE(0x2764)%」
+				PRINTFORMW 리내는 쾌락의 너무, 무의식가운데 엉덩이를 털어 버리고 있다.
+			ENDIF
+		ELSE
+			PRINTFORML 「……………」
+			PRINTFORMW 리내는 아무것도 말하지 않고,%CALLNAME:MASTER%에 고혈을 빨 수 있고 있다….
+		ENDIF
+	ELSEIF ABL:A감각 <= 1
+			PRINTFORML 「, 어쩐지 기분 나쁠지도……」
+			PRINTFORMW 항문에 혀를 넣을 수 있어 리내는 싫은 듯이  얼굴을 찡그렸다.
+	ELSEIF ABL:A감각 <= 3
+		PRINTFORML 「그렇게 빨면(자) 더럽다고 생각하는데……응」
+		PRINTFORMW 리내는 조금 뺨을 붉혀 걱정스러운 듯이%CALLNAME:MASTER%(을)를 응시하고 있다.
+	ELSE
+		PRINTFORML 「아%UNICODE(0x2764)% %CALLNAME:MASTER%, 응응%UNICODE(0x2764)%」
+		PRINTFORMW 리내는 쾌락의 너무, 무의식가운데 엉덩이를 털어 버리고 있다.
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;5,アナル愛撫
+;==================================================
+@M_KOJO_MESSAGE_COM_K123_5
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K123_5_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K123_5_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	ELSEIF TALENT:광기
+		IF TALENT:연인
+			IF ABL:A감각 <= 1
+				PRINTFORML 「히！？ , 조금, 그만두어……」
+				PRINTFORMW 항문을 손대어져 리내는 싫은 듯이  얼굴을 찡그렸다.
+			ELSEIF ABL:A감각 <= 3
+				PRINTFORML 「…！또 그런 곳 손대어…도―……」
+				PRINTFORMW 리내는 조금 뺨을 붉혀 글자와 와%CALLNAME:MASTER%(을)를 예응으로 있다.
+			ELSE
+				PRINTFORML 「아…그만두고%UNICODE(0x2764)% 후~……엉덩이는 안된데……」
+				PRINTFORMW 리내는 민감한 고혈을 손대어져 무심코 느껴 버린 것 같다.
+			ENDIF
+		ELSE
+			PRINTFORML 「……………」
+			PRINTFORMW 리내는 아무것도 말하지 않고,%CALLNAME:MASTER%에 고혈을 만지작거려지고 있다….
+		ENDIF
+	ELSEIF ABL:A감각 <= 1
+		PRINTFORML 「히！？ , 조금, 그만두어……」
+		PRINTFORMW 항문을 손대어져 리내는 싫은 듯이  얼굴을 찡그렸다.
+	ELSEIF ABL:A감각 <= 3
+		PRINTFORML 「…！또 그런 곳 손대어…도―……」
+		PRINTFORMW 리내는 조금 뺨을 붉혀 글자와 와%CALLNAME:MASTER%(을)를 예응으로 있다.
+	ELSE
+		PRINTFORML 「아…그만두고%UNICODE(0x2764)% 후~……엉덩이는 안된데……」
+		PRINTFORMW 리내는 민감한 고혈을 손대어져 무심코 느껴 버린 것 같다.
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;6,胸愛撫
+;==================================================
+@M_KOJO_MESSAGE_COM_K123_6
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K123_6_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K123_6_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:광기
+		IF TALENT:연인
+			IF ABL:B감각 <= 1
+				SELECTCASE RAND:2
+				CASE 0
+					PRINTFORML 「무슨, 손놀림이 싫은 것 같지만―？」
+					PRINTFORMW 리내는 가만히%CALLNAME:MASTER%의 손을 응시하고 있다.
+				CASE 1
+					PRINTFORML 「응……너무 기분 좋지 않을까―……」
+					PRINTFORMW 아직 리내는 가슴으로 느낄 수가 없는 것 같다.
+				ENDSELECT
+			ELSE
+				SELECTCASE RAND:2
+				CASE 0
+					PRINTFORML 「……후후, 여기에 손대고 싶었다？%CALLNAME:MASTER%……%UNICODE(0x2764)%」
+					PRINTFORMW 리내는 고혹적인 미소를 띄웠다……
+				CASE 1
+					PRINTFORML 「조금 전부터, 여기만 보고 있던 것？후후후%UNICODE(0x2764)%」
+					PRINTFORMW 자신의 가슴에 펴진 손을 봐, 리내는 키득키득 웃었다.
+				ENDSELECT
+			ENDIF
+		ELSE
+			PRINTFORML 「……………」
+			PRINTFORMW 리내는, 자신의 가슴을 어루만진다%CALLNAME:MASTER%의 손을 가만히 응시하고 있다.
+		ENDIF
+	ELSEIF ABL:B감각 <= 1
+		SELECTCASE RAND:2
+		CASE 0
+			PRINTFORMW 「무슨, 손놀림이 싫은 것 같지만―？」
+			PRINTFORMW 리내는 가만히%CALLNAME:MASTER%의 손을 응시하고 있다.
+		CASE 1
+			PRINTFORML 「응……너무 기분 좋지 않을까―……」
+			PRINTFORMW 아직 리내는 가슴으로 느낄 수가 없는 것 같다.
+		ENDSELECT
+	ELSE
+		SELECTCASE RAND:2
+		CASE 0
+			PRINTFORMW 「……후후, 여기에 손대고 싶었다？%CALLNAME:MASTER%……%UNICODE(0x2764)%」
+			PRINTFORMW 리내는 고혹적인 미소를 띄웠다……
+		CASE 1
+			PRINTFORML 「조금 전부터, 여기만 보고 있던 것？후후후%UNICODE(0x2764)%」
+			PRINTFORMW 자신의 가슴에 펴진 손을 봐, 리내는 키득키득 웃었다.
+		ENDSELECT
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;7,乳首責め
+;==================================================
+@M_KOJO_MESSAGE_COM_K123_7
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K123_7_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K123_7_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	ELSEIF TALENT:광기
+		IF TALENT:연인
+			PRINTFORML 「%UNICODE(0x2764)% 후후, 끝(쪽), 기분 있고%UNICODE(0x2764)%」
+			PRINTFORMW 넌더리나고 넌더리나고와 유두를 희롱해 주면(자), 리내는 쾌락에 물든 미소를 보여 주었다.
+		ELSE
+			PRINTFORML 「………, 응……」
+			PRINTFORMW 첨단을 만지작거려져 리내는 희미한 반응을 보였다.
+		ENDIF
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORML 「%UNICODE(0x2764)% 후후, 끝(쪽), 기분 있고%UNICODE(0x2764)%」
+		PRINTFORMW 넌더리나고 넌더리나고와 유두를 희롱해 주면(자), 리내는 쾌락에 물든 미소를 보여 주었다.
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORML 「아, 그렇게 강하게 하면 안 됨……」
+		PRINTFORMW 리내는 유두를 반죽할 수 있어, 꿈틀하고 몸을 뛰게 했다.
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;8,秘貝開帳
+;==================================================
+@M_KOJO_MESSAGE_COM_K123_8
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K123_8_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K123_8_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;9,自慰
+;==================================================
+@M_KOJO_MESSAGE_COM_K123_9
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K123_9_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K123_9_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+[SKIPSTART]
+;別コマンド化
+;==================================================
+;10,乳首吸い
+;==================================================
+@M_KOJO_MESSAGE_COM_K123_10
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K123_10_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K123_10_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+[SKIPEND]
+;==================================================
+;11,乳首吸い
+;==================================================
+@M_KOJO_MESSAGE_COM_K123_11
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K123_11_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K123_11_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	ELSEIF TALENT:광기
+		IF TALENT:연인
+			PRINTFORML 「후후%UNICODE(0x2764)% %CALLNAME:MASTER%, 아기같고 사랑스럽다―%UNICODE(0x2764)%」
+			PRINTFORMW 리내는 모성을 간지러워졌는지, 상냥하고%CALLNAME:MASTER%의 머리를 어루만지기 시작했다.
+		ELSE
+			PRINTFORML 「…………후~」
+			PRINTFORMW 리내는 어딘가 먼 곳을 응시한 채로, 한숨을 토했다.
+		ENDIF
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORML 「후후%UNICODE(0x2764)% %CALLNAME:MASTER%, 아기같고 사랑스럽다―%UNICODE(0x2764)%」
+		PRINTFORMW 리내는 모성을 간지러워졌는지, 상냥하고%CALLNAME:MASTER%의 머리를 어루만지기 시작했다.
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORML 「--들이마셔, 아기같구나♪」
+		PRINTFORMW %CALLNAME:MASTER%의 모습을 봐, 리내는 낄낄 웃고 있다.
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;12,胸もみ
+;==================================================
+@M_KOJO_MESSAGE_COM_K123_12
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K123_12_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K123_12_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;13,アナル開帳
+;==================================================
+@M_KOJO_MESSAGE_COM_K123_13
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K123_13_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K123_13_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;15,クリ愛撫
+;==================================================
+@M_KOJO_MESSAGE_COM_K123_15
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K123_15_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K123_15_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	ELSEIF TALENT:광기
+		IF TALENT:연인
+			IF ABL:C감각 <= 3
+				PRINTFORML 「후후, 조금 낯간지러울지도%UNICODE(0x2764)%」
+				PRINTFORMW 리내는 곤란한 것 같은 미소를 띄우고 있다.
+			ELSE
+				PRINTFORML 「은, 아%UNICODE(0x2764)% 거기, 좀 더 손대어…%UNICODE(0x2764)%」
+				PRINTFORMW 리내는 민감한 개소를 몇번이나 켜져 쾌락으로 몸을 털게 하고 있다.
+			ENDIF
+		ELSE
+			PRINTFORML 「……………」
+			PRINTFORMW 리내는 일순간눈썹을 찡그렸지만, 이후는 특히 반응을 보이지 않았다.
+		ENDIF
+	ELSEIF ABL:C감각 <= 3
+		PRINTFORML 「후후, 조금 낯간지러울지도%UNICODE(0x2764)%」
+		PRINTFORMW 리내는 곤란한 것 같은 미소를 띄우고 있다.
+	ELSE
+		PRINTFORML 「은, 아%UNICODE(0x2764)% 거기, 좀 더 손대어…%UNICODE(0x2764)%」
+		PRINTFORMW 리내는 민감한 개소를 몇번이나 켜져 쾌락으로 몸을 털게 하고 있다.
+	ENDIF
+ENDIF
+RETURN 1
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;ソフト系コマンド
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;19,キスする
+;==================================================
+@M_KOJO_MESSAGE_COM_K123_19
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K123_19_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K123_19_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	ELSEIF TALENT:광기
+		IF TALENT:연인
+			PRINTFORML 「응,……%UNICODE(0x2764)%」
+			PRINTFORMW 리내는 뺨을 붉혀 황홀로 한 표정으로%CALLNAME:MASTER%(와)과 서로 입맞춤하고.
+		ELSE
+			PRINTFORML 「응………」
+			PRINTFORMW 「는………」
+		ENDIF
+	ELSEIF TALENT:연모
+		SELECTCASE RAND:2
+		CASE 0
+			PRINTFORML 「………%UNICODE(0x2764)%」
+			PRINTFORMW 「후~%UNICODE(0x2764)% 후후, 좀 더 해버린다？%UNICODE(0x2764)%」
+		CASE 1
+			PRINTFORML 「응,……%UNICODE(0x2764)%」
+			PRINTFORMW 리내는 뺨을 붉혀 황홀로 한 표정으로%CALLNAME:MASTER%(와)과 서로 입맞춤하고.
+		ENDSELECT
+	ELSE
+		SELECTCASE RAND:2
+		CASE 0
+			PRINTFORML 「……」
+			PRINTFORMW 「후후, 더 이상은 안 되요―？」
+		CASE 1
+			PRINTFORML 「………」
+			PRINTFORML 「………는. 후후후, 어쩐지 어른이 된 기분이군요？」
+			PRINTFORMW 입술을 떼어 놓으면(자), 는에 문 미소를 띄우는 리내가 눈에 들어왔다.
+		ENDSELECT
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;20,キスする
+;==================================================
+@M_KOJO_MESSAGE_COM_K123_20
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K123_20_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K123_20_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	ELSEIF TALENT:광기
+		IF TALENT:연인
+			PRINTFORML 「응,……%UNICODE(0x2764)%」
+			PRINTFORMW 리내는 뺨을 붉혀 황홀로 한 표정으로%CALLNAME:MASTER%(와)과 서로 입맞춤하고.
+		ELSE
+			PRINTFORML 「응………」
+			PRINTFORMW 「는………」
+		ENDIF
+	ELSEIF TALENT:연모
+		SELECTCASE RAND:2
+		CASE 0
+			PRINTFORML 「………%UNICODE(0x2764)%」
+			PRINTFORMW 「후~%UNICODE(0x2764)% 후후, 좀 더 해버린다？%UNICODE(0x2764)%」
+		CASE 1
+			PRINTFORML 「응,……%UNICODE(0x2764)%」
+			PRINTFORMW 리내는 뺨을 붉혀 황홀로 한 표정으로%CALLNAME:MASTER%(와)과 서로 입맞춤하고.
+		ENDSELECT
+	ELSE
+		SELECTCASE RAND:2
+		CASE 0
+			PRINTFORML 「……」
+			PRINTFORMW 「후후, 더 이상은 안 되요―？」
+		CASE 1
+			PRINTFORML 「………」
+			PRINTFORML 「………는. 후후후, 어쩐지 어른이 된 기분이군요？」
+			PRINTFORMW 입술을 떼어 놓으면(자), 는에 문 미소를 띄우는 리내가 눈에 들어왔다.
+		ENDSELECT
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;21,何もしない
+;==================================================
+@M_KOJO_MESSAGE_COM_K123_21
+;CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K123_21_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K123_21_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;22,誘い受ける
+;==================================================
+@M_KOJO_MESSAGE_COM_K123_22
+;CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K123_22_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K123_22_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;23,ピロートーク
+;==================================================
+@M_KOJO_MESSAGE_COM_K123_23
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K123_23_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K123_23_1
+;-------------------------------------------------
+;記入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;失敗
+	IF TFLAG:193
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;思慕
+	ELSEIF TALENT:사모
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1

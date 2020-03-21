@@ -1,0 +1,880 @@
+﻿;※※※※※※※※※※※※※※※※※※※※※※※※※
+;애무계 커맨드
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;0, 애무
+;==================================================
+@M_KOJO_MESSAGE_COM_K111_0
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K111_0_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K111_0_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;삽입중
+	;기입 체크
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	;V삽입
+	IF LOCAL:1 && TEQUIP:50 == PLAYER && !FLAG:시간정지
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORMW 「응 %UNICODE(0x2764)% 아%UNICODE(0x2764)% 그것 간사해 %UNICODE(0x2764)%」
+			PRINTFORMW 「에에%UNICODE(0x2764)% 아앙 %UNICODE(0x2764)% 아앙 %UNICODE(0x2764)%」
+		CASE 1
+			PRINTFORMW 「응 %UNICODE(0x2764)% 아%UNICODE(0x2764)% %CALLNAME:MASTER%, 안기다 %UNICODE(0x2764)%」
+			PRINTFORMW 「아앙 %UNICODE(0x2764)% %CALLNAME:MASTER%%UNICODE(0x2764)% 좋아~%UNICODE(0x2764)%」
+		CASE 2
+			PRINTFORMW 「응 %UNICODE(0x2764)% 아%UNICODE(0x2764)% 그런 %UNICODE(0x2764)% 한번에 와버리는∼%UNICODE(0x2764)%」
+			PRINTFORMW 「아앙 %UNICODE(0x2764)% 아앙 %UNICODE(0x2764)% 수호좋은~%UNICODE(0x2764)%」
+		ENDSELECT
+		RETURN 1
+		;사정했다
+		IF NOWEX:PLAYER:11
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;A삽입
+;	ELSEIF LOCAL:1 && TEQUIP:51 == PLAYER
+;		;사정했다
+;		IF NOWEX:PLAYER:11
+;			PRINTFORMW 
+;			RETURN 1
+;		ELSE
+;			PRINTFORMW 
+;			RETURN 1
+;		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;후타나리
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && (TALENT:2 & 3) == 3
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;공통
+	IF FLAG:시간정지
+		RETURN 1
+	ELSE
+		SELECTCASE RAND:6
+		CASE 0
+			PRINTFORMW 「에에 ……!」
+			PRINTFORMW 「%CALLNAME:MASTER%의 손놀림……야라시이야……%UNICODE(0x2764)%」
+		CASE 1
+			PRINTFORMW 「아…아앙 %UNICODE(0x2764)%」
+			PRINTFORMW 「개……, 소리가 %UNICODE(0x2764)% 아…나와버리는……%UNICODE(0x2764)%」
+		CASE 2
+			PRINTFORMW 「아!후왓………아아앗……%UNICODE(0x2764)%」
+			PRINTFORMW 「%CALLNAME:MASTER%……%UNICODE(0x2764)% 좀 더……%UNICODE(0x2764)%」
+		CASE 3
+			PRINTFORMW 「아앙 ……%UNICODE(0x2764)% 기분 있어라 ……%UNICODE(0x2764)%」
+		CASE 4
+			PRINTFORMW 「아%UNICODE(0x2764)% 젖가슴 %UNICODE(0x2764)% 그런 %UNICODE(0x2764)%」
+			PRINTFORMW 「아앙 %UNICODE(0x2764)% 아%UNICODE(0x2764)% 아%UNICODE(0x2764)% 아앗 %UNICODE(0x2764) * 2%」
+		CASE 5
+			PRINTFORMW 「아%UNICODE(0x2764)% 아%UNICODE(0x2764)% 싫어 %UNICODE(0x2764)%」
+			PRINTFORMW 「조금 %UNICODE(0x2764)% 벗길 수 있는 쉿 %UNICODE(0x2764)% 있고 %UNICODE(0x2764)% 아앙 %UNICODE(0x2764)%」
+		ENDSELECT
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;1, 쿠니
+;==================================================
+@M_KOJO_MESSAGE_COM_K111_1
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K111_1_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K111_1_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM) && !FLAG:시간정지
+		PRINTFORMW 「……거기는 더럽게……」
+		PRINTFORMW 「아!앗, 아핫 %UNICODE(0x2764)% 안 돼 ……%UNICODE(0x2764) * 2%」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;질내사정 직후
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:100 == PLAYER
+		IF TCVAR:102
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;절정 했다
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && NOWEX:0
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;기본 세트
+	;시간중
+	IF FLAG:시간정지
+		RETURN 1
+	;계속 쿠니
+	ELSEIF PREVCOM == SELECTCOM
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORMW 「에에 원%UNICODE(0x2764)% 아%UNICODE(0x2764)% 아아앗 %UNICODE(0x2764) * 2%」
+			PRINTFORMW 「좀 더 %UNICODE(0x2764)% 좀 더 %UNICODE(0x2764)% 기분 있고∼~%UNICODE(0x2764) * 2%」
+		CASE 1
+			PRINTFORMW 「아%UNICODE(0x2764)% 좀 더 %UNICODE(0x2764)% 아앙 %UNICODE(0x2764)%」
+			PRINTFORMW 「격렬하고 %UNICODE(0x2764)% 할짝 할짝 해 %UNICODE(0x2764) * 2%」
+		CASE 2
+			PRINTFORMW 「%CALLNAME:MASTER%%UNICODE(0x2764)% -?  이, 이봐 해 있고? \/\/\/」
+			PRINTFORMW 「값의 보지 맛있어? \/\/\/」
+		ENDSELECT
+	;그 이외
+	ELSE
+		SELECTCASE RAND:2
+		CASE 0
+			PRINTFORMW 「다시 빠는 거야……?」
+			PRINTFORMW 「 좋아……네…인, 핥아 %UNICODE(0x2764) * 2%」
+		CASE 1
+			PRINTFORMW 「빨고 싶은거야?  그럼, 옛!」
+			PRINTFORMW 「값의 보지 할짝 할짝 해 %UNICODE(0x2764)%」
+		ENDSELECT
+	ENDIF
+ENDIF
+RETURN 1
+;그리고는 적당한 분기를 추가해 주세요
+;==================================================
+;2, 펠라한다
+;==================================================
+@M_KOJO_MESSAGE_COM_K111_2
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K111_2_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K111_2_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;기본 세트
+	;시간중
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;연모
+	ELSEIF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;굴복 3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;그 이외
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;3, 손가락 삽입
+;==================================================
+@M_KOJO_MESSAGE_COM_K111_3
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K111_3_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K111_3_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	IF FLAG:시간정지
+		RETURN 1
+	ELSE
+		SELECTCASE RAND:2
+		CASE 0
+			PRINTFORMW 「%UNICODE(0x2764)% 응 %UNICODE(0x2764)% 거기%UNICODE(0x2764)% 기분%UNICODE(0x2764)%」
+		CASE 1
+			PRINTFORMW 「아앗 %UNICODE(0x2764)% 아%UNICODE(0x2764)% 아%UNICODE(0x2764)% 굉장해 %UNICODE(0x2764)% 이것%UNICODE(0x2764)% 아%UNICODE(0x2764)%」
+		ENDSELECT
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;4, 애널빨기
+;==================================================
+@M_KOJO_MESSAGE_COM_K111_4
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K111_4_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K111_4_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;기본 세트
+	;시간중
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;연모
+	ELSEIF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;굴복 3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;그 이외
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;5, 애널애무
+;==================================================
+@M_KOJO_MESSAGE_COM_K111_5
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K111_5_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K111_5_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM) && !FLAG:시간정지
+		PRINTFORMW 「히!, 거기는 엉덩이의 구멍이야 ……, 더러워 ……아\/\/\/」
+		RETURN 1
+	ENDIF
+	IF FLAG:시간정지
+		RETURN 1
+	ELSE
+		PRINTFORMW 「아앙\/\/\/ 거기는 안 돼\/\/\/ 앗 아앗\/\/\/」
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;6, 가슴애무
+;==================================================
+@M_KOJO_MESSAGE_COM_K111_6
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K111_6_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K111_6_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	IF FLAG:시간정지
+	ELSE
+		SELECTCASE RAND:2
+		CASE 0
+			PRINTFORMW 「%UNICODE(0x2764)% 기분 있고 %UNICODE(0x2764) * 2%」
+			PRINTFORMW 「아%UNICODE(0x2764)% 아앙 %UNICODE(0x2764)%」
+		CASE 1
+			PRINTFORMW 「이얏 %UNICODE(0x2764)% 엣찌 %UNICODE(0x2764) * 2%」
+			PRINTFORMW 「응 %UNICODE(0x2764)% 나 %UNICODE(0x2764)% 쉽게 하고 있자 %UNICODE(0x2764)%」
+		ENDSELECT
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;7, 유두고문
+;==================================================
+@M_KOJO_MESSAGE_COM_K111_7
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K111_7_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K111_7_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	IF FLAG:시간정지
+	ELSE
+		SELECTCASE RAND:2
+		CASE 0
+			PRINTFORMW 「∼~%UNICODE(0x2764) * 2%」
+			PRINTFORMW 「젖꼭지뿐 스윽스윽 하지 않고∼~%UNICODE(0x2764) * 2%」
+		CASE 1
+			PRINTFORMW 「아앗, %UNICODE(0x2764)% 어째서 젖꼭지뿐 %UNICODE(0x2764)% 이얏 %UNICODE(0x2764)%」
+			PRINTFORMW 「좀 더 쉽고 %UNICODE(0x2764)% 아앗, 아앙 %UNICODE(0x2764)%」
+		ENDSELECT
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;8, 음부개장
+;==================================================
+@M_KOJO_MESSAGE_COM_K111_8
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K111_8_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K111_8_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;기본 세트
+	;시간중
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;연모
+	ELSEIF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;굴복 3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;그 이외
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;9, 자위
+;==================================================
+@M_KOJO_MESSAGE_COM_K111_9
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K111_9_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K111_9_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 「네?  값의 자위 보고 싶은거야?  별로 상관없지만……」
+		PRINTFORMW 「응…%CALLNAME:MASTER%로 보여지고 하다니……\/\/\/」
+		PRINTFORMW 「왠지 하기 힘들어 ……\/\/\/」
+		RETURN 1
+	ENDIF
+	SELECTCASE RAND:3
+	CASE 0
+		PRINTFORMW 「응\/\/\/ 응…\/\/\/ %CALLNAME:MASTER%, 보지 말고 손대어……\/\/\/」
+	CASE 1
+		PRINTFORMW 「\/\/\/ 후우……\/\/\/\/\/\/ %마스터는% 이것 즐거운거야……?」
+	CASE 2
+		PRINTFORMW 「응\/\/\/\/\/\/ 하\/\/\/ 언제나 할 때는 %CALLNAME:MASTER%의 일생각이면서 해 의 ……\/\/\/」
+	ENDSELECT
+ENDIF
+RETURN 1
+[SKIPSTART]
+;구별 커맨드 화
+;==================================================
+;10, 유두빨기
+;==================================================
+@M_KOJO_MESSAGE_COM_K111_10
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K111_10_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K111_10_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;기본 세트
+	;연모
+	IF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;굴복 3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;그 이외
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+[SKIPEND]
+;==================================================
+;11, 유두빨기
+;==================================================
+@M_KOJO_MESSAGE_COM_K111_11
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K111_11_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K111_11_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	IF FLAG:시간정지
+	ELSE
+		SELECTCASE RAND:2
+		CASE 0
+			PRINTFORMW 「이나∼！ 들이마시지 말고 야\/\/\/」
+			PRINTFORMW 「아앗, 절의 부엌안 돼~~%UNICODE(0x2764)%」
+		CASE 1
+			PRINTFORMW 「아앙 %UNICODE(0x2764)% %CALLNAME:MASTER%아기 보고 싶다♪」
+			PRINTFORMW 「스윽스윽 해 주는군♪ 스윽스윽♪ 스윽스윽♪」
+		ENDSELECT
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;12, 가슴도 보고
+;==================================================
+@M_KOJO_MESSAGE_COM_K111_12
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K111_12_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K111_12_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;기본 세트
+	;시간중
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;연모
+	ELSEIF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;굴복 3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;그 이외
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;13, 애널개장
+;==================================================
+@M_KOJO_MESSAGE_COM_K111_13
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K111_13_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K111_13_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;기본 세트
+	;시간중
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;연모
+	ELSEIF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;굴복 3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;그 이외
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;소프트계 커맨드
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;20, 키스한다
+;==================================================
+@M_KOJO_MESSAGE_COM_K111_20
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K111_20_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K111_20_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;기본 세트
+	;시간중
+	IF FLAG:시간정지
+	ELSEIF FIRSTTIME("첫키스")
+		PRINTFORMW 「에에 ……!」
+		PRINTFORMW 「이, 이것이 키스인가……%UNICODE(0x2764)%」
+		PRINTFORMW 「응……키스는 이렇게 달구나 %UNICODE(0x2764)%」
+		IF CFLAG:111:현재위치 == CFLAG:111:초기위치 && CFLAG:111:초기위치 != 99
+			CSTR:111:첫키스상실이력 = %PRINT_DATE_F(DAY)%, 자신의 방에서 %마스터와% 정사에 이르고 있을 때, 반 억지로 첫키스를 빼앗겼다
+		ELSEIF FLAG:데이트상대 == 111
+			CSTR:111:첫키스상실이력 = %PRINT_DATE_F(DAY)%, %DATENAME_SPOT()%로 %마스터와% 정사에 이르고 있을 때, 반 억지로 첫키스를 빼앗겼다
+		ELSE
+			CSTR:111:첫키스상실이력 = %PRINT_DATE_F(DAY)%, %NAME_FROM_PLACE(CFLAG:111:현재위치)%로 %마스터와% 정사에 이르고 있을 때, 반 억지로 첫키스를 빼앗겼다
+		ENDIF
+	ELSE
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORMW 「응……%UNICODE(0x2764)%」
+			PRINTFORMW 「왠지……머리가 멍해진다……」
+		CASE 1
+			PRINTFORMW 「―……%UNICODE(0x2764)%」
+		CASE 2
+			PRINTFORMW 「쭙…아암…………」
+			PRINTFORMW 「%CALLNAME:MASTER%……좀 더 ……%UNICODE(0x2764)%」
+		CASE 3
+			PRINTFORMW 「값으로부터 시켜!」
+			PRINTFORMW 「응―……쭙 %UNICODE(0x2764)%」
+			PRINTFORMW 「후아………, %CALLNAME:MASTER%…기분 좋아……?」
+		CASE 4
+			PRINTFORMW 「쭙 %UNICODE(0x2764)%」
+			PRINTFORMW 「달다……%UNICODE(0x2764)%」
+			PRINTFORMW 「쭙 쪽 %UNICODE(0x2764)%」
+		ENDSELECT
+	ENDIF
+ENDIF
+RETURN 1
+
+
+;==================================================
+;21, 아무것도하지않는다
+;==================================================
+@M_KOJO_MESSAGE_COM_K111_21
+;CALL TRAIN_MESSAGE
+DRAWLINE
+CALL M_KOJO_MESSAGE_COM_K111_21_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K111_21_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	CALL M_KOJO_COLOR_K111
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;기본 세트
+	;시간중
+	IF FLAG:시간정지
+	ELSE
+		SELECTCASE RAND:2
+		CASE 0
+			PRINTFORMW 「……?」
+			PRINTFORMW 「왜 그래의 %CALLNAME:MASTER%?  어째서 굳어져 버린다의?」
+		CASE 1
+			PRINTFORMW 「어!%CALLNAME:MASTER%, 어째서 움직이지 않는거야?」
+			PRINTFORMW 「혹시 할 수 있어 이외의시간이 지비쳐……?」
+			PRINTFORMW 「자 잠시……\/\/\/」
+		ENDSELECT
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;22, 권해받는다
+;==================================================
+@M_KOJO_MESSAGE_COM_K111_22
+;CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K111_22_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K111_22_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;기본 세트
+	;시간중
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;연모
+	ELSEIF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;굴복 3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;그 이외
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;23, 필로토크
+;==================================================
+@M_KOJO_MESSAGE_COM_K111_23
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K111_23_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K111_23_1
+;-------------------------------------------------
+;기입 체크(=0, 비표시, 1, 표시)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;소분기
+	;-------------------------------------------------
+	;처음
+	;기입 체크
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;실패
+	IF TFLAG:193
+		PRINTFORMW 
+		RETURN 1
+	;연모
+	ELSEIF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;사모
+	ELSEIF TALENT:사모
+		PRINTFORMW 
+		RETURN 1
+	;그 이외
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1

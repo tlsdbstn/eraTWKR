@@ -1,0 +1,47 @@
+﻿;--------------------------------------------------
+;	맵내 이동 처리 확장 패치 부속
+;	명련사MAP용 함수
+;--------------------------------------------------
+
+@MAP_PLACENAME_14(ARG)
+#FUNCTIONS
+#DIM PLACEID
+
+IF GET_MAPID(ARG) == MAIN_MAP
+	SELECTCASE ARG
+		CASE 1401 TO (MAXROOM - 1)
+			RETURNF STR:(ARG + 8000)
+		CASE 1498
+			RETURNF OMANEKI_PLACE()
+		CASE 1499
+			RETURNF "스키마 공간"
+		CASE MAXROOM
+			RETURNF "저택 밖"
+		CASEELSE
+			RETURNF "불명"
+	ENDSELECT
+ELSE
+	RETURNF "불명"
+ENDIF
+
+@MAP_VIEWING_14(AA)
+#DIMS REF AA, 0
+IF !TFLAG:맵변환
+	SELECTCASE CFLAG:MASTER:현재위치
+		CASE 1424 TO 1433
+			TFLAG:맵변환 = 2
+		CASE 1434 TO 1444
+			TFLAG:맵변환 = 3
+		CASEELSE
+			TFLAG:맵변환 = 1
+	ENDSELECT
+ENDIF
+CALL DRAW_INFORMATIONLINE(@"%MAPNAME:(TFLAG:맵변환)%")
+PRINTFORML 
+TRYCALLFORM MAP_OWN2_{TFLAG:맵변환}(AA)
+
+@MAP_CAN_MOVE_14(ARG, ARG:1)
+#FUNCTION
+RETURNF 1
+
+

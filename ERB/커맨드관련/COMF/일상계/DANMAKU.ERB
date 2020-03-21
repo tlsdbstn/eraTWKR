@@ -1,0 +1,610 @@
+﻿@DANMAKU_OPPONENT_STATUS(ARG, ARG:1)
+;特殊能力表示
+LOCAL:1 = 0
+FOR LOCAL, 0, 10
+	SIF GETBIT(CFLAG:ARG:탄막특능, LOCAL)
+		LOCAL:1 ++
+NEXT
+IF LOCAL:1 == 10
+	CALL DANMAKU_SA_OUTPUT(ARG, LOCAL:1)
+ELSEIF LOCAL:1 == 0
+	PRINTFORML 弾幕スキル未収得
+ELSE
+	FOR LOCAL, 0, 10
+		CALL DANMAKU_SA_OUTPUT(ARG, LOCAL)
+	NEXT
+ENDIF
+
+SIF ARG:1
+	RETURN
+;戦闘能力の差でメッセージ分岐
+SELECTCASE ABL:ARG:전투능력 - ABL:MASTER:전투능력
+	CASE -6 TO -4
+		PRINTFORML 눈 가리고 앉아있어도 이긴다.
+	CASE -4 TO -2
+		PRINTFORML 눈 가리고 있어도 이길 것 같다.
+	CASE -1
+		PRINTFORML 질 것 같지는 않다.
+	CASE 0
+		PRINTFORML 아마 이길 것 같다.
+	CASE 1
+		PRINTFORML 못 이길 상대는 아니다.
+	CASE 2
+		PRINTFORML 상대는 꽤 강한 것 같다.
+	CASE 3
+		PRINTFORML 적어도 당신보다 배는 강한 것 같다.
+	CASE 4
+		PRINTFORML 기적이 일어나지 않으면 살해당할 것이다.
+	CASE 5,6
+		PRINTFORML 상대가 거인이라 치면, 당신은 개미똥 이하다.
+	CASEELSE
+		
+ENDSELECT
+
+@DANMAKU_SA_OUTPUT(OPPONENT, ARG:0)
+#DIM OPPONENT
+
+SIF ARG:0 < 10
+	LOCAL = GETBIT(CFLAG:OPPONENT:탄막특능, ARG:0)
+	IF ARG:0 == 10
+		SETCOLOR C_RED
+		PRINTFORML 【백재무궁】: 모든 특수 능력을 겸비한다. 최강
+	ELSEIF LOCAL && ARG:0 == 0
+		SETCOLOR C_P_BLUE
+		PRINTFORML 【언소자약】: %CALLNAME:MASTER%의 주사위수 Down
+	ELSEIF LOCAL && ARG:0 == 1
+		SETCOLOR C_P_BLUE
+		PRINTFORML 【온유돈독】: %CALLNAME:MASTER%의 주사위면 Down
+	ELSEIF LOCAL && ARG:0 == 2
+		SETCOLOR C_RED
+		PRINTFORML 【용기늠름】: %CALLNAME:OPPONENT%의 주사위수 Up
+	ELSEIF LOCAL && ARG:0 == 3
+		SETCOLOR C_RED
+		PRINTFORML 【호방뇌락】: %CALLNAME:OPPONENT%의 주사위면 Up
+	ELSEIF LOCAL && ARG:0 == 4
+		SETCOLOR C_P_PURPLE
+		PRINTFORML 【괴력난신】: %CALLNAME:OPPONENT%의 주사위값이 %CALLNAME:MASTER%의 주사위값보다 작아도 그 차이가 일정수 이하라면 잔기가 줄지 않는다
+	ELSEIF LOCAL && ARG:0 == 5
+		SETCOLOR C_P_PURPLE
+		PRINTFORML 【습람심식】: %CALLNAME:OPPONENT%의 초기 잔기가 4가 된다
+	ELSEIF LOCAL && ARG:0 == 6
+		SETCOLOR C_P_PURPLE
+		PRINTFORML 【잔인무도】: %CALLNAME:MASTER%의 피탄에서 복귀했을 때의 폭탄수가 ―1 된다
+	ELSEIF LOCAL && ARG:0 == 7
+		SETCOLOR C_P_PURPLE
+		PRINTFORML 【건곤일척】: %CALLNAME:OPPONENT%가 일정 확률로 폭탄을 사용하게 된다
+	ELSEIF LOCAL && ARG:0 == 8
+		SETCOLOR C_RED
+		PRINTFORML 【견개고고】: %CALLNAME:OPPONENT%의 주사위 수정치 Up
+	ELSEIF LOCAL && ARG:0 == 9
+		SETCOLOR C_P_BLUE
+		PRINTFORML 【유수암한】: %CALLNAME:MASTER%의 주사위 수정치 Down
+	ENDIF
+RESETCOLOR
+
+
+;-------------------------------------------------
+;戦闘中の処理
+;-------------------------------------------------
+@DANMAKU_BATTLE(OPPONENT)
+#DIM プレイヤー残機
+#DIM 相手残機
+#DIM 残りHP
+#DIM 残りボム回数
+#DIM ターン数
+#DIM プレイヤーダイス面
+#DIM 相手ダイス面
+#DIM プレイヤーダイス数
+#DIM 相手ダイス数
+#DIM プレイヤーダイス値
+#DIM 相手ダイス値
+#DIM プレイヤー修正値
+#DIM 相手修正値
+#DIM 相手強さ
+#DIM 霊力充填フラグ
+#DIM 慢心フラグ
+#DIM OPPONENT
+#DIM BombPower
+#DIM B_Min
+#DIM B_Max
+#DIM 持ち込みアイテム
+
+プレイヤー残機 = 3
+相手残機 = 3
+相手強さ = ABL:OPPONENT:전투능력
+残りHP = MAXBASE:MASTER:체력
+残りボム回数 = 2
+ターン数 = 1
+霊力充填フラグ = 0
+慢心フラグ = 0
+B_min = ABL:MASTER:전투능력 * 7 * (ABL:MASTER:전투능력 / 2 + 1)
+B_Max = ABL:MASTER:전투능력 * 11 * (ABL:MASTER:전투능력 / 2 + 1) + 6
+SIF TALENT:OPPONENT:자존심 > 0 && ABL:MASTER:전투능력 < 相手強さ && 相手強さ > 2 && TALENT:OPPONENT:스침 == 1
+	慢心フラグ = 1
+;【洽覧深識】の効果
+SIF GETBIT(CFLAG:OPPONENT:탄막특능, 5)
+	相手残機 ++
+;【エクステンド】の効果
+SIF TALENT:MASTER:익스텐드 == 1
+	プレイヤー残機 ++
+;【ルナシューター】の効果
+SIF TALENT:MASTER:루나슈터 == 1
+	残りボム回数 ++
+;弾幕勝負補助アイテムの持ち込み
+CALL DANMAKU_ITEM_USE
+持ち込みアイテム = RESULT
+
+WHILE プレイヤー残機 > 0 && 相手残機 > 0
+	;ダイス数計算
+	プレイヤーダイス数 = (ABL:MASTER:전투능력 + RAND:5) * 2 + (ABL:MASTER:전투능력 + RAND:3) / 2
+	相手ダイス数 = (相手強さ + RAND:4 + 1) * 2 + 相手強さ / 2 * RAND:3
+	SELECTCASE 相手残機
+		CASE IS > 2
+			IF 慢心フラグ && 相手残機 > 2
+				CALL COLORMESSAGE(@"%CALLNAME:OPPONENT%は%CALLNAME:MASTER%のことを見くびっている",C_YELLOW,1)
+				相手ダイス数 -= 相手強さ / 2
+			ENDIF
+		CASE 2
+			相手ダイス数 += 相手強さ / 2
+		CASE 1
+			相手ダイス数 += 相手強さ / 2 + 1
+	ENDSELECT
+
+	;ダイス面計算
+	プレイヤーダイス面 = (ABL:MASTER:전투능력 + 1) * (6 + RAND:8) + RAND:(15 + TFLAG:행운보정) * ABL:MASTER:전투능력 / 2
+	相手ダイス面 = (相手強さ + 1) * (9 + RAND:7) + RAND:10 - (相手残機 - 1) * 相手強さ
+	;修正値計算
+	IF (相手強さ - ABL:MASTER:전투능력) < 0
+		プレイヤー修正値 = (ABL:MASTER:전투능력 - 相手強さ + 3) * (-RAND:4 - 8) * ABL:MASTER:전투능력 / 2
+		相手修正値 = (ABL:MASTER:전투능력 - 相手強さ + 3) * (RAND:4 + 8) * 相手強さ / 2
+	ELSEIF (相手強さ - ABL:MASTER:전투능력) > 0
+		プレイヤー修正値 = (相手強さ - ABL:MASTER:전투능력 + 3) * (RAND:4 + 8) * ABL:MASTER:전투능력 / 2
+		相手修正値 = (相手強さ - ABL:MASTER:전투능력 + 3) * (-RAND:4 - 8) * 相手強さ / 2
+	ELSE
+		プレイヤー修正値 = 0
+		相手修正値 = 0
+	ENDIF
+	
+	;イベント用
+	プレイヤー修正値 -= HANDICAP_FIXED
+	SIF HANDICAP_RAND
+		プレイヤー修正値 -= RAND:(HANDICAP_RAND)
+	;【言笑自若】の効果
+	SIF GETBIT(CFLAG:OPPONENT:탄막특능, 0)
+		プレイヤーダイス数 -= (相手強さ / 2 + RAND:3 + 1) * RAND:2
+	;【温柔敦厚】の効果
+	SIF GETBIT(CFLAG:OPPONENT:탄막특능, 1)
+		プレイヤーダイス面 -= (相手強さ / 2 + 1) * RAND:4 + RAND:5
+	;【勇気凛々】の効果
+	SIF GETBIT(CFLAG:OPPONENT:탄막특능, 2)
+		相手ダイス数 += (相手強さ / 2 + RAND:3 + 2) * RAND:2
+	;【豪放磊落】の効果
+	SIF GETBIT(CFLAG:OPPONENT:탄막특능, 3)
+		相手ダイス面 += 相手強さ * 2 + 6 / (RAND:3 + 1)
+	;【狷介孤高】の効果
+	SIF GETBIT(CFLAG:OPPONENT:탄막특능, 8)
+		相手修正値 += 相手強さ * (RAND:5 + 5) + RAND:5
+	;【幽愁暗恨】の効果
+	SIF GETBIT(CFLAG:OPPONENT:탄막특능, 9)
+		プレイヤー修正値 -= 相手強さ * (RAND:4 + 4) + RAND:9
+		
+	;【霊力充填】の効果
+	IF 霊力充填フラグ
+		プレイヤーダイス数 += 相手強さ / 2 + 1
+		プレイヤーダイス面 += (相手強さ / 2 + 1) * 4
+		プレイヤー修正値 += 相手強さ * (RAND:5 + 4)
+		霊力充填フラグ = 0
+	ENDIF
+
+	;弾幕勝負補助アイテムの効果
+	CALL DANMAKU_ITEM_EFFECT(持ち込みアイテム)
+	プレイヤーダイス面 += RESULT:0
+	プレイヤーダイス数 += RESULT:1
+	;念のためリセット
+	VARSET RESULT
+	
+	SIF プレイヤーダイス数 <= 0
+		プレイヤーダイス数 = 1
+	SIF 相手ダイス数 <= 0
+		相手ダイス数 = 1
+	SIF プレイヤーダイス面 <= 0
+		プレイヤーダイス面 = 1
+	SIF 相手ダイス面 <= 0
+		相手ダイス面 = 1
+		
+	PRINTL 
+	PRINTFORML -----------------------------------------------------
+	PRINTFORML TURN:{ターン数}
+	PRINTFORML -----------------------------------------------------
+	PRINTL 
+	
+	CALL DICE_PRINT(プレイヤーダイス数, プレイヤーダイス面, プレイヤー修正値, 相手ダイス数, 相手ダイス面, 相手修正値, "確定前")
+	PRINTFORMW 운명의 다이스 롤!!
+	;イベント用
+	IF (HANDICAP_FIXED || HANDICAP_RAND)
+		TRYCALLFORM M_KOJO_MESSAGE_COM_K{OPPONENT}_DANMAKU("ハンデ", 相手残機)
+	ENDIF
+	;ダイス値計算
+	プレイヤーダイス値 = DICE_VALUE(プレイヤーダイス数, プレイヤーダイス面, プレイヤー修正値)
+	相手ダイス値 = DICE_VALUE(相手ダイス数, 相手ダイス面, 相手修正値)
+	LOCAL = 相手ダイス値 - プレイヤーダイス値
+	
+	CALL DICE_PRINT(プレイヤーダイス値, 0, 0, 相手ダイス数, 相手ダイス面, 相手修正値, "確定後")
+	PRINTL 
+	PRINTFORML HP: {残りHP}　봄: {残りボム回数}　봄 위력: Min:{B_Min}, Max:{B_Max}　잔기: {プレイヤー残機}
+	
+	IF 持ち込みアイテム
+		SETCOLOR 0x666666
+		PRINTFORML (아이템 효과: %ITEMNAME:持ち込みアイテム% …%DANMAKU_ITEM_EXPLANATION(持ち込みアイテム)%)
+		RESETCOLOR
+	ENDIF
+	
+	CALL ASK_M("회피에 전념한다", 1, "승부한다", 1)
+	SELECTCASE RESULT
+		CASE 0
+			;【霊力充填】の効果
+			IF TALENT:MASTER:영력충전 == 1
+				霊力充填フラグ = 1
+				CALL COLORMESSAGE(@"%CALLNAME:MASTER%의【영력충전】발동!",C_RED,2)
+			ENDIF
+			PRINTFORML 날아오는 탄막을 회피하는 것에 전념하기로 했다.
+			PRINTFORMW ...
+			PRINTL 
+			CALL DICE_PRINT(プレイヤーダイス値, 相手ダイス値, 0, 0, 0, 0, "勝負")
+			PRINTW 
+			;【グレイズ上手】の効果
+			IF TALENT:MASTER:그레이즈능숙함 == 1
+				IF ABL:MASTER:전투능력 == 0
+					LOCAL = LOCAL * 2 / 3
+				ELSEIF ABL:MASTER:전투능력 < 3
+					LOCAL = (LOCAL * 2) / (ABL:MASTER:전투능력 + 2)
+				ELSE
+					LOCAL = (LOCAL * 3) / (ABL:MASTER:전투능력 + 3)
+				ENDIF
+			ENDIF
+			
+			IF ABL:MASTER:전투능력 < 4
+				IF LOCAL <= 20
+					PRINTFORML 살짝 긁혔을 뿐이다.
+					SIF LOCAL > 0
+						残りHP-= LOCAL * 4
+				ELSEIF LOCAL <= 50
+					PRINTFORML 약간 타격을 입었다.
+					残りHP-= LOCAL * 5
+				ELSEIF LOCAL <= 150
+					PRINTFORML 꽤 타격을 입었다.
+					残りHP-= LOCAL * 6
+				ELSE
+					PRINTFORML 상당한 타격을 입었다.
+					残りHP= 残りHP- MAXBASE:MASTER:체력 / 2 + 1
+				ENDIF
+			ELSE
+				IF LOCAL <= 20 * ABL:MASTER:전투능력 / 2
+					PRINTFORML 살짝 긁혔을 뿐이다.
+					SIF LOCAL > 0
+						残りHP-= LOCAL * 4
+				ELSEIF LOCAL <= 50 * ABL:MASTER:전투능력 / 2
+					PRINTFORML 약간 타격을 입었다.
+					残りHP-= LOCAL * 5
+				ELSEIF LOCAL <= 150 * ABL:MASTER:전투능력 / 2
+					PRINTFORML 꽤 타격을 입었다.
+					残りHP-= LOCAL * 6
+				ELSE
+					PRINTFORML 상당한 타격을 입었다.
+					残りHP= 残りHP- MAXBASE:MASTER:체력 / 2 + 1
+				ENDIF
+			ENDIF
+			
+			PRINTFORMW HP: {残りHP}
+			IF 残りHP <= 0
+				PRINTFORML ＼ピチューン／
+				PRINTFORML 被弾してしまった……
+				プレイヤー残機 --
+				残りHP = MAXBASE:MASTER:체력
+				残りボム回数 = 2
+				PRINTFORMW プレイヤー残機: {プレイヤー残機}
+				;【ルナシューター】の効果
+				SIF TALENT:MASTER:루나슈터 == 1
+					残りボム回数 ++
+				;【残忍酷薄】の効果
+				IF GETBIT(CFLAG:OPPONENT:탄막특능, 6) && プレイヤー残機 > 0
+					SETCOLOR C_RED
+						PRINTFORMW %CALLNAME:OPPONENT%의【잔인무도】발동！
+					RESETCOLOR
+					;【三粒の天滴】の効果
+					IF ITEM:스와코의선물 && !RAND:2
+						PRINTFORMW 케로쨩의 가호로【잔인무도】효과를 방어했다!
+					ELSE
+						;口上呼び出し
+						TRYCALLFORM M_KOJO_MESSAGE_COM_K{OPPONENT}_DANMAKU("残忍酷薄", 相手残機)
+						残りボム回数 --
+					ENDIF
+				ENDIF
+			ENDIF
+		CASE 1
+			;【乾坤一擲】の効果
+			IF GETBIT(CFLAG:OPPONENT:탄막특능, 7)
+				IF RAND:100 + 1 < 10 + 相手強さ * 2
+					LOCAL:1 = 相手強さ * (7 + RAND:5) * (相手強さ / 2 + 1) + RAND:7
+					相手ダイス値 += LOCAL:1
+					SETCOLOR C_RED
+						PRINTFORML %CALLNAME:OPPONENT%의【건곤일척】발동!
+						PRINTFORMW %CALLNAME:OPPONENT%의 주사위 값이 {LOCAL:1} 만큼 증가했다!
+					RESETCOLOR
+					;口上呼び出し
+					TRYCALLFORM M_KOJO_MESSAGE_COM_K{OPPONENT}_DANMAKU("乾坤一擲", 相手残機)
+					LOCAL = 相手ダイス値 - プレイヤーダイス値
+				ENDIF
+			ENDIF
+			IF 残りボム回数 >= 1
+				PRINTFORML 봄을 사용합니까?
+				CALL ASK_M("사용한다", 1, "사용하지 않는다", 1)
+				SELECTCASE RESULT
+					CASE 0
+						CALL UseBomb
+						BombPower = RESULT
+						プレイヤーダイス値 += BombPower
+						PRINTFORMW 주사위 값이 {BombPower} 만큼 증가했다!
+						残りボム回数 --
+						LOCAL = 相手ダイス値 - プレイヤーダイス値
+					CASE 1
+						
+				ENDSELECT
+			ENDIF
+			PRINTFORML 승부다!
+			PRINTFORMW ...
+			PRINTL 
+			CALL DICE_PRINT(プレイヤーダイス値, 相手ダイス値, 0, 0, 0, 0, "勝負")
+			PRINTW 
+			IF LOCAL > 0
+				IF 残りボム回数 >= 1
+					PRINTFORML 피할 길이 없어져 버린 %CALLNAME:MASTER%은(는) 봄을 사용했다!
+					CALL UseBomb
+					BombPower = RESULT
+
+					SETCOLOR C_RED
+					PRINTFORM ダイス値の差:{LOCAL} 
+					IF LOCAL <= BombPower
+						PRINTFORML ≤ {BombPower}
+						PRINTFORMW %CALLNAME:MASTER%은 봄으로 %CALLNAME:OPPONENT%의 탄막을 소거했다!
+						LOCAL = 0
+					ELSE
+						PRINTFORMW ＞ {BombPower}
+					ENDIF
+					RESETCOLOR
+					残りボム回数 --
+				ENDIF
+			ELSEIF LOCAL < 0
+				;【怪力乱神】の効果
+				IF GETBIT(CFLAG:OPPONENT:탄막특능, 4) && (-LOCAL) < 相手強さ * 10
+					SETCOLOR C_RED
+						PRINTFORML %CALLNAME:OPPONENT%의 【괴력난신】발동!
+						PRINTFORMW %CALLNAME:MASTER%의 탄막이 %CALLNAME:OPPONENT% 를 피탄시키기 전에 소거되었다!
+						;口上呼び出し
+						TRYCALLFORM M_KOJO_MESSAGE_COM_K{OPPONENT}_DANMAKU("怪力乱神", 相手残機)
+						LOCAL = 0
+					RESETCOLOR
+				ENDIF
+			ENDIF
+			IF LOCAL < 0
+				CALL COLORMESSAGE(@"격파했다! 해냈어!",C_YELLOW,1)
+				相手残機 --
+				;口上呼び出し
+				TRYCALLFORM M_KOJO_MESSAGE_COM_K{OPPONENT}_DANMAKU("被弾", 相手残機)
+				PRINTFORMW 상대 잔기: {相手残機}
+			ELSEIF LOCAL == 0
+				PRINTFORMW 서로 탄막을 맞출수 없었다.
+			ELSE
+				PRINTFORML ＼피츙／
+				PRINTFORML 피탄당하고 말았다......
+				プレイヤー残機 --
+				残りHP = MAXBASE:MASTER:체력
+				残りボム回数 = 2
+				PRINTFORMW LIFES: {プレイヤー残機}
+				;【ルナシューター】の効果
+				SIF TALENT:MASTER:루나슈터 == 1
+					残りボム回数 ++
+				;【残忍酷薄】の効果
+				IF GETBIT(CFLAG:OPPONENT:탄막특능, 6) && プレイヤー残機 > 0
+					SETCOLOR C_RED
+						PRINTFORMW %CALLNAME:OPPONENT%의 【잔인무도】발동!
+					RESETCOLOR
+					;【三粒の天滴】の効果
+					IF ITEM:스와코의선물 && !RAND:2
+						PRINTFORMW 케로쨩의 가호로【잔인무도】효과를 방어했다!
+					ELSE
+						;口上呼び出し
+						TRYCALLFORM M_KOJO_MESSAGE_COM_K{OPPONENT}_DANMAKU("残忍酷薄", 相手残機)
+						残りボム回数 --
+					ENDIF
+				ENDIF
+			ENDIF
+	ENDSELECT
+	
+	ターン数 ++
+WEND
+
+PRINTL 
+IF プレイヤー残機 <= 0
+	PRINTFORMW %마스터는% 져 버렸다……
+	CALL COLORMESSAGE(@"패배자!",C_RED,2,1)
+ELSEIF 相手残機 <= 0
+	PRINTFORML %마스터는% %CALLNAME:OPPONENT%와의 승부에서 이겼다!
+	CALL COLORMESSAGE(@"인생의 승리자!",C_GREEN,2,1)
+ENDIF
+PRINTL 
+
+; 악보 획득 판정. 1.20u3 버전에서는 이식되지 않았기에 주석 처리.
+;楽譜入手処理
+;IF (RAND:(100) < 30)
+;	RESULT = 楽譜入手_弾幕勝負(OPPONENT)
+;	SIF RESULT != -1
+;		PRINTL
+;ENDIF
+
+RETURN 相手残機
+
+
+@DICE_PRINT(ARG:0, ARG:1, ARG:2, ARG:3, ARG:4, ARG:5, ARGS)
+IF ARGS == "確定前"
+	PRINTFORM %CALLNAME:MASTER%: 
+	SETCOLOR C_GREEN
+	PRINTFORM {ARG:0}d{ARG:1}
+	IF ARG:2 > 0
+		SETCOLOR C_RED
+		PRINTFORM +{ARG:2}
+	ELSEIF ARG:2 < 0
+		SETCOLOR C_BLUE
+		PRINTFORM {ARG:2}
+	ENDIF
+	RESETCOLOR
+	PRINTFORM (Min:{ARG:0 + ARG:2}, Max:{ARG:0 * ARG:1 + ARG:2})  VS  
+	SETCOLOR C_GREEN
+	PRINTFORM {ARG:3}d{ARG:4}
+	IF ARG:5 > 0
+		SETCOLOR C_RED
+		PRINTFORM +{ARG:5}
+	ELSEIF ARG:5 < 0
+		SETCOLOR C_BLUE
+		PRINTFORM {ARG:5}
+	ENDIF
+	RESETCOLOR
+	PRINTFORM (Min:{ARG:3 + ARG:5}, Max:{ARG:3 * ARG:4 + ARG:5}) 
+	PRINTFORML :%CALLNAME:TARGET%
+;ARG:1,2は使わない
+ELSEIF ARGS == "確定後"
+	PRINTFORM %CALLNAME:MASTER%: 
+	SETCOLOR C_GREEN
+	PRINTFORM {ARG:0}  
+	RESETCOLOR
+	PRINTFORM VS  
+	SETCOLOR C_GREEN
+	PRINTFORM {ARG:3}d{ARG:4}
+	IF ARG:5 > 0
+		SETCOLOR C_RED
+		PRINTFORM +{ARG:5}
+	ELSEIF ARG:5 < 0
+		SETCOLOR C_BLUE
+		PRINTFORM {ARG:5}
+	ENDIF
+	RESETCOLOR
+	PRINTFORM (Min:{ARG:3 + ARG:5}, Max:{ARG:3 * ARG:4 + ARG:5}) 
+	PRINTFORML :%CALLNAME:TARGET%
+;ARG:2,3,4,5は使わない
+ELSEIF ARGS == "勝負"
+	PRINTFORM %CALLNAME:MASTER%: 
+	SETCOLOR C_GREEN
+	PRINTFORM {ARG:0}  
+	RESETCOLOR
+	PRINTFORM VS  
+	SETCOLOR C_GREEN
+	PRINTFORM {ARG:1} 
+	RESETCOLOR
+	PRINTFORML :%CALLNAME:TARGET%
+ENDIF
+
+
+@DICE_VALUE(ARG:0, ARG:1, ARG:2)
+#FUNCTION
+;初期化しないとダメ
+LOCAL:1 = 0
+FOR LOCAL, 0, ARG:0
+	LOCAL:1 += RAND:(ARG:1) + 1
+NEXT
+
+RETURNF LOCAL:1 + ARG:2
+
+
+@SHOW_DANMAKU_RULE
+PRINTFORML 서로 주사위를 던져 나온 눈의 크기를 겨룬다는 게 기본 룰입니다
+PRINTFORMW 처음은 서로 잔기를 3개 보유하고 있으며, 전투능력이 클수록 주사위 수와 면이 증가합니다.
+PRINTFORMW 플레이어만, 자신의 주사위눈을 본 다음 회피에 전념할지 승부할지를 선택할 수 있습니다(이때, 상대의 주사위눈은 보이지 않습니다).
+PRINTFORMW 회피에 전념하기로 선택했을 경우는, 잔기가 줄어들지 않는 대신에 주사위눈 차이에 따라 HP에 대미지를 받습니다.
+PRINTFORMW HP가 0이 되면 플레이어의 잔기가 1 줄어듭니다. 잔기가 0이 되면 플레이어의 패배입니다.
+PRINTFORMW 승부하기로 선택하고 상대보다 낮은 주사위눈이었을 경우는, 무조건 플레이어의 잔기가 1 줄어듭니다.
+PRINTFORMW 승부하기로 선택하고 상대보다 높은 주사위눈을 냈을 때에만 상대의 잔기를 1 줄일 수 있습니다.
+PRINTFORMW 플레이어의 잔기가 0이 되기 전에 상대의 잔기를 0으로 만들면 플레이어의 승리가 됩니다.
+PRINTFORMW 또한 플레이어는 폭탄을 사용해 주사위의 결과에 플러스할 수 있으므로, 이때다 싶은 순간에 사용합시다.
+PRINTFORMW 더해서 주사위 승부에 패배해 플레이어의 잔기가 줄어들 때, 폭탄을 사용해 잔기가 줄어드는 것을 막을 때가 있습니다.
+PRINTFORMW 단, 잔기가 줄어들면 폭탄 사용 횟수가 강제적으로 2가 되므로, 사용하지 않은 채로 잔기가 줄면 손해를 봅니다.
+
+
+@UseBomb
+#DIM BombPower
+BombPower = ABL:MASTER:전투능력 * (7 + RAND:5) * (ABL:MASTER:전투능력 / 2 + 1) + RAND:7
+
+CALL COLORMESSAGE(@"봄 위력 {BombPower}",C_YELLOW,1)
+;【ルナシューター】の効果
+IF TALENT:MASTER:루나슈터 == 1
+	BombPower = BombPower * (RAND:3 + 2)
+	CALL COLORMESSAGE(@"【루나슈터】의 효과로 봄 위력이 {BombPower} 만큼 증가했다!",C_YELLOW,2)
+ENDIF
+;【三粒の天滴】の効果
+IF ITEM:스와코의선물
+	;LOCAL = MAX(RAND:750, 400)
+	LOCAL = BombPower / 10
+	BombPower += LOCAL
+	CALL COLORMESSAGE(@"%CALLNAME:MASTER%의 주머니에서 조용히 수많은 개구리들이 튀어나왔다!",C_YELLOW,1)
+	CALL COLORMESSAGE(@"봄 위력이 {LOCAL} 만큼 증가했다!",C_YELLOW,1)
+ENDIF
+RETURN BombPower
+
+@DANMAKU_ITEM_USE
+#DIM 持ち込みアイテム
+#DIMS 効果テキスト
+持ち込みアイテム = 0
+SIF !ITEM:850 && !ITEM:851 && !ITEM:852 && !ITEM:853
+	RETURN 0
+DRAWLINE
+PRINTFORML 탄막승부 보조 아이템을 사용할까요?
+DRAWLINE
+CALL ASK_M("각성제",ITEM:850, "아이시클봄",ITEM:851, "태을의불씨",ITEM:852, "매혹의미끼", ITEM:853, "사용하지 않는다",1)
+IF RESULT == 4
+	RETURN 0
+ENDIF
+
+持ち込みアイテム = RESULT + 850
+PRINTFORML %ITEMNAME:持ち込みアイテム%를 사용합니까？
+PRINTFORML %DANMAKU_ITEM_EXPLANATION(持ち込みアイテム)%
+CALL ASK_YN
+IF !RESULT
+	;先に進む
+ELSE
+	RESTART
+ENDIF
+ITEM:持ち込みアイテム -= 1
+RETURN 持ち込みアイテム
+
+@DANMAKU_ITEM_EXPLANATION(ARG)
+#FUNCTIONS
+#DIMS 効果テキスト
+SELECTCASE ARG
+	CASE 850
+		効果テキスト = ダイス面がほんのり良くなる
+	CASE 851
+		効果テキスト = ダイス数がほんのり増える
+	CASE 852
+		効果テキスト = ダイス面が少し良くなる
+	CASE 853
+		効果テキスト = ダイス数が少し増える
+	CASEELSE
+		効果テキスト = 
+ENDSELECT
+RETURNF 効果テキスト
+
+@DANMAKU_ITEM_EFFECT(ARG)
+#DIM Dnum
+#DIM Dface
+Dnum = 0
+Dface = 0
+SELECTCASE ARG
+	CASE 850	;パワフルドラッグ
+		Dface = MAX(RAND:((ABL:MASTER:전투능력) + 3), 2)
+	CASE 851	;アイシクルボム
+		Dnum = MAX(RAND:((ABL:MASTER:전투능력) + 1), 1)
+	CASE 852	;太乙の火種
+		Dface = MAX(RAND:((ABL:MASTER:전투능력) * 2), 4)
+	CASE 853	;魅惑のエサ
+		Dnum = MAX(RAND:((ABL:MASTER:전투능력) * 2), 3)
+ENDSELECT
+RETURN Dface, Dnum
