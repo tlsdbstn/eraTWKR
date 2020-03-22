@@ -1,5 +1,5 @@
 ﻿; Using Semantic Versioning 2.0.0
-#DIMS CONST eraTW_Version = "0.12.0"
+#DIMS CONST eraTW_Version = "0.13.0"
 
 ;SAVESTR
 #DIM CONST 본체버전 = 8
