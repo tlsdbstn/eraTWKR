@@ -2,7 +2,7 @@
 ;セクハラ系コマンド
 ;※※※※※※※※※※※※※※※※※※※※※※※※※
 ;==================================================
-;310,尻を撫でる
+;310,엉덩이를 쓰다듬다
 ;TFLAG:193(1=不快(TALENT:臆病なら涙目) 2&&3=恥ずかしがる(TALENT:男嫌い兼MASTERが男なら、身をすくめる) 4=されるがまま)
 ;CFLAG:우후후==2&&TCVAR:20(パンツ無し顔面騎乗(70=クンニ強制 71=フェラチオ強制 72=アナル奉仕) 35=スカート内見せつけ 52=素股)
 ;CFLAG:우후후==2&&TEQUIP:식스나인(パンツありTCVAR:20(70～72)はこちら)
@@ -32,71 +32,72 @@ IF LOCAL
 			SELECTCASE TFLAG:193
 				;不快
 				CASE 1
-					PRINTFORML 「위, 갑자기 손대지 말아. 기분 깬다―」
-					PRINTFORMW 무용은 불쾌 그렇게%CALLNAME:MASTER%의 손을 지불했다.
-				;恥ずかしがる
+					PRINTFORML 「우와, 갑자기 건드리지 마. 기분나빠―」
+					PRINTFORMW 마이는 불쾌하게 %CALLNAME:MASTER%의 손을 털어냈다
+				;부끄러워하다
 				CASE 2,3
-					PRINTFORML 「도―！싫은 것 같은 손놀림으로 손대어―%UNICODE(0x2764)%」
-					PRINTFORMW 무용은 드물게는에 문 미소를 띄우고 있다.
+					PRINTFORML 「정말―! 야한 손놀림으로 만지다니―%UNICODE(0x2764)%」
+					;イヤらしい手つきで触って
+					PRINTFORMW 마이는 드물게 수줍은 미소를 짓고 있다
 				;されるがまま
 				CASE 4
 					SELECTCASE RAND:2
 					CASE 0
-						PRINTFORML 「부부부―！너도 그근처의 색골 아버지와 동레벨이구나―」
-						PRINTFORMW 무용은 능글능글 하면서, 힐책하도록(듯이)%CALLNAME:MASTER%(을)를 응시하고 있다.
+						PRINTFORML 「후후후―! 너도 그 정도의 색골 아저씨와 같은 수준이구나―」
+						PRINTFORMW 마이는 히죽히죽 거리며, 꾸짖듯이 %마스터를% 바라보고 있다
 					CASE 1
-						PRINTFORML 「아하하！%CALLNAME:MASTER%(은)는 정말 치한 보고 싶다！」
-						PRINTFORMW 무용은 깔깔 마른 웃음소리를 주고 있다.
+						PRINTFORML 「아하핫! %마스터는% 치한같네!」
+						PRINTFORMW 마이는 메마른 웃음소리를 내고 있다
 					ENDSELECT
 			ENDSELECT
 		ELSEIF TALENT:연모
 			SELECTCASE TFLAG:193
 				;不快
 				CASE 1
-					PRINTFORML 「아！？있고, 갑자기 그만두어！」
-					PRINTFORML 「 이제(벌써)……그러한 것, 치한이라고 해？」
-					PRINTFORMW 무용은 뺨을 부풀려%CALLNAME:MASTER%에 항의하고 있다.
+					PRINTFORML 「히익!? 가, 갑자기 그만둬!」
+					PRINTFORML 「정말……그런 걸 치한이라고 한다니까?」
+					PRINTFORMW 마이는 볼을 부풀려 %CALLNAME:MASTER%에게 항의하고 있다
 				;恥ずかしがる
 				CASE 2,3
 					SELECTCASE RAND:2
 						CASE 0
-							PRINTFORMW 「……(은)는, 부끄럽기 때문에 그만두어……」
+							PRINTFORMW 「우우우……부, 끄러우니까 그만둬……」
 						CASEELSE
-							PRINTFORMW 「%CALLNAME:MASTER%의 헨타이……」
+							PRINTFORMW 「%마스터는% 변태……」
 					ENDSELECT
 				;されるがまま
 				CASE 4
 					SELECTCASE RAND:2
 						CASE 0
-							PRINTFORMW 「네에에…나의 엉덩이, 어때？」
+							PRINTFORMW 「에헤헤…내 엉덩이 어때?」
 						CASEELSE
-							PRINTFORML 「%CALLNAME:MASTER%라고, 엉덩이를 좋아해？」
-							PRINTFORMW 「좋아하면……좀 더 손대어도, 괜찮아？」
+							PRINTFORML 「%마스터는% 엉덩이가 좋아?」
+							PRINTFORMW 「좋아한다면……더 만져도, 괜찮아?」
 					ENDSELECT
 			ENDSELECT
 		ELSE
 			SELECTCASE TFLAG:193
 				;不快
 				CASE 1
-					PRINTFORML 「히！！에, 거치지 않아 싶다-！」
-					PRINTFORMW 무용은%CALLNAME:MASTER%의 손을 뿌리쳤다.
+					PRINTFORML 「히이익!! 벼, 변태―애!」
+					PRINTFORMW 마이는 %CALLNAME:MASTER%의 손을 뿌리쳤다
 				;恥ずかしがる
 				CASE 2,3
 					SELECTCASE RAND:2
 						CASE 0
-							PRINTFORML 「이나, 그만두어………」
-							PRINTFORMW 무용은 기분악에 몸화로 의치라고 있다.
+							PRINTFORML 「그, 그만둬………」
+							PRINTFORMW 마이는 거북한 듯이 몸을 웅크리고 있다
 						CASEELSE
-							PRINTFORMW 「…이런 금년이라고, 즐거운거야……？」
+							PRINTFORMW 「으으…이런 짓을 해서, 즐거운 거야……?」
 					ENDSELECT
 				;されるがまま
 				CASE 4
 					SELECTCASE RAND:2
 						CASE 0
-							PRINTFORML 「너무 손댄 있고로군요……」
-							PRINTFORMW 무용은 축축히%CALLNAME:MASTER%(을)를 응시하고 있다.
+							PRINTFORML 「너무 만지진 마……」
+							PRINTFORMW 마이는 가만히 %마스터를% 바라보고 있다
 						CASEELSE
-							PRINTFORMW 「라고 할까……%CALLNAME:MASTER%라고, 변태구나……」
+							PRINTFORMW 「뭐랄까……%마스터는% 변태구나……」
 					ENDSELECT
 			ENDSELECT
 		ENDIF
@@ -132,29 +133,29 @@ IF LOCAL
 		IF TALENT:광기
 			SELECTCASE RAND:2
 			CASE 0
-				PRINTFORML 「딱 좋은 안아 마음？에？ 자, 상태도 확인해 본다？」
-				PRINTFORMW 무용 벌등, 이라고 스커트를 넘겨,%CALLNAME:MASTER%에 요염한 미소를 보였다.
+				PRINTFORML 「딱 좋은 포옹이지? 헤에? 그럼 상태도 확인해볼래?」
+				PRINTFORMW 마이는 흘끗, 하고 스커트를 넘기고, %CALLNAME:MASTER%에게 요염한 미소를 보였다
 			CASE 1
-				PRINTFORML 「후후후, 나는 해도 좋다―？」
-				PRINTFORMW 무용은 꼬드김정적인 미소를 띄워,%CALLNAME:MASTER%(을)를 눈을 치켜 뜨고 봄으로 응시하고 있다.
+				PRINTFORML 「후후훗, 나는 꼭 안아줘도 좋아―?」
+				PRINTFORMW 마이는 선정적인 미소를 지으며 %마스터를% 눈을 치뜨고 바라보고 있다
 			ENDSELECT
 		ELSEIF TALENT:연모
 			SELECTCASE RAND:2
 			CASE 0
-				PRINTFORML 「네에에…따뜻하게라고, 안심한데…」
-				PRINTFORMW %CALLNAME:MASTER%에 꼭 껴안을 수 있어 무용은 완전히 응석부리고 자르고 있다.
+				PRINTFORML 「에헤헤…따뜻해서, 안심돼…」
+				PRINTFORMW %CALLNAME:MASTER%에게 꼭 안겨어 마이는 완전히 어리광 부리고 있다
 			CASE 1
-				PRINTFORML 「%CALLNAME:MASTER%, 좀 더…는 해…？」
-				PRINTFORMW 무용은 응석부린 소리를 높여,%CALLNAME:MASTER%졸라 하고 있다.
+				PRINTFORML 「%CALLNAME:MASTER%, 좀 더…꼭 안아줘…?」
+				PRINTFORMW 마이는 어리광부리는 소리를 내며 %CALLNAME:MASTER%에게 조르고 있다
 			ENDSELECT
 		ELSE
 			SELECTCASE RAND:2
 			CASE 0
-				PRINTFORML 「후후후, 따뜻하다♪」
-				PRINTFORMW %CALLNAME:MASTER%에 꼭 껴안을 수 있어 무용은 순진하게 웃고 있다.
+				PRINTFORML 「후후후, 따뜻하―다♪」
+				PRINTFORMW %CALLNAME:MASTER%에게 안겨서 마이는 천진난만하게 웃고 있다
 			CASE 1
-				PRINTFORML 「리내와도 자주(잘) 이렇게 한다―」
-				PRINTFORMW %CALLNAME:MASTER%(와)과 하그를 서로 해 , 무용은 조금 낯간지러운 듯이  웃고 있다.
+				PRINTFORML 「사토노하고도 자주 이렇게 해―」
+				PRINTFORMW %조사처리(CALLNAME:MASTER,"와")% 서로 포옹을 하고, 마이는 조금 간지러운 듯이 웃고 있다
 			ENDSELECT
 		ENDIF
 	ENDIF
@@ -187,25 +188,25 @@ IF LOCAL
 	ELSEIF CFLAG:수면
 	ELSE
 		IF TALENT:광기
-			PRINTFORML 「,……%UNICODE(0x2764)%」
-			PRINTFORMW 「는……후후, 다음은 좀 더 깊게 한다…？%UNICODE(0x2764)%」
+			PRINTFORML 「쮸웁, 쪽……%UNICODE(0x2764)%」
+			PRINTFORMW 「후아……후훗, 다음엔 더 깊게할까…?%UNICODE(0x2764)%」
 		ELSEIF TALENT:연모
 			SELECTCASE RAND:2
 			CASE 0
-				PRINTFORML 「짜는, 응,……%UNICODE(0x2764)%」
-				PRINTFORMW 「후~……더 이상 하면(자), 심장이 폭발해버릴 그렇게…%UNICODE(0x2764)%」
+				PRINTFORML 「움, 응, 쪽……%UNICODE(0x2764)%」
+				PRINTFORMW 「하아……더 이상 하다간 심장이 터질 것만 같아…%UNICODE(0x2764)%」
 			CASE 1
-				PRINTFORML 「…,…%UNICODE(0x2764)%」
-				PRINTFORMW 무용은 황홀로 한 표정으로,%CALLNAME:MASTER%의 입맞춤을 받아들이고 있다.
+				PRINTFORML 「쪽…핥짝, 음…%UNICODE(0x2764)%」
+				PRINTFORMW 마이는 황홀한 표정으로 %CALLNAME:MASTER%의 입맞춤을 받아들이고 있다
 			ENDSELECT
 		ELSE
 			SELECTCASE RAND:2
 			CASE 0
-				PRINTFORML 「……」
-				PRINTFORMW 「응, 역시…이런 것은, 연인으로 하는 것이 아닌거야？」
+				PRINTFORML 「쪽……」
+				PRINTFORMW 「으응, 역시…이런 건 연인끼리 하는 게 아니야?」
 			CASE 1
-				PRINTFORML 「, ,……」
-				PRINTFORMW 무용은 조금 사양 쉽상으로%CALLNAME:MASTER%의 키스를 받아들이고 있다.
+				PRINTFORML 「쪽, 핥짝, 쮸웁……」
+				PRINTFORMW 마이는 조금 조심스럽게 %CALLNAME:MASTER%의 키스를 받아 들이고 있다
 			ENDSELECT
 		ENDIF
 	ENDIF
@@ -235,20 +236,20 @@ IF LOCAL
 		IF ABL:B감각 <= 1
 			SELECTCASE RAND:2
 			CASE 0
-				PRINTFORMW 「아하하, 낯간지러워―」
-				PRINTFORMW ……아직 무용은 가슴으로 느낄 수가 없는 것 같다.
+				PRINTFORMW 「아하하, 간지러워―」
+				PRINTFORMW ……아직 마이는 가슴으로 느끼지 못하는 것 같다
 			CASE 1
-				PRINTFORML 「이것, 정말로 기분 좋아져―？」
-				PRINTFORMW 무용은 아 해 기분에%CALLNAME:MASTER%의 손을 응시하고 있다.
+				PRINTFORML 「이거, 정말로 기분 좋아지는거야―?」
+				PRINTFORMW 마이는 수상쩍게 %CALLNAME:MASTER%의 손을 바라보고 있다
 			ENDSELECT
 		ELSE
 			SELECTCASE RAND:2
 			CASE 0
-				PRINTFORMW 「……응, 기분이 좋아,%CALLNAME:MASTER%……」
-				PRINTFORMW 무용은%CALLNAME:MASTER%(을)를 받아들이고 있다.
+				PRINTFORMW 「……읏, 기분좋아, %CALLNAME:MASTER%……」
+				PRINTFORMW 마이는 %마스터를% 받아 들이고 있다
 			CASE 1
-				PRINTFORML 「네에에, 좀 더 손대어도 좋아―%UNICODE(0x2764)%」
-				PRINTFORMW 무용은%CALLNAME:MASTER%하지만 손대기 쉽게 가슴을 폈다.
+				PRINTFORML 「에헤헤, 더 만져도 좋아―%UNICODE(0x2764)%」
+				PRINTFORMW 마이는 %마스터가% 만지기 쉽도록 가슴을 폈다
 			ENDSELECT
 		ENDIF
 	ENDIF
@@ -273,14 +274,14 @@ LOCAL = 1
 ;-------------------------------------------------
 IF LOCAL
 	IF ABL:A감각 <= 1
-		PRINTFORML 「히！？(이)나, 그만두어！ ……그렇다고 할까 더럽지 않다？」
-		PRINTFORMW 무용은 돈 당겨-라고 하는 표정으로 이쪽을 응시하고 있다.
+		PRINTFORML 「우히익!? 그, 그만둬! ……라고 할까 더럽지 않아?」
+		PRINTFORMW 마이는 싸―한 표정으로 이쪽을 바라보고 있다
 	ELSEIF ABL:A감각 <= 3
-		PRINTFORML 「…！이거 참, 촉응 없고―」
-		PRINTFORMW 무용은 조금 뺨을 붉혀 글자와 와%CALLNAME:MASTER%(을)를 예응으로 있다.
+		PRINTFORML 「히익…! 야아, 손대지 마―」
+		PRINTFORMW 마이는 볼을 조금 물들이고, 촉촉하게 %마스터를% 노려보고 있다
 	ELSE
-		PRINTFORML 「만난다%UNICODE(0x2764)% , 엉덩이는 안된다니까―%UNICODE(0x2764)%」
-		PRINTFORMW 무용은 민감한 고혈을 손대어져 무심코 느껴 버린 것 같다.
+		PRINTFORML 「아우우%UNICODE(0x2764)% 어, 엉덩이는 안된다니까―%UNICODE(0x2764)%」
+		PRINTFORMW 마이는 민감한 항문을 만져져 무심코 느껴 버린 것 같다
 	ENDIF
 ENDIF
 RETURN 1
@@ -302,16 +303,16 @@ LOCAL = 1
 ;-------------------------------------------------
 IF LOCAL
 	IF ABL:C감각 <= 3
-		PRINTFORML 「응, 후후후%UNICODE(0x2764)%」
-		PRINTFORMW 무용은 미소지으면서, 간지러운 듯이  몸을 궁리했다.
+		PRINTFORML 「응, 후후훗%UNICODE(0x2764)%」
+		PRINTFORMW 마이는 미소를 지으며 간지러운 듯 몸을 비틀었다
 	ELSE
 		SELECTCASE RAND:2
 		CASE 0
-			PRINTFORMW 「좋아,%CALLNAME:MASTER%……%UNICODE(0x2764)%」
-			PRINTFORMW 무용은 열정적인 눈초리를 해,%CALLNAME:MASTER%의 손을 비소에 꽉 눌렀다……
+			PRINTFORMW 「좋아, %CALLNAME:MASTER%……읏%UNICODE(0x2764)%」
+			PRINTFORMW 마이는 뜨거운 눈빛을 띄우고, %CALLNAME:MASTER%의 손을 비소에 갖다댔다……
 		CASE 1
-			PRINTFORML 「아%UNICODE(0x2764)% 이제(벌써)…거기만 괴롭히지 말아―%UNICODE(0x2764)%」
-			PRINTFORMW %CALLNAME:MASTER%하지만 손가락을 움직일 때마다, 무용은 몸을 비쿡과 반응시키고 있다.
+			PRINTFORML 「아앗%UNICODE(0x2764)% 정말…거기만 괴롭히지 마―%UNICODE(0x2764)%」
+			PRINTFORMW %마스터가% 손가락을 움직일 때마다 마이는 몸을 움찔하게 반응시키고 있다
 		ENDSELECT
 	ENDIF
 ENDIF
@@ -335,14 +336,14 @@ LOCAL = 1
 ;-------------------------------------------------
 IF LOCAL
 	IF TALENT:처녀 == 1
-		PRINTFORML 「, 조금 기다려！그렇게 손대어지면(자) 무서워…」
-		PRINTFORMW 무용은 파과의 가능성에 무서워하고 있는 것 같다….
+		PRINTFORML 「자, 잠깐만! 그렇게 만지면 무서워…」
+		PRINTFORMW 마이는 파과의 가능성에 무서워하고 있는 것 같다…
 	ELSEIF ABL:V감각 < 1
-		PRINTFORML 「무슨, 생각했던 것보다 기분 좋지 않다…」
-		PRINTFORMW 무용은 아직 질로 느낄 수가 없는 것 같다.
+		PRINTFORML 「왠지 생각보다 기분좋지않네…」
+		PRINTFORMW 마이는 아직 질로 느낄 수가 없는 것 같다
 	ELSE
-		PRINTFORML 「은%UNICODE(0x2764)% 아, 기분 있고 , 좀 더…%UNICODE(0x2764)%」
-		PRINTFORMW %CALLNAME:MASTER%하지만 손가락을 움직일 때마다, 무용은 느끼고 자른 소리를 높였다.
+		PRINTFORML 「하앗%UNICODE(0x2764)% 아, 기분좋아, 좀 더…%UNICODE(0x2764)%」
+		PRINTFORMW %마스터가% 손가락을 움직일 때마다, 마이는 느끼는 목소리를 높였다
 	ENDIF
 ENDIF
 RETURN 1
@@ -362,16 +363,16 @@ LOCAL = 1
 ;-------------------------------------------------
 IF LOCAL
 	IF ABL:V감각 < 2
-		PRINTFORML 「응,……그런데, 응, 좀 더, 천천히 움직여 주지 않는다…？」
-		PRINTFORMW 무용은 아직 질로 느낄 수가 없는 것 같다.
+		PRINTFORML 「응, 으읏……이, 있잖아, 조금 천천히 움직여주지않을래…?」
+		PRINTFORMW 마이는 아직 질로 느낄 수가 없는 것 같다
 	ELSE
 		SELECTCASE RAND:2
 		CASE 0
-			PRINTFORMW 「아, 개, 이것,…%UNICODE(0x2764)% %UNICODE(0x2764)%」
-			PRINTFORMW 몇번이나 질을 켜져, 무용은 이미 허덕일 수 밖에 할 수 없는 것 같다.
+			PRINTFORMW 「앗, 이, 이거, 굉장…읏%UNICODE(0x2764)% 앗%UNICODE(0x2764)%」
+			PRINTFORMW 몇 번이나 질을 문질러져져, 마이는 이제 헐떡이는 것 밖에 할 수 없는 것 같다
 		CASE 1
-			PRINTFORML 「%CALLNAME:MASTER%, 기분 있어라%UNICODE(0x2764)% 좀 더, 좀 더%UNICODE(0x2764)%」
-			PRINTFORMW %CALLNAME:MASTER%하지만 움직일 때에, 무용은 엉덩이를 진동시켜 쾌락을 재촉 했다.
+			PRINTFORML 「%CALLNAME:MASTER%, 기분좋앗%UNICODE(0x2764)% 좀 더, 좀 더엇%UNICODE(0x2764)%」
+			PRINTFORMW %마스터가% 움직일 때마다 마이는 엉덩이를 떨며 쾌락을 재촉했다
 		ENDSELECT
 	ENDIF
 ENDIF
@@ -391,16 +392,16 @@ LOCAL = 1
 ;-------------------------------------------------
 IF LOCAL
 	IF ABL:A감각 < 2
-		PRINTFORML 「기다려, 조금, 아프다……」
-		PRINTFORMW 고혈을 범해져 무용은 괴로운 듯하게 얼굴을 비뚤어지게 하고 있다.
+		PRINTFORML 「기다려, 조금, 아파……」
+		PRINTFORMW 항문을 범해져 마이가 괴로운 듯이 얼굴을 일그러뜨리고 있다
 	ELSE
 		SELECTCASE RAND:2
 		CASE 0
-			PRINTFORMW 「, 엉덩이인데, 이렇게…%UNICODE(0x2764)% , 는 , 안돼…%UNICODE(0x2764)%%UNICODE(0x2764)%」
-			PRINTFORMW 무용은 고 구멍으로부터 타 오는 쾌락에 열중하고 있다.
+			PRINTFORMW 「앗, 엉덩이인데, 이렇게…%읏UNICODE(0x2764)% 아, 하앗, 안돼…읏%UNICODE(0x2764)%%UNICODE(0x2764)%」
+			PRINTFORMW 마이는 항문으로부터 흐르는 쾌락에 푹 빠져 있다
 		CASE 1
-			PRINTFORML 「아, 엉덩이 기분 있고…%UNICODE(0x2764)% 아는 ,%CALLNAME:MASTER%, 좀 더 해도 좋아…%UNICODE(0x2764)%」
-			PRINTFORMW 무용은 어널 섹스의 열락에 만족기분인 미소를 띄우고 있다.
+			PRINTFORML 「앗, 엉덩이 기분좋아…읏%UNICODE(0x2764)% 아핫, %CALLNAME:MASTER%, 좀 더 해도 좋아…읏%UNICODE(0x2764)%」
+			PRINTFORMW 마이는 아날 섹스의 열락에 만족스러운 미소를 짓고 있다
 		ENDSELECT
 	ENDIF
 ENDIF
@@ -428,73 +429,73 @@ IF LOCAL
 		SELECTCASE TFLAG:193
 			;ビンタ
 			CASE -5
-				PRINTFORML 「위！？ 개, 이, 변태째！」
-				PRINTFORMW 스커트를 넘겨진 무용은,%CALLNAME:MASTER%에 마음껏 빈타를 물렸다.
+				PRINTFORML 「우왓!? 이, 이런, 변태야!」
+				PRINTFORMW 치마를 넘겨진 마이는 %CALLNAME:MASTER%의 뺨을 마음껏 쳤다
 			;つねられる
 			CASE -3
-				PRINTFORML 「나의 스커트를 손대려고 한 손은 이것인가―？」
-				PRINTFORMW 무용우우와%CALLNAME:MASTER%의 손을 개군요.
+				PRINTFORML 「내 치마 만지려고 한 손이 이건가―?」
+				PRINTFORMW 마이는 꽈악하고 %CALLNAME:MASTER%의 손을 꼬집었다
 			;嫌がる
 			CASE -1
 				IF TALENT:광기
-					PRINTFORML 「이나-응, 외설-☆ ……정말, 한다고 생각했다？」
-					PRINTFORMW 무용은 식은 눈으로%CALLNAME:MASTER%(을)를 응시하고 있다.
+					PRINTFORML 「시―렁, 야해―☆ ……라고, 할 줄 알았어?」
+					PRINTFORMW 마이는 차가운 눈으로 %마스터를% 바라보고 있다
 				ELSE
 					SELECTCASE RAND:2
 					CASE 0
-						PRINTFORML 「아니, 정말 뭐 하고 있어……？」
-						PRINTFORMW 무용은 마음 속 돈 당겨 한 것처럼%CALLNAME:MASTER%(을)를 응시하고 있다.
+						PRINTFORML 「아니, 정말 뭐하는거야……?」
+						PRINTFORMW 마이는 마음속 깊이 박힌 듯 %마스터를% 바라보고 있다
 					CASEELSE
-						PRINTFORML 「위！？ (이)나, 그만두어―！」
-						PRINTFORMW 스커트를 누른 무용은, 얼굴을 새빨갛게 해 항의하고 있다.
+						PRINTFORML 「우왓!? 그, 그만둬―!」
+						PRINTFORMW 치마를 누르는 마이는 얼굴을 붉히며 항의하고 있다
 					ENDSELECT
 				ENDIF
 			;嫌がる（嬉しげ）
 			CASE 0
 				SELECTCASE RAND:2
 					CASE 0
-						PRINTFORML 「했군？ 스커트 넘겨, 는 싶다！」
-						PRINTFORMW 무용은 약간 웃으면서 항의해 왔다.
+						PRINTFORML 「했겠다? 치마 넘기는거, 변―태!」
+						PRINTFORMW 마이는 약간 웃으며 항의해 왔다
 					CASEELSE
-						PRINTFORML 「도―！%CALLNAME:MASTER%의 외설-！」
-						PRINTFORMW 무용은 스커트를 눌러 조금 웃으면서 항의해 왔다.
+						PRINTFORML 「정말―! %마스터는% 야해-!」
+						PRINTFORMW 마이는 치마를 누르고 살짝 웃으며 항의해 왔다
 				ENDSELECT
 			;成功
 			CASE 1
 				IF GET_TARGETNUM() == 1 && !DATE_HITOGOMI(CFLAG:PLAYER:현재위치) && !WITH_MOB()
 					IF ABL:노출벽 > 3
 						IF TALENT:광기
-							PRINTFORML 「그렇게 보고 싶으면 보여 줄게, 이봐요♪」
-							PRINTFORMW 무용은 능글능글 하면서, 자신의 스커트를 싶게 했다.
+							PRINTFORML 「그렇게 보고싶다면 보여줄께, 자♪」
+							PRINTFORMW 마이는 히죽히죽 웃으며 자신의 치마를 걷어 올렸다
 						ELSE
-							PRINTFORML 「그렇게 보고 싶은거야？해, 어쩔 수 없다……」
-							PRINTFORMW 무용은 부끄러운 듯이  뺨을 붉히면서, 사양 쉽상으로 스커트를 싶게 했다.
+							PRINTFORML 「그렇게나 보고 싶은거야? 어, 어쩔 수 없지……」
+							PRINTFORMW 마이는 부끄러운 듯이 볼을 물들이면서, 조심스럽게 스커트를 걷어 올렸다
 						ENDIF
 					ELSE
 						IF TALENT:광기
-							PRINTFORML 「아하하 , 상당히 보여 버렸다일까？」
-							PRINTFORMW 무용은 웃으면서, 권하도록(듯이) 스커트를 팔랑팔랑 시키고 있다.
+							PRINTFORML 「아하핫, 꽤 보여졌나?」
+							PRINTFORMW 마이는 웃으면서, 권유하듯이 스커트를 펄럭이고 있다
 						ELSE
-							PRINTFORML 「보고, 보였겠죠？ 만족했다？」
-							PRINTFORMW 무용은 부끄러운 듯이  뺨을 붉히면서, 가만히%CALLNAME:MASTER%(을)를 응시하고 있다.
+							PRINTFORML 「봐, 봤지? 만족했어?」
+							PRINTFORMW 마이는 부끄러운 듯이 볼을 물들이면서 가만히 %마스터를% 바라보고 있다
 						ENDIF
 					ENDIF
 				ELSE
 					IF ABL:노출벽 > 5
 						IF TALENT:광기
-							PRINTFORML 「그렇게 보고 싶으면 보여 줄게, 이봐요♪」
-							PRINTFORMW 무용은 능글능글 하면서, 자신의 스커트를 싶게 했다.
+							PRINTFORML 「그렇게 보고싶다면 보여줄께, 자♪」
+							PRINTFORMW 마이는 히죽히죽 웃으며 자신의 치마를 걷어 올렸다
 						ELSE
-							PRINTFORML 「그렇게 보고 싶은거야？해, 어쩔 수 없다……」
-							PRINTFORMW 무용은 부끄러운 듯이  뺨을 붉히면서, 사양 쉽상으로 스커트를 싶게 했다.
+							PRINTFORML 「그렇게나 보고 싶은거야? 어, 어쩔 수 없지……」
+							PRINTFORMW 마이는 부끄러운 듯이 볼을 물들이면서, 조심스럽게 스커트를 걷어 올렸다
 						ENDIF
 					ELSE
 						IF TALENT:광기
-							PRINTFORML 「아하하 , 상당히 보여 버렸다일까？」
-							PRINTFORMW 무용은 웃으면서, 권하도록(듯이) 스커트를 팔랑팔랑 시키고 있다.
+							PRINTFORML 「아하핫, 꽤 보여졌나?」
+							PRINTFORMW 마이는 웃으면서, 권유하듯이 스커트를 펄럭이고 있다
 						ELSE
-							PRINTFORML 「보고, 보였겠죠？ 만족했다？」
-							PRINTFORMW 무용은 부끄러운 듯이  뺨을 붉히면서, 가만히%CALLNAME:MASTER%(을)를 응시하고 있다.
+							PRINTFORML 「봐, 봤지? 만족했어?」
+							PRINTFORMW 마이는 부끄러운 듯이 볼을 물들이면서 가만히 %마스터를% 바라보고 있다
 						ENDIF
 					ENDIF
 				ENDIF

@@ -25,9 +25,9 @@ SIF FLAG:대사색깔
 	LOCAL:1 = 1
 	;-------------------------------------------------
 	IF LOCAL:1 && ARGS == "戦闘前"
-		PRINTFORML 「에-네？암흑 테스트를 받고 싶은거야？
-		PRINTFORML 리내가 없으면 상태가 아니지만―」
-		PRINTFORMW 무용은 가볍게 굽힘과 폄을 하면(자), 못된 장난인 미소를 띄워 품으로부터 스펠 카드를 꺼냈다.　
+		PRINTFORML 「헤─에? 암흑 테스트 받고 싶어?
+		PRINTFORML 사토노가 없으면 상태가 안 좋은데─」
+		PRINTFORMW 마이는 몸을 가볍게 굽혔다 피자 장난스러운 미소를 지으며 품에서 스펠 카드를 꺼냈다
 		HANDICAP_FIXED = 0
 		HANDICAP_RAND = 0
 		RETURN 0
@@ -53,11 +53,11 @@ SIF FLAG:대사색깔
 			CASE 3
 				PRINTFORML 
 			CASE 2
-				PRINTFORMW 「이봐요 이봐요―！자꾸자꾸 격렬하게 하버릴거야―！」
-				PRINTFORMW 무용은 아직도 여유 그렇다……！
+				PRINTFORMW 「이봐 이봐─! 자꾸자꾸 격렬하게 만들거야─!」
+				PRINTFORMW 마이는 아직 여유로워 보인다……!
 			CASE 1
-				PRINTFORML 「광란 텡오드시다―！！춤출 수 있는 춤추어라―！」
-				PRINTFORMW 사방팔방에 대나무가 날아 온다……！
+				PRINTFORML 「광무텐구 겁주기다─!! 춤춰라 춤춰─!」
+				PRINTFORMW 사방팔방에서 대나무 창이 날아온다……!
 			CASE 0
 				PRINTFORML 
 		ENDSELECT
@@ -106,13 +106,13 @@ SIF FLAG:대사색깔
 			CASE 4
 				PRINTFORML 
 			CASE 3 TO 1
-				PRINTFORML 「부부부―！　나의 승리다―！
-				PRINTFORML 이런 꼴이다%CALLNAME:MASTER%(은)는 불합격일까♪」
-				PRINTFORMW 무용은%CALLNAME:MASTER%에 우쭐거리고 있다………
+				PRINTFORML 「후후후─!　나의 승리야─!
+				PRINTFORML 이런 꼴로는 %마스터가% 불합격인걸까♪」
+				PRINTFORMW 마이는 %마스터를% 이겨서 기세등등하다………
 			CASE 0
-				PRINTFORML 「……！	, 응！
-				PRINTFORML 뭐, 아직도 이 정도는 암흑 테스트에는 불합격이다―！」
-				PRINTFORMW 무용은%CALLNAME:MASTER%에 져 쇼크인 같다……
+				PRINTFORML 「우……!	흐, 흥!
+				PRINTFORML 뭐, 아직 이 정도로는 암흑 테스트에는 불합격이야─!」
+				PRINTFORMW 마이는 %CALLNAME:MASTER%에게 져서 충격인 것 같다……
 		ENDSELECT
 	ENDIF
 RESETCOLOR
